@@ -2,18 +2,34 @@ import { useState, useRef } from "react";
 import { Text } from "@react-three/drei";
 import * as THREE from "three";
 
+import { useNavigate, useParams } from "react-router-dom";
+import { useAnswerStore, useDefaultPositionsStore } from "../../store/store";
+import checkAnswer from "../../utils/checkAnswer";
 import CUBE_CONSTANT from "../../constants/cube";
 
 function Cube({ position, numbers }) {
+  const navigate = useNavigate();
+  const { difficulty, stageNumber } = useParams();
   const cube = useRef();
   const [isClicked, setIsClicked] = useState(false);
+  const { answer } = useAnswerStore();
+  const { defaultPositions, setDefaultPositions } = useDefaultPositionsStore();
 
   const edges = new THREE.EdgesGeometry(new THREE.BoxGeometry(2, 2, 2));
   const lineMaterial = new THREE.LineBasicMaterial({ color: 0x000000 });
   const edgeLines = new THREE.LineSegments(edges, lineMaterial);
 
   function handleClick() {
+    defaultPositions[position.join("")] = !defaultPositions[position.join("")];
+
     setIsClicked(!isClicked);
+    setDefaultPositions(defaultPositions);
+
+    const result = checkAnswer(answer, defaultPositions);
+
+    if (result) {
+      navigate(`/complete/${difficulty}/${stageNumber}`);
+    }
   }
 
   return (
