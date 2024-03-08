@@ -5,18 +5,13 @@ const puzzlesStore = (set) => ({
     tutorial: {
       1: {
         title: "bamboo",
-        size: [1, 5, 2],
+        size: [2, 5, 1],
         positions: [
           [-1, -4, 0],
           [-1, -2, 0],
           [-1, 0, 0],
           [-1, 2, 0],
           [-1, 4, 0],
-          [1, -4, 0],
-          [1, -2, 0],
-          [1, -0, 0],
-          [1, 2, 0],
-          [1, 4, 0],
         ],
         numbersList: [
           [5, null, null],
@@ -34,16 +29,137 @@ const puzzlesStore = (set) => ({
       2: {
         title: "macbook",
         size: [5, 4, 4],
+        positions: [
+          [-4, 3, -3],
+          [-2, 3, -3],
+          [0, 3, -3],
+          [2, 3, -3],
+          [4, 3, -3],
+          [-4, 1, -3],
+          [-2, 1, -3],
+          [0, 1, -3],
+          [2, 1, -3],
+          [4, 1, -3],
+          [-4, -1, -3],
+          [-2, -1, -3],
+          [0, -1, -3],
+          [2, -1, -3],
+          [4, -1, -3],
+          [-4, -3, -3],
+          [-2, -3, -3],
+          [0, -3, -3],
+          [2, -3, -3],
+          [4, -3, -3],
+
+          [-4, -3, -1],
+          [-2, -3, -1],
+          [0, -3, -1],
+          [2, -3, -1],
+          [4, -3, -1],
+
+          [-4, -3, 1],
+          [-2, -3, 1],
+          [0, -3, 1],
+          [2, -3, 1],
+          [4, -3, 1],
+
+          [-4, -3, 3],
+          [-2, -3, 3],
+          [0, -3, 3],
+          [2, -3, 3],
+          [4, -3, 3],
+        ],
+        numbersList: [
+          [null, 5, null],
+          [null, 5, null],
+          [null, 5, null],
+          [null, 5, null],
+          [null, 5, null],
+          [null, null, null],
+          [null, null, null],
+          [null, null, null],
+          [null, 5, null],
+          [null, null, null],
+          [null, null, null],
+          [null, null, null],
+          [null, 5, null],
+          [null, null, null],
+          [null, null, null],
+          [null, null, null],
+        ],
       },
       3: {
         title: "chair",
         size: [3, 6, 3],
+        positions: [
+          [-2, 5, -2],
+          [0, 5, -2],
+          [2, 5, -2],
+
+          [-2, 3, -2],
+          [0, 3, -2],
+          [2, 3, -2],
+
+          [-2, 1, -2],
+          [0, 1, -2],
+          [2, 1, -2],
+
+          [-2, -1, -2],
+          [0, -1, -2],
+          [2, -1, -2],
+          [-2, -1, 0],
+          [0, -1, 0],
+          [2, -1, 0],
+          [-2, -1, 2],
+          [0, -1, 2],
+          [2, -1, 2],
+
+          [-2, -3, -2],
+          [2, -3, -2],
+          [-2, -3, 2],
+          [2, -3, 2],
+
+          [-2, -5, -2],
+          [2, -5, -2],
+          [-2, -5, 2],
+          [2, -5, 2],
+        ],
+        numbersList: [
+          [null, 2, null],
+          [null, 0, null],
+          [null, 2, null],
+          [null, 2, null],
+          [null, 0, null],
+          [null, 2, null],
+          [null, 3, null],
+          [null, 3, null],
+          [null, 3, null],
+          [null, 3, null],
+          [null, null, null],
+          [null, null, null],
+          [null, 3, null],
+          [null, null, null],
+          [null, null, null],
+          [null, 3, null],
+          [null, null, null],
+          [null, null, null],
+        ],
       },
     },
     normal: {},
     hard: {},
   },
   setPuzzles: (puzzles) => set({ puzzles }),
+});
+
+const answerStore = (set) => ({
+  answer: {},
+  setAnswer: (newAnswer) => set({ newAnswer }),
+});
+
+const defaultPositionsStore = (set) => ({
+  defaultPositions: {},
+  setDefaultPositions: (defaultPositions) => set({ defaultPositions }),
 });
 
 const clickModeStore = (set) => ({
@@ -62,8 +178,17 @@ const soundStore = (set) => ({
 });
 
 const usePuzzlesStore = create(puzzlesStore);
+const useAnswerStore = create(answerStore);
+const useDefaultPositionsStore = create(defaultPositionsStore);
 const useClickModeStore = create(clickModeStore);
 const useLayerStore = create(layerStore);
 const useSoundStore = create(soundStore);
 
-export { usePuzzlesStore, useClickModeStore, useLayerStore, useSoundStore };
+export {
+  usePuzzlesStore,
+  useAnswerStore,
+  useDefaultPositionsStore,
+  useClickModeStore,
+  useLayerStore,
+  useSoundStore,
+};
