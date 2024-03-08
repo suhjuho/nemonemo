@@ -4,7 +4,7 @@ import { useParams } from "react-router-dom";
 import { useRef } from "react";
 import styled from "styled-components";
 
-import Bamboo from "../puzzles/Bamboo";
+import Puzzle from "../puzzles/Puzzle";
 import { usePuzzlesStore } from "../../store/store";
 
 import GameStageHeader from "../Header/GameStageHeader";
@@ -37,19 +37,13 @@ function GameStage() {
           fov={40}
           near={0.04}
           far={1000}
-          zoom={16 * Math.max(...puzzle.size)}
+          zoom={Math.floor(300 / Math.max(...puzzle.size))}
         />
-
         <OrbitControls ref={controls} enableZoom={false} />
         <color attach="background" args={["#577D6D"]} />
         <axesHelper scale={[5, 5, 5]} />
 
-        {puzzle.title === "bamboo" && (
-          <Bamboo
-            positions={puzzle.positions}
-            numbersList={puzzle.numbersList}
-          />
-        )}
+        <Puzzle puzzle={puzzle} />
       </Canvas>
     </Stage>
   );
