@@ -177,6 +177,11 @@ const rightClickStore = (set) => ({
   setIsRightClick: (isRightClick) => set({ isRightClick }),
 });
 
+const dragPositionStore = (set) => ({
+  dragPosition: [],
+  setDragPosition: (dragPosition) => set({ dragPosition }),
+});
+
 const layerStore = (set) => ({
   layerMode: "all", // all, one
   setLayerMode: (mode) => set({ mode }),
@@ -193,6 +198,7 @@ const useDefaultPositionsStore = create(defaultPositionsStore);
 const useClickModeStore = create(clickModeStore);
 const useOrbitControlStore = create(orbitControlStore);
 const useRightClickStore = create(rightClickStore);
+const useDragPositionStore = create(dragPositionStore);
 const useLayerStore = create(layerStore);
 const useSoundStore = create(soundStore);
 
@@ -203,6 +209,7 @@ export {
   useClickModeStore,
   useOrbitControlStore,
   useRightClickStore,
+  useDragPositionStore,
   useLayerStore,
   useSoundStore,
 };

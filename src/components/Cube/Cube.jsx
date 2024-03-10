@@ -9,6 +9,7 @@ import {
   useDefaultPositionsStore,
   useOrbitControlStore,
   useRightClickStore,
+  useDragPositionStore,
 } from "../../store/store";
 import checkAnswer from "../../utils/checkAnswer";
 import CUBE_CONSTANT from "../../constants/cube";
@@ -23,10 +24,11 @@ function Cube({ position, numbers }) {
   const [hoverState, setHoverState] = useState("default");
 
   const { answer } = useAnswerStore();
-  const { defaultPositions, setDefaultPositions } = useDefaultPositionsStore();
   const { clickMode } = useClickModeStore();
-  const { isOrbitEnable, setOrbitEnableState } = useOrbitControlStore();
   const { isRightClick, setIsRightClick } = useRightClickStore();
+  const { dragPosition, setDragPosition } = useDragPositionStore();
+  const { isOrbitEnable, setOrbitEnableState } = useOrbitControlStore();
+  const { defaultPositions, setDefaultPositions } = useDefaultPositionsStore();
 
   const edges = new THREE.EdgesGeometry(new THREE.BoxGeometry(2, 2, 2));
   const lineMaterial = new THREE.LineBasicMaterial({ color: 0x000000 });
@@ -54,6 +56,7 @@ function Cube({ position, numbers }) {
     event.stopPropagation();
     setOrbitEnableState(false);
     setIsRightClick(true);
+    setDragPosition(position);
 
     if (clickMode === "color") {
       if (event.type === "click") {
@@ -108,7 +111,11 @@ function Cube({ position, numbers }) {
 
         defaultPositions[position.join("")] =
           !defaultPositions[position.join("")];
-      } else {
+      } else if (
+        (dragPosition[0] === position[0] && dragPosition[1] === position[1]) ||
+        (dragPosition[1] === position[1] && dragPosition[2] === position[2]) ||
+        (dragPosition[2] === position[2] && dragPosition[0] === position[0])
+      ) {
         setIsClicked(false);
         setIsRemoved(!isRemoved);
 
@@ -170,6 +177,7 @@ function Cube({ position, numbers }) {
   const handleDragEnd = () => {
     setOrbitEnableState(true);
     setIsRightClick(false);
+    setDragPosition([]);
   };
 
   return (
