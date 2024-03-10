@@ -31,9 +31,13 @@ function Puzzle({ puzzle }) {
     setDefaultPositions(defaultPositions);
   }, []);
 
-  return defaultCubes.map((position, index) => (
-    <Cube key={position} position={position} numbers={numbersList[index]} />
-  ));
+  return (
+    <>
+      {defaultCubes.map((position, index) => (
+        <Cube key={position} position={position} numbers={numbersList[index]} />
+      ))}
+    </>
+  );
 }
 
 export default Puzzle;

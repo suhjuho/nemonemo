@@ -11,7 +11,7 @@ function App() {
       <Route path="/" exact element={<MainPage />} />
       <Route path="/puzzles/:difficulty/:stageNumber" element={<GameStage />} />
       <Route
-        path="/complete/:difficulty/:stageNumber"
+        path="/completion/:difficulty/:stageNumber"
         element={<CompletePage />}
       />
     </Routes>
