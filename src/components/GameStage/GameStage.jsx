@@ -1,49 +1,81 @@
 import { Canvas } from "@react-three/fiber";
 import { OrthographicCamera, OrbitControls } from "@react-three/drei";
 import { useParams } from "react-router-dom";
-import { useRef } from "react";
+import { useEffect, useRef } from "react";
 import styled from "styled-components";
 
 import Puzzle from "../puzzles/Puzzle";
-import { usePuzzlesStore } from "../../store/store";
-
+import BackGround from "./BackGround";
 import GameStageHeader from "../Header/GameStageHeader";
 import GameStageSideBar from "../SideBar/GameStageSideBar";
+import GameStageFooter from "../Footer/GameStageFooter";
+
+import {
+  usePuzzlesStore,
+  useClickModeStore,
+  useOrbitControlStore,
+} from "../../store/store";
+
+const Stage = styled.div`
+  position: relative;
+  height: 100vh;
+`;
 
 function GameStage() {
   const { puzzles } = usePuzzlesStore();
+  const { clickMode, setClickMode } = useClickModeStore();
+  const { isOrbitEnable } = useOrbitControlStore();
   const { difficulty, stageNumber } = useParams();
   const controls = useRef();
 
-  const puzzle = puzzles[difficulty][stageNumber];
+  useEffect(() => {
+    function handleContextMenu(event) {
+      if (event.key === "c" || event.key === "C" || event.key === "ㅊ") {
+        if (clickMode === "color") {
+          setClickMode("cube");
+        } else {
+          setClickMode("color");
+        }
+      }
+    }
 
-  const Stage = styled.div`
-    position: relative;
-    height: 100vh;
-  `;
+    window.addEventListener("keydown", handleContextMenu);
+    return () => window.removeEventListener("keydown", handleContextMenu);
+  }, [clickMode]);
+
+  const puzzle = puzzles[difficulty][stageNumber];
 
   return (
     <Stage>
       <GameStageHeader title={puzzle.title} />
       <GameStageSideBar />
+      <GameStageFooter />
 
       <Canvas>
-        <ambientLight />
+        <ambientLight intensity={1} />
         <pointLight position={[0, 15, 20]} />
-        <spotLight angle={0.25} penumbra={0.5} position={[10, 10, 5]} />
+        <directionalLight intensity={1} position={[10, 5, -10]} />
+        <directionalLight intensity={1} position={[10, 5, 10]} />
+
         <OrthographicCamera
           makeDefault
-          position={[-6, 6, 6]}
-          fov={40}
-          near={0.04}
+          position={[-10, 10, 10]}
+          fov={100}
+          near={1}
           far={1000}
           zoom={Math.floor(300 / Math.max(...puzzle.size))}
         />
-        <OrbitControls ref={controls} enableZoom={false} />
-        <color attach="background" args={["#577D6D"]} />
-        <axesHelper scale={[5, 5, 5]} />
 
         <Puzzle puzzle={puzzle} />
+        <BackGround />
+        <axesHelper scale={[10, 10, 10]} />
+
+        <OrbitControls
+          ref={controls}
+          enableZoom={false}
+          enablePan={false}
+          enabled={isOrbitEnable}
+        />
       </Canvas>
     </Stage>
   );
