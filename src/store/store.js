@@ -163,8 +163,18 @@ const defaultPositionsStore = (set) => ({
 });
 
 const clickModeStore = (set) => ({
-  clickMode: "color", // color, block
-  setClickMode: (mode) => set({ mode }),
+  clickMode: "color", // color, cube
+  setClickMode: (clickMode) => set({ clickMode }),
+});
+
+const orbitControlStore = (set) => ({
+  isOrbitEnable: true,
+  setOrbitEnableState: (isOrbitEnable) => set({ isOrbitEnable }),
+});
+
+const rightClickStore = (set) => ({
+  isRightClick: false,
+  setIsRightClick: (isRightClick) => set({ isRightClick }),
 });
 
 const layerStore = (set) => ({
@@ -181,6 +191,8 @@ const usePuzzlesStore = create(puzzlesStore);
 const useAnswerStore = create(answerStore);
 const useDefaultPositionsStore = create(defaultPositionsStore);
 const useClickModeStore = create(clickModeStore);
+const useOrbitControlStore = create(orbitControlStore);
+const useRightClickStore = create(rightClickStore);
 const useLayerStore = create(layerStore);
 const useSoundStore = create(soundStore);
 
@@ -189,6 +201,8 @@ export {
   useAnswerStore,
   useDefaultPositionsStore,
   useClickModeStore,
+  useOrbitControlStore,
+  useRightClickStore,
   useLayerStore,
   useSoundStore,
 };
