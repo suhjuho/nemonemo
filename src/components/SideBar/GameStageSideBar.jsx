@@ -82,19 +82,33 @@ function GameStageSideBar() {
     <SideBar>
       {clickMode === "color" && (
         <Icon>
-          <MainIcon>
-            <TbCube className="icon" />
-            <PiEyedropperSampleFill className="event-icon color-dropper-icon" />
-          </MainIcon>
-          <Command>C</Command>
+          <div style={{ position: "relative" }}>
+            <MainIcon>
+              <TbCube className="icon" />
+              <PiEyedropperSampleFill className="event-icon color-dropper-icon" />
+            </MainIcon>
+            <Command>C</Command>
+          </div>
+          <h3>Color Mode</h3>
         </Icon>
       )}
 
-      {/* 추후 블록 생성, 제거의 경우는 마우스 커서 호버 이벤트로 파악. 두 가지 경우 나누어서 렌더링 */}
-      {clickMode === "block" && (
+      {clickMode === "cube" && (
         <>
-          <TbCubePlus className="icon " />
-          <TbCubeOff className="icon" />
+          <Icon>
+            <div style={{ position: "relative" }}>
+              <TbCubePlus className="icon " />
+              <Command>C</Command>
+            </div>
+            <h3>Cube Mode</h3>
+          </Icon>
+          <Icon>
+            <div style={{ position: "relative" }}>
+              <TbCubeOff className="icon " />
+              <Command>C</Command>
+            </div>
+            <h3>Cube Mode</h3>
+          </Icon>
         </>
       )}
 
@@ -113,7 +127,7 @@ function GameStageSideBar() {
           <BiMouseAlt className="icon" />
           <TbClick className="event-icon right-click-icon" />
         </MainIcon>
-        <h3>Remove</h3>
+        <h3>Mode Change</h3>
       </Icon>
       <Icon>
         <MainIcon>
@@ -143,14 +157,6 @@ function GameStageSideBar() {
       <Icon>
         <BiLayerPlus className="icon" />
         <Command>W</Command>
-      </Icon>
-      <Icon>
-        <BiUndo className="icon" />
-        <Command>Z</Command>
-      </Icon>
-      <Icon>
-        <BiUndo className="icon" style={{ transform: "scaleX(-1)" }} />
-        <Command>X</Command>
       </Icon>
     </SideBar>
   );
