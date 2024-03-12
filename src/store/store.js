@@ -7,142 +7,94 @@ const puzzlesStore = (set) => ({
         title: "bamboo",
         size: [2, 5, 1],
         positions: [
-          [-1, -4, 0],
-          [-1, -2, 0],
-          [-1, 0, 0],
-          [-1, 2, 0],
-          [-1, 4, 0],
+          [0, 0, 0],
+          [0, 1, 0],
+          [0, 2, 0],
+          [0, 3, 0],
+          [0, 4, 0],
         ],
         numbersList: [
-          [5, null, null],
-          [5, null, null],
-          [5, null, null],
-          [5, null, null],
-          [5, null, null],
-          [0, null, null],
-          [0, null, null],
-          [0, null, null],
-          [0, null, null],
-          [0, null, null],
+          [0, 4, 0],
+          [1, 4, 0],
         ],
       },
       2: {
-        title: "macbook",
+        title: "laptop",
         size: [5, 4, 4],
-        positions: [
-          [-4, 3, -3],
-          [-2, 3, -3],
-          [0, 3, -3],
-          [2, 3, -3],
-          [4, 3, -3],
-          [-4, 1, -3],
-          [-2, 1, -3],
-          [0, 1, -3],
-          [2, 1, -3],
-          [4, 1, -3],
-          [-4, -1, -3],
-          [-2, -1, -3],
-          [0, -1, -3],
-          [2, -1, -3],
-          [4, -1, -3],
-          [-4, -3, -3],
-          [-2, -3, -3],
-          [0, -3, -3],
-          [2, -3, -3],
-          [4, -3, -3],
-
-          [-4, -3, -1],
-          [-2, -3, -1],
-          [0, -3, -1],
-          [2, -3, -1],
-          [4, -3, -1],
-
-          [-4, -3, 1],
-          [-2, -3, 1],
-          [0, -3, 1],
-          [2, -3, 1],
-          [4, -3, 1],
-
-          [-4, -3, 3],
-          [-2, -3, 3],
-          [0, -3, 3],
-          [2, -3, 3],
-          [4, -3, 3],
-        ],
+        positions: [[0, 0, 0]],
         numbersList: [
-          [null, 5, null],
-          [null, 5, null],
-          [null, 5, null],
-          [null, 5, null],
-          [null, 5, null],
-          [null, null, null],
-          [null, null, null],
-          [null, null, null],
-          [null, 5, null],
-          [null, null, null],
-          [null, null, null],
-          [null, null, null],
-          [null, 5, null],
-          [null, null, null],
-          [null, null, null],
-          [null, null, null],
+          [0, 0, 0],
+          [1, 0, 0],
         ],
       },
       3: {
         title: "chair",
         size: [3, 6, 3],
         positions: [
-          [-2, 5, -2],
-          [0, 5, -2],
-          [2, 5, -2],
+          [0, 5, 0],
+          [1, 5, 0],
+          [2, 5, 0],
 
-          [-2, 3, -2],
-          [0, 3, -2],
-          [2, 3, -2],
+          [0, 4, 0],
+          [1, 4, 0],
+          [2, 4, 0],
 
-          [-2, 1, -2],
-          [0, 1, -2],
-          [2, 1, -2],
+          [0, 3, 0],
+          [1, 3, 0],
+          [2, 3, 0],
 
-          [-2, -1, -2],
-          [0, -1, -2],
-          [2, -1, -2],
-          [-2, -1, 0],
-          [0, -1, 0],
-          [2, -1, 0],
-          [-2, -1, 2],
-          [0, -1, 2],
-          [2, -1, 2],
+          [0, 2, 0],
+          [1, 2, 0],
+          [2, 2, 0],
+          [0, 2, 1],
+          [1, 2, 1],
+          [2, 2, 1],
+          [0, 2, 2],
+          [1, 2, 2],
+          [2, 2, 2],
 
-          [-2, -3, -2],
-          [2, -3, -2],
-          [-2, -3, 2],
-          [2, -3, 2],
+          [0, 1, 0],
+          [2, 1, 0],
+          [0, 1, 2],
+          [2, 1, 2],
 
-          [-2, -5, -2],
-          [2, -5, -2],
-          [-2, -5, 2],
-          [2, -5, 2],
+          [0, 0, 0],
+          [2, 0, 0],
+          [0, 0, 2],
+          [2, 0, 2],
         ],
         numbersList: [
-          [null, 2, null],
-          [null, 0, null],
-          [null, 2, null],
-          [null, 2, null],
-          [null, 0, null],
-          [null, 2, null],
-          [null, 3, null],
-          [null, 3, null],
-          [null, 3, null],
-          [null, 3, null],
-          [null, null, null],
-          [null, null, null],
-          [null, 3, null],
-          [null, null, null],
-          [null, null, null],
-          [null, 3, null],
-          [null, null, null],
-          [null, null, null],
+          [0, 5, 0],
+          [1, 5, 0],
+          [2, 5, 0],
+
+          [0, 4, 0],
+          [1, 4, 0],
+          [2, 4, 0],
+
+          [0, 3, 0],
+          [1, 3, 0],
+          [2, 3, 0],
+
+          [0, 2, 0],
+          [1, 2, 0],
+          [2, 2, 0],
+          [0, 2, 1],
+          [1, 2, 1],
+          [2, 2, 1],
+          [0, 2, 2],
+          [1, 2, 2],
+          [2, 2, 2],
+
+          [0, 1, 0],
+          [2, 1, 0],
+          [0, 1, 2],
+          [2, 1, 2],
+
+          [0, 0, 0],
+          [2, 0, 0],
+          [0, 0, 2],
+          [2, 0, 2],
         ],
       },
     },
@@ -152,14 +104,23 @@ const puzzlesStore = (set) => ({
   setPuzzles: (puzzles) => set({ puzzles }),
 });
 
+const markingNumbersStore = (set) => ({
+  markingNumbers: {},
+  setMarkingNumbers: (markingNumbers) => set({ markingNumbers }),
+});
+
 const answerStore = (set) => ({
   answer: {},
   setAnswer: (newAnswer) => set({ newAnswer }),
 });
 
-const defaultPositionsStore = (set) => ({
-  defaultPositions: {},
-  setDefaultPositions: (defaultPositions) => set({ defaultPositions }),
+const cubeStatesStore = (set) => ({
+  cubeStates: {},
+  cubeStatesHistory: [],
+  historyIndex: 0,
+  setCubeStates: (cubeStates) => set({ cubeStates }),
+  setCubeStatesHistory: (cubeStatesHistory) => set({ cubeStatesHistory }),
+  setHistoryIndex: (historyIndex) => set({ historyIndex }),
 });
 
 const clickModeStore = (set) => ({
@@ -182,9 +143,18 @@ const dragPositionStore = (set) => ({
   setDragPosition: (dragPosition) => set({ dragPosition }),
 });
 
+const cameraPositionStore = (set) => ({
+  cameraPosition: [0, 1, 1],
+  setCameraPosition: (cameraPosition) => set({ cameraPosition }),
+});
+
 const layerStore = (set) => ({
-  layerMode: "all", // all, one
-  setLayerMode: (mode) => set({ mode }),
+  layerDirection: "FRONT", // FRONT, BACK, LEFT, RIGHT
+  currentLayer: 0,
+  layers: [],
+  setCurrentLayer: (currentLayer) => set({ currentLayer }),
+  setLayers: (layers) => set({ layers }),
+  setLayerDirection: (layerDirection) => set({ layerDirection }),
 });
 
 const soundStore = (set) => ({
@@ -193,23 +163,27 @@ const soundStore = (set) => ({
 });
 
 const usePuzzlesStore = create(puzzlesStore);
+const useMarkingNumbersStore = create(markingNumbersStore);
 const useAnswerStore = create(answerStore);
-const useDefaultPositionsStore = create(defaultPositionsStore);
+const useCubeStatesStore = create(cubeStatesStore);
 const useClickModeStore = create(clickModeStore);
 const useOrbitControlStore = create(orbitControlStore);
 const useRightClickStore = create(rightClickStore);
 const useDragPositionStore = create(dragPositionStore);
+const useCameraPositionStore = create(cameraPositionStore);
 const useLayerStore = create(layerStore);
 const useSoundStore = create(soundStore);
 
 export {
   usePuzzlesStore,
+  useMarkingNumbersStore,
   useAnswerStore,
-  useDefaultPositionsStore,
+  useCubeStatesStore,
   useClickModeStore,
   useOrbitControlStore,
   useRightClickStore,
   useDragPositionStore,
+  useCameraPositionStore,
   useLayerStore,
   useSoundStore,
 };
