@@ -1,5 +1,6 @@
 import {
   useClickModeStore,
+  useCubeStatesStore,
   useOrbitControlStore,
   useRightClickStore,
 } from "../../store/store";
@@ -10,6 +11,13 @@ function BackGround() {
   const { clickMode, setClickMode } = useClickModeStore();
   const { setOrbitEnableState } = useOrbitControlStore();
   const { setIsRightClick } = useRightClickStore();
+  const {
+    cubeStates,
+    cubeStatesHistory,
+    historyIndex,
+    setCubeStatesHistory,
+    setHistoryIndex,
+  } = useCubeStatesStore();
 
   function handleContextMenu(event) {
     event.stopPropagation();
@@ -21,9 +29,20 @@ function BackGround() {
     }
   }
 
-  const handleDragEnd = () => {
+  const handleDragEnd = (event) => {
+    event.stopPropagation();
     setOrbitEnableState(true);
     setIsRightClick(false);
+
+    if (
+      JSON.stringify(cubeStates) !==
+      JSON.stringify(cubeStatesHistory[historyIndex])
+    ) {
+      cubeStatesHistory.push(JSON.parse(JSON.stringify(cubeStates)));
+
+      setCubeStatesHistory(cubeStatesHistory);
+      setHistoryIndex(cubeStatesHistory.length - 1);
+    }
   };
 
   return (

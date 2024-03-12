@@ -4,53 +4,173 @@ import * as THREE from "three";
 
 import { useNavigate, useParams } from "react-router-dom";
 import {
+  useMarkingNumbersStore,
   useAnswerStore,
   useClickModeStore,
-  useDefaultPositionsStore,
+  useCubeStatesStore,
   useOrbitControlStore,
   useRightClickStore,
   useDragPositionStore,
+  useLayerStore,
 } from "../../store/store";
 import checkAnswer from "../../utils/checkAnswer";
+import checkNumberShown from "../../utils/isNumberShown";
 import CUBE_CONSTANT from "../../constants/cube";
 
-function Cube({ position, numbers }) {
+import CubeEdge from "./CubeEdge";
+
+function Cube({ position, numbers, size }) {
   const cube = useRef();
   const navigate = useNavigate();
   const { difficulty, stageNumber } = useParams();
   const [isClicked, setIsClicked] = useState(false);
   const [isRemoved, setIsRemoved] = useState(false);
+  const [isHidden, setIsHidden] = useState(false);
   const [cubeState, setCubeState] = useState("blank");
   const [hoverState, setHoverState] = useState("default");
 
+  const { markingNumbers } = useMarkingNumbersStore();
   const { answer } = useAnswerStore();
   const { clickMode } = useClickModeStore();
   const { isRightClick, setIsRightClick } = useRightClickStore();
   const { dragPosition, setDragPosition } = useDragPositionStore();
   const { isOrbitEnable, setOrbitEnableState } = useOrbitControlStore();
-  const { defaultPositions, setDefaultPositions } = useDefaultPositionsStore();
+  const {
+    cubeStates,
+    cubeStatesHistory,
+    historyIndex,
+    setCubeStates,
+    setCubeStatesHistory,
+    setHistoryIndex,
+  } = useCubeStatesStore();
+  const { layerDirection, layers, currentLayer, setCurrentLayer } =
+    useLayerStore();
 
-  const edges = new THREE.EdgesGeometry(new THREE.BoxGeometry(2, 2, 2));
-  const lineMaterial = new THREE.LineBasicMaterial({ color: 0x000000 });
+  const edges = new THREE.EdgesGeometry(
+    new THREE.BoxGeometry(2.01, 2.01, 2.01),
+  );
+  const lineMaterial = new THREE.LineBasicMaterial({
+    color: 0x00000,
+    linecap: "round",
+    linejoin: "round",
+  });
   const edgeLines = new THREE.LineSegments(edges, lineMaterial);
 
-  useEffect(() => {
+  function saveCubeStates() {
+    cubeStates[position.join("")] = { isClicked, isRemoved, isHidden };
+    setCubeStates(cubeStates);
+  }
+
+  function checkCubeState() {
+    let result;
+
     if (!isClicked && !isRemoved) {
-      setCubeState("blank");
+      result = "blank";
     }
 
     if (isClicked && !isRemoved) {
-      setCubeState("marked");
+      result = "marked";
     }
 
     if (!isClicked && isRemoved && clickMode === "color") {
-      setCubeState("invisible");
+      result = "invisible";
     }
 
     if (!isClicked && isRemoved && clickMode === "cube") {
-      setCubeState("haze");
+      result = "haze";
     }
+
+    if (isHidden) {
+      result = "invisible";
+    }
+
+    return result;
+  }
+
+  useEffect(() => {
+    setIsHidden(false);
+  }, [layerDirection]);
+
+  useEffect(() => {
+    setCubeState(checkCubeState());
+
+    saveCubeStates();
   }, [isClicked, isRemoved, clickMode]);
+
+  useEffect(() => {
+    setCubeState(checkCubeState());
+  }, [isHidden]);
+
+  useEffect(() => {
+    function handleLayerChange(event) {
+      const isInside = CUBE_CONSTANT.INSIDE_CUBE_KEYS.includes(event.key);
+      const isOutside = CUBE_CONSTANT.OUTSIDE_CUBE_KEYS.includes(event.key);
+
+      const targetPosition =
+        layerDirection === "FRONT" || layerDirection === "BACK"
+          ? position[2]
+          : position[0];
+
+      if (isInside) {
+        if (CUBE_CONSTANT.INSIDE_DIRECTIONS.includes(layerDirection)) {
+          if (targetPosition === layers[currentLayer - 1]) {
+            setIsHidden(true);
+            setCurrentLayer(currentLayer - 1);
+          }
+        } else if (CUBE_CONSTANT.OUTSIDE_DIRECTIONS.includes(layerDirection)) {
+          if (targetPosition === layers[currentLayer - 1]) {
+            setIsHidden(true);
+            setCurrentLayer(currentLayer + 1);
+          }
+        }
+      }
+
+      if (isOutside) {
+        if (CUBE_CONSTANT.INSIDE_DIRECTIONS.includes(layerDirection)) {
+          if (targetPosition === layers[currentLayer]) {
+            setIsHidden(false);
+            setCurrentLayer(currentLayer + 1);
+          }
+        } else if (CUBE_CONSTANT.OUTSIDE_DIRECTIONS.includes(layerDirection)) {
+          if (targetPosition === layers[currentLayer - 2]) {
+            setIsHidden(false);
+            setCurrentLayer(currentLayer - 1);
+          }
+        }
+      }
+    }
+
+    window.addEventListener("keydown", handleLayerChange);
+    return () => window.removeEventListener("keydown", handleLayerChange);
+  }, [currentLayer, layerDirection, layers, position]);
+
+  useEffect(() => {
+    function handleCubeHistory(event) {
+      const isUndo = CUBE_CONSTANT.UNDO_KEYS.includes(event.key);
+      const isRedo = CUBE_CONSTANT.REDO_KEYS.includes(event.key);
+
+      if (isUndo && historyIndex > 0) {
+        const newCubeStates = cubeStatesHistory[historyIndex - 1];
+
+        setHistoryIndex(historyIndex - 1);
+        setIsClicked(newCubeStates[position.join("")].isClicked);
+        setIsRemoved(newCubeStates[position.join("")].isRemoved);
+        setHoverState("default");
+      }
+
+      if (isRedo && historyIndex < cubeStatesHistory.length - 1) {
+        const newCubeStates = cubeStatesHistory[historyIndex + 1];
+
+        setHistoryIndex(historyIndex + 1);
+        setIsClicked(newCubeStates[position.join("")].isClicked);
+        setIsRemoved(newCubeStates[position.join("")].isRemoved);
+        setHoverState("default");
+      }
+    }
+
+    window.addEventListener("keydown", handleCubeHistory);
+    return () => window.removeEventListener("keydown", handleCubeHistory);
+  }, [cubeStates, cubeStatesHistory, historyIndex]);
 
   function handleRightClick(event) {
     event.stopPropagation();
@@ -58,44 +178,8 @@ function Cube({ position, numbers }) {
     setIsRightClick(true);
     setDragPosition(position);
 
-    if (clickMode === "color") {
-      if (event.type === "click") {
-        setIsClicked(!isClicked);
-
-        defaultPositions[position.join("")] =
-          !defaultPositions[position.join("")];
-      }
-
-      if (event.type === "contextmenu") {
-        setIsClicked(false);
-        setIsRemoved(true);
-
-        defaultPositions[position.join("")] = false;
-      }
-
-      setDefaultPositions(defaultPositions);
-
-      const result = checkAnswer(answer, defaultPositions);
-
-      if (result) {
-        navigate(`/completion/${difficulty}/${stageNumber}`);
-      }
-    }
-
-    if (clickMode === "cube" && event.type === "click") {
-      setIsClicked(false);
-      setIsRemoved(!isRemoved);
-
-      defaultPositions[position.join("")] = false;
-
-      setDefaultPositions(defaultPositions);
-
-      const result = checkAnswer(answer, defaultPositions);
-
-      if (result) {
-        navigate(`/completion/${difficulty}/${stageNumber}`);
-      }
-    }
+    setIsClicked(false);
+    setIsRemoved(true);
   }
 
   function handleDrag(event) {
@@ -108,9 +192,6 @@ function Cube({ position, numbers }) {
     if (clickMode === "color") {
       if (!isRightClick) {
         setIsClicked(!isClicked);
-
-        defaultPositions[position.join("")] =
-          !defaultPositions[position.join("")];
       } else if (
         (dragPosition[0] === position[0] && dragPosition[1] === position[1]) ||
         (dragPosition[1] === position[1] && dragPosition[2] === position[2]) ||
@@ -118,32 +199,12 @@ function Cube({ position, numbers }) {
       ) {
         setIsClicked(false);
         setIsRemoved(!isRemoved);
-
-        defaultPositions[position.join("")] = false;
-      }
-
-      setDefaultPositions(defaultPositions);
-
-      const result = checkAnswer(answer, defaultPositions);
-
-      if (result) {
-        navigate(`/completion/${difficulty}/${stageNumber}`);
       }
     }
 
     if (clickMode === "cube") {
       setIsClicked(false);
       setIsRemoved(!isRemoved);
-
-      defaultPositions[position.join("")] = false;
-
-      setDefaultPositions(defaultPositions);
-
-      const result = checkAnswer(answer, defaultPositions);
-
-      if (result) {
-        navigate(`/completion/${difficulty}/${stageNumber}`);
-      }
     }
   }
 
@@ -153,31 +214,34 @@ function Cube({ position, numbers }) {
 
     if (clickMode === "color") {
       setIsClicked(!isClicked);
-
-      defaultPositions[position.join("")] =
-        !defaultPositions[position.join("")];
     }
 
     if (clickMode === "cube") {
       setIsClicked(false);
       setIsRemoved(!isRemoved);
-
-      defaultPositions[position.join("")] = false;
-    }
-
-    setDefaultPositions(defaultPositions);
-
-    const result = checkAnswer(answer, defaultPositions);
-
-    if (result) {
-      navigate(`/completion/${difficulty}/${stageNumber}`);
     }
   };
 
-  const handleDragEnd = () => {
+  const handleDragEnd = (event) => {
+    event.stopPropagation();
     setOrbitEnableState(true);
     setIsRightClick(false);
     setDragPosition([]);
+
+    if (historyIndex !== cubeStatesHistory.length - 1) {
+      cubeStatesHistory.push(
+        JSON.parse(JSON.stringify(cubeStatesHistory[historyIndex])),
+      );
+    }
+
+    cubeStatesHistory.push(JSON.parse(JSON.stringify(cubeStates)));
+
+    setCubeStatesHistory(cubeStatesHistory);
+    setHistoryIndex(cubeStatesHistory.length - 1);
+
+    if (checkAnswer(answer, cubeStates)) {
+      navigate(`/completion/${difficulty}/${stageNumber}`);
+    }
   };
 
   return (
@@ -188,7 +252,6 @@ function Cube({ position, numbers }) {
             ref={cube}
             onContextMenu={handleRightClick}
             onPointerDown={handleDragStart}
-            onPointerMissed={handleDragEnd}
             onPointerUp={handleDragEnd}
             onPointerEnter={handleDrag}
             onPointerOver={() => setHoverState("hover")}
@@ -201,21 +264,32 @@ function Cube({ position, numbers }) {
               {...CUBE_CONSTANT.HOVER_MATERIAL_ARGS[hoverState]}
             />
           </mesh>
-          {numbers &&
-            numbers.map((number, index) => (
+          {checkNumberShown(position, size, numbers) &&
+            markingNumbers[position.join("")] &&
+            markingNumbers[position.join("")].map((number) => (
               <Text
-                key={`${position.join("")}${CUBE_CONSTANT.LAYERS[index]}`}
-                position={CUBE_CONSTANT.LAYERS[index]}
+                key={`${position.join("")}${CUBE_CONSTANT.LAYERS[number[0]]}`}
+                position={CUBE_CONSTANT.LAYERS[number[0]]}
                 fontSize={1}
                 color="#000000"
                 anchorX="center"
                 anchorY="middle"
-                rotation={CUBE_CONSTANT.ROTATIONS[index]}
+                rotation={
+                  number[0] === "UP_LAYER" || number[0] === "DOWN_LAYER"
+                    ? CUBE_CONSTANT.ROTATIONS[number[0]][layerDirection]
+                    : CUBE_CONSTANT.ROTATIONS[number[0]]
+                }
               >
-                {number !== null ? number : ""}
+                {number[1]}
               </Text>
             ))}
           <primitive object={edgeLines} />
+          <CubeEdge layerPosition="UP" />
+          <CubeEdge layerPosition="DOWN" />
+          <CubeEdge layerPosition="LEFT" />
+          <CubeEdge layerPosition="RIGHT" />
+          <CubeEdge layerPosition="BACK" />
+          <CubeEdge layerPosition="FORWARD" />
         </>
       )}
     </group>
