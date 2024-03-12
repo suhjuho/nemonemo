@@ -1,6 +1,5 @@
-import { BiLayerMinus, BiLayerPlus, BiUndo, BiMouseAlt } from "react-icons/bi";
+import { BiLayerMinus, BiLayerPlus, BiMouseAlt } from "react-icons/bi";
 import { TbCubePlus, TbClick, TbCube, TbCubeOff } from "react-icons/tb";
-import { TfiLayersAlt, TfiLayoutWidthFull } from "react-icons/tfi";
 import { PiEyedropperSampleFill } from "react-icons/pi";
 import { CgScrollV } from "react-icons/cg";
 
@@ -94,22 +93,17 @@ function GameStageSideBar() {
       )}
 
       {clickMode === "cube" && (
-        <>
-          <Icon>
-            <div style={{ position: "relative" }}>
-              <TbCubePlus className="icon " />
-              <Command>C</Command>
-            </div>
-            <h3>Cube Mode</h3>
-          </Icon>
-          <Icon>
-            <div style={{ position: "relative" }}>
-              <TbCubeOff className="icon " />
-              <Command>C</Command>
-            </div>
-            <h3>Cube Mode</h3>
-          </Icon>
-        </>
+        <Icon>
+          <div style={{ position: "relative" }}>
+            <TbCubePlus className="icon" />
+            <Command>C</Command>
+          </div>
+          <div style={{ position: "relative" }}>
+            <TbCubeOff className="icon" />
+            <Command>C</Command>
+          </div>
+          <h3>Cube Mode</h3>
+        </Icon>
       )}
 
       <Icon>
@@ -135,19 +129,6 @@ function GameStageSideBar() {
           <CgScrollV className="event-icon scroll-icon" />
         </MainIcon>
         <h3>Layer Change</h3>
-      </Icon>
-
-      <Icon>
-        {layerMode === "all" && (
-          <TfiLayersAlt
-            className="icon"
-            style={{ transform: "scaleY(-1)", strokeWidth: "0.3px" }}
-          />
-        )}
-        {layerMode === "one" && (
-          <TfiLayoutWidthFull className="icon" style={{ strokeWidth: "1px" }} />
-        )}
-        <h3>Space</h3>
       </Icon>
 
       <Icon>
