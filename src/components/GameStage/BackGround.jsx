@@ -1,16 +1,24 @@
+import { useNavigate, useParams } from "react-router-dom";
+
 import {
   useClickModeStore,
   useCubeStatesStore,
   useOrbitControlStore,
   useRightClickStore,
+  useAnswerStore,
 } from "../../store/store";
 
 import BACKGROUND_CONSTANT from "../../constants/background";
 
+import checkAnswer from "../../utils/checkAnswer";
+
 function BackGround() {
+  const navigate = useNavigate();
+  const { difficulty, stageNumber } = useParams();
   const { clickMode, setClickMode } = useClickModeStore();
   const { setOrbitEnableState } = useOrbitControlStore();
   const { setIsRightClick } = useRightClickStore();
+  const { answer } = useAnswerStore();
   const {
     cubeStates,
     cubeStatesHistory,
@@ -42,6 +50,10 @@ function BackGround() {
 
       setCubeStatesHistory(cubeStatesHistory);
       setHistoryIndex(cubeStatesHistory.length - 1);
+    }
+
+    if (checkAnswer(answer, cubeStates)) {
+      navigate(`/completion/${difficulty}/${stageNumber}`);
     }
   };
 

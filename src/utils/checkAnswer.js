@@ -4,11 +4,11 @@ function checkAnswer(answer, cubeStates) {
   let result = true;
 
   positions.forEach((position) => {
-    if (answer[position[0]] && !position[1].isClicked) {
+    if (answer[position[0]] && position[1].isRemoved) {
       result = false;
     }
 
-    if (!answer[position[0]] && position[1].isClicked) {
+    if (!answer[position[0]] && !position[1].isRemoved) {
       result = false;
     }
   });
