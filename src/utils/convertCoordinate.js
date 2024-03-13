@@ -1,4 +1,4 @@
-function convertCoordinates(position, size) {
+function convertCoordinate(position, size) {
   const [sizeX, sizeY, sizeZ] = size;
 
   return [
@@ -8,4 +8,4 @@ function convertCoordinates(position, size) {
   ];
 }
 
-export default convertCoordinates;
+export default convertCoordinate;

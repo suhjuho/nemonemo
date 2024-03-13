@@ -1,9 +1,25 @@
-const UP_LAYER = [0, 1.01, 0];
-const LEFT_LAYER = [-1.01, 0, 0];
-const FRONT_LAYER = [0, 0, 1.01];
-const DOWN_LAYER = [0, -1.01, 0];
-const RIGHT_LAYER = [1.01, 0, 0];
-const BACK_LAYER = [0, 0, -1.01];
+const UP_LAYER = {
+  center: [0, 1.01, 0],
+  corner: {
+    FRONT: [0.5, 1.01, -0.5],
+    BACK: [-0.5, 1.01, 0.5],
+    LEFT: [0.5, 1.01, 0.5],
+    RIGHT: [-0.5, 1.01, -0.5],
+  },
+};
+const DOWN_LAYER = {
+  center: [0, -1.01, 0],
+  corner: {
+    FRONT: [0.5, -1.01, 0.5],
+    BACK: [-0.5, -1.01, -0.5],
+    LEFT: [-0.5, -1.01, 0.5],
+    RIGHT: [0.5, -1.01, -0.5],
+  },
+};
+const RIGHT_LAYER = { center: [1.01, 0, 0], corner: [1.01, 0.5, -0.5] };
+const LEFT_LAYER = { center: [-1.01, 0, 0], corner: [-1.01, 0.5, 0.5] };
+const FRONT_LAYER = { center: [0, 0, 1.01], corner: [0.5, 0.5, 1.01] };
+const BACK_LAYER = { center: [0, 0, -1.01], corner: [-0.5, 0.5, -1.01] };
 
 const CUBE_CONSTANT = {
   LAYERS: {

@@ -1,5 +1,5 @@
 import { useEffect } from "react";
-import convertCoordinates from "../../utils/convertCoordinate";
+import convertCoordinate from "../../utils/convertCoordinate";
 import getMarkingNumbers from "../../utils/getMarkingNumbers";
 import getDefaultPuzzle from "../../utils/getDefaultPuzzle";
 
@@ -17,7 +17,7 @@ import LayerEdge from "../Edge/LayerEdge";
 import CUBE_CONSTANT from "../../constants/cube";
 
 function Puzzle({ puzzle }) {
-  const { size, positions, numbersList } = puzzle;
+  const { size, positions, showingNumbers } = puzzle;
   const defaultPuzzle = getDefaultPuzzle(size);
 
   const { markingNumbers, setMarkingNumbers } = useMarkingNumbersStore();
@@ -29,7 +29,7 @@ function Puzzle({ puzzle }) {
 
   useEffect(() => {
     positions.forEach((position) => {
-      answer[convertCoordinates(position, size).join("")] = true;
+      answer[convertCoordinate(position, size).join("")] = true;
     });
 
     defaultPuzzle.forEach((position) => {
@@ -43,6 +43,7 @@ function Puzzle({ puzzle }) {
         position,
         positions,
         size,
+        showingNumbers,
       );
     });
 
@@ -65,12 +66,7 @@ function Puzzle({ puzzle }) {
   return (
     <>
       {defaultPuzzle.map((position) => (
-        <Cube
-          key={position}
-          position={position}
-          numbers={numbersList}
-          size={size}
-        ></Cube>
+        <Cube key={position} position={position}></Cube>
       ))}
       {CUBE_CONSTANT.BACK_SCAFFOLD[cameraPosition.join("")].map((position) => (
         <LayerEdge key={position} layerPosition={position} puzzle={puzzle} />

@@ -1,4 +1,4 @@
-import { useState, useRef, useEffect } from "react";
+import React, { useState, useRef, useEffect } from "react";
 import { Text } from "@react-three/drei";
 import * as THREE from "three";
 
@@ -14,12 +14,11 @@ import {
   useLayerStore,
 } from "../../store/store";
 import checkAnswer from "../../utils/checkAnswer";
-import checkNumberShown from "../../utils/isNumberShown";
 import CUBE_CONSTANT from "../../constants/cube";
 
 import CubeEdge from "./CubeEdge";
 
-function Cube({ position, numbers, size }) {
+function Cube({ position }) {
   const cube = useRef();
   const navigate = useNavigate();
   const { difficulty, stageNumber } = useParams();
@@ -264,25 +263,49 @@ function Cube({ position, numbers, size }) {
               {...CUBE_CONSTANT.HOVER_MATERIAL_ARGS[hoverState]}
             />
           </mesh>
-          {checkNumberShown(position, size, numbers) &&
+
+          {cubeState !== "haze" &&
             markingNumbers[position.join("")] &&
             markingNumbers[position.join("")].map((number) => (
-              <Text
-                key={`${position.join("")}${CUBE_CONSTANT.LAYERS[number[0]]}`}
-                position={CUBE_CONSTANT.LAYERS[number[0]]}
-                fontSize={1}
-                color="#000000"
-                anchorX="center"
-                anchorY="middle"
-                rotation={
-                  number[0] === "UP_LAYER" || number[0] === "DOWN_LAYER"
-                    ? CUBE_CONSTANT.ROTATIONS[number[0]][layerDirection]
-                    : CUBE_CONSTANT.ROTATIONS[number[0]]
-                }
+              <React.Fragment
+                key={CUBE_CONSTANT.LAYERS[number[0]].center + position}
               >
-                {number[1]}
-              </Text>
+                <Text
+                  position={CUBE_CONSTANT.LAYERS[number[0]].center}
+                  fontSize={1}
+                  color="#000000"
+                  anchorX="center"
+                  anchorY="middle"
+                  rotation={
+                    number[0] === "UP_LAYER" || number[0] === "DOWN_LAYER"
+                      ? CUBE_CONSTANT.ROTATIONS[number[0]][layerDirection]
+                      : CUBE_CONSTANT.ROTATIONS[number[0]]
+                  }
+                >
+                  {number[1] > -1 ? number[1] : null}
+                </Text>
+                <Text
+                  position={
+                    number[0] === "UP_LAYER" || number[0] === "DOWN_LAYER"
+                      ? CUBE_CONSTANT.LAYERS[number[0]].corner[layerDirection]
+                      : CUBE_CONSTANT.LAYERS[number[0]].corner
+                  }
+                  fontSize={0.5}
+                  fontWeight="bold"
+                  color="#000000"
+                  anchorX="center"
+                  anchorY="middle"
+                  rotation={
+                    number[0] === "UP_LAYER" || number[0] === "DOWN_LAYER"
+                      ? CUBE_CONSTANT.ROTATIONS[number[0]][layerDirection]
+                      : CUBE_CONSTANT.ROTATIONS[number[0]]
+                  }
+                >
+                  {number[2] - 1 > 0 ? number[2] - 1 : null}
+                </Text>
+              </React.Fragment>
             ))}
+
           <primitive object={edgeLines} />
           <CubeEdge layerPosition="UP" />
           <CubeEdge layerPosition="DOWN" />
