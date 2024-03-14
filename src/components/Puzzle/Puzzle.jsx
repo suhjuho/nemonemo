@@ -12,16 +12,18 @@ import {
 } from "../../store/store";
 
 import Cube from "../Cube/Cube";
-import LayerEdge from "../Edge/LayerEdge";
 
 import CUBE_CONSTANT from "../../constants/cube";
+
+import Scaffold from "../Edge/Scaffold";
+import DefaultScaffold from "../Edge/DefaultScaffold";
 
 function Puzzle({ puzzle }) {
   const { size, positions, showingNumbers } = puzzle;
   const defaultPuzzle = getDefaultPuzzle(size);
 
   const { markingNumbers, setMarkingNumbers } = useMarkingNumbersStore();
-  const { answer, setAnswer } = useAnswerStore();
+  const { answer, setAnswer, setIsComplete } = useAnswerStore();
   const { cubeStates, setCubeStates, setCubeStatesHistory, setHistoryIndex } =
     useCubeStatesStore();
   const { cameraPosition } = useCameraPositionStore();
@@ -53,10 +55,11 @@ function Puzzle({ puzzle }) {
       newLayers.push(z);
     }
 
-    setCurrentLayer(puzzle.size[2]);
     setLayers(newLayers);
+    setCurrentLayer(puzzle.size[2]);
 
     setAnswer(answer);
+    setIsComplete(false);
     setCubeStates(cubeStates);
     setCubeStatesHistory([JSON.parse(JSON.stringify(cubeStates))]);
     setHistoryIndex(0);
@@ -68,8 +71,25 @@ function Puzzle({ puzzle }) {
       {defaultPuzzle.map((position) => (
         <Cube key={position} position={position}></Cube>
       ))}
+
       {CUBE_CONSTANT.BACK_SCAFFOLD[cameraPosition.join("")].map((position) => (
-        <LayerEdge key={position} layerPosition={position} puzzle={puzzle} />
+        <DefaultScaffold
+          key={position}
+          layerPosition={position}
+          size={puzzle.size}
+          color="#ff0000"
+          thickness={0.01}
+        />
+      ))}
+
+      {CUBE_CONSTANT.BACK_SCAFFOLD[cameraPosition.join("")].map((position) => (
+        <Scaffold
+          key={position}
+          layerPosition={position}
+          size={puzzle.size}
+          color="#ffffff"
+          thickness={0.02}
+        />
       ))}
     </>
   );
