@@ -16,7 +16,9 @@ import {
   useOrbitControlStore,
   useCameraPositionStore,
   useLayerStore,
+  useAnswerStore,
 } from "../../store/store";
+import { GameCompleteModal } from "../GameCompleteModal/GameCompleteModal";
 
 const Stage = styled.div`
   position: relative;
@@ -31,6 +33,7 @@ function GameStage() {
   const { layerDirection, setLayerDirection, setCurrentLayer, setLayers } =
     useLayerStore();
   const { difficulty, stageNumber } = useParams();
+  const { isComplete } = useAnswerStore();
   const controls = useRef();
   const camera = useRef();
 
@@ -73,9 +76,8 @@ function GameStage() {
 
         setCurrentLayer(puzzle.size[0]);
         setLayers(newLayers);
+        setLayerDirection("RIGHT");
       }
-
-      setLayerDirection("RIGHT");
     } else if (Z >= X && Z < -1 * X) {
       if (layerDirection !== "LEFT") {
         const newLayers = [];
@@ -86,9 +88,8 @@ function GameStage() {
 
         setCurrentLayer(1);
         setLayers(newLayers);
+        setLayerDirection("LEFT");
       }
-
-      setLayerDirection("LEFT");
     } else if (Z >= X && Z >= -1 * X) {
       if (layerDirection !== "FRONT") {
         const newLayers = [];
@@ -99,9 +100,8 @@ function GameStage() {
 
         setCurrentLayer(puzzle.size[2]);
         setLayers(newLayers);
+        setLayerDirection("FRONT");
       }
-
-      setLayerDirection("FRONT");
     } else if (Z < X && Z < -1 * X) {
       if (layerDirection !== "BACK") {
         const newLayers = [];
@@ -112,9 +112,8 @@ function GameStage() {
 
         setCurrentLayer(1);
         setLayers(newLayers);
+        setLayerDirection("BACK");
       }
-
-      setLayerDirection("BACK");
     }
   }
 
@@ -128,6 +127,7 @@ function GameStage() {
 
   return (
     <Stage>
+      {isComplete && <GameCompleteModal />}
       <GameStageHeader title={puzzle.title} />
       <GameStageSideBar />
       <GameStageFooter />
@@ -150,7 +150,7 @@ function GameStage() {
 
         <Puzzle puzzle={puzzle} />
         <BackGround />
-        <axesHelper scale={[10, 10, 10]} />
+        {/* <axesHelper scale={[10, 10, 10]} /> */}
 
         <OrbitControls
           ref={controls}

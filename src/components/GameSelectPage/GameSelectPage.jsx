@@ -1,4 +1,4 @@
-import { useRef, useMemo, useState } from "react";
+import { useRef, useMemo, useState, useEffect } from "react";
 import { Canvas } from "@react-three/fiber";
 import { OrthographicCamera, OrbitControls, Text } from "@react-three/drei";
 
@@ -7,6 +7,7 @@ import styled from "styled-components";
 import { useNavigate } from "react-router-dom";
 import GameSelectBackground from "./GameSelectBackground";
 import GameStageHeader from "../Header/GameStageHeader";
+import { useAnswerStore } from "../../store/store";
 
 const Stage = styled.div`
   position: relative;
@@ -21,6 +22,12 @@ function GameSelectPage() {
   const [isHoveredEasy, setIsHoveredEasy] = useState(false);
   const [isHoveredNormal, setIsHoveredNormal] = useState(false);
   const [isHoveredHard, setIsHoveredHard] = useState(false);
+
+  const { setIsComplete } = useAnswerStore();
+
+  useEffect(() => {
+    setIsComplete(false);
+  }, []);
 
   return (
     <Stage>

@@ -116,7 +116,9 @@ const markingNumbersStore = (set) => ({
 
 const answerStore = (set) => ({
   answer: {},
+  isComplete: false,
   setAnswer: (newAnswer) => set({ newAnswer }),
+  setIsComplete: (isComplete) => set({ isComplete }),
 });
 
 const cubeStatesStore = (set) => ({

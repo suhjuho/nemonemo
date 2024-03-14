@@ -20,7 +20,7 @@ const Header = styled.header`
 
   .title {
     font-size: 3rem;
-    width: 25%;
+    width: 40%;
     color: orange;
     text-align: center;
   }
@@ -29,8 +29,15 @@ const Header = styled.header`
     font-size: 3rem;
   }
 
+  .header-left-icons {
+    width: 200px;
+  }
+
   .header-right-icons {
+    width: 200px;
     position: relative;
+    display: flex;
+    justify-content: end;
   }
 
   .settingButton {
@@ -83,13 +90,21 @@ function GameStageHeader({ title }) {
 
   return (
     <Header>
-      <IoIosBackspace className="backButton" />
-      <div className="title" onClick={handleClick}>
-        {isHintOpen ? title : "Hint"}
+      <div className="header-left-icons">
+        <IoIosBackspace className="backButton" />
       </div>
-      <div className="timer">
-        <Timer />
-      </div>
+      {title === "main" ? (
+        <div className="title">NEMO NEMO</div>
+      ) : (
+        <>
+          <div className="title" onClick={handleClick}>
+            {isHintOpen ? title : "Hint"}
+          </div>
+          <div className="timer">
+            <Timer />
+          </div>
+        </>
+      )}
       <div className="header-right-icons">
         <FcSpeaker onClick={handleSound} className="soundButton" />
         {!isMuted && <RxCross1 onClick={handleSound} className="crossSign" />}

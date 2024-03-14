@@ -18,7 +18,7 @@ function BackGround() {
   const { clickMode, setClickMode } = useClickModeStore();
   const { setOrbitEnableState } = useOrbitControlStore();
   const { setIsRightClick } = useRightClickStore();
-  const { answer } = useAnswerStore();
+  const { answer, setIsComplete } = useAnswerStore();
   const {
     cubeStates,
     cubeStatesHistory,
@@ -53,7 +53,7 @@ function BackGround() {
     }
 
     if (checkAnswer(answer, cubeStates)) {
-      navigate(`/completion/${difficulty}/${stageNumber}`);
+      setIsComplete(true);
     }
   };
 
