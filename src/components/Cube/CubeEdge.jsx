@@ -81,7 +81,7 @@ function CubeEdge({ layerPosition }) {
             key={layerPosition + startPos + endPos}
             start={new THREE.Vector3(...startPos)}
             end={new THREE.Vector3(...endPos)}
-            thickness={0.015}
+            thickness={0.025}
             color="#000000"
           />
         );

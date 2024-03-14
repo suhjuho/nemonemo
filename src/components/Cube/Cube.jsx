@@ -29,7 +29,7 @@ function Cube({ position }) {
   const [hoverState, setHoverState] = useState("default");
 
   const { markingNumbers } = useMarkingNumbersStore();
-  const { answer } = useAnswerStore();
+  const { answer, setIsComplete } = useAnswerStore();
   const { clickMode } = useClickModeStore();
   const { isRightClick, setIsRightClick } = useRightClickStore();
   const { dragPosition, setDragPosition } = useDragPositionStore();
@@ -112,12 +112,15 @@ function Cube({ position }) {
 
       if (isInside) {
         if (CUBE_CONSTANT.INSIDE_DIRECTIONS.includes(layerDirection)) {
-          if (targetPosition === layers[currentLayer - 1]) {
+          if (currentLayer > 1 && targetPosition === layers[currentLayer - 1]) {
             setIsHidden(true);
             setCurrentLayer(currentLayer - 1);
           }
         } else if (CUBE_CONSTANT.OUTSIDE_DIRECTIONS.includes(layerDirection)) {
-          if (targetPosition === layers[currentLayer - 1]) {
+          if (
+            currentLayer < layers.length &&
+            targetPosition === layers[currentLayer - 1]
+          ) {
             setIsHidden(true);
             setCurrentLayer(currentLayer + 1);
           }
@@ -239,7 +242,7 @@ function Cube({ position }) {
     setHistoryIndex(cubeStatesHistory.length - 1);
 
     if (checkAnswer(answer, cubeStates)) {
-      navigate(`/completion/${difficulty}/${stageNumber}`);
+      setIsComplete(true);
     }
   };
 
