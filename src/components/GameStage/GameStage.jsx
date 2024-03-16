@@ -1,7 +1,7 @@
 import { Canvas } from "@react-three/fiber";
 import { OrthographicCamera, OrbitControls } from "@react-three/drei";
 import { useParams } from "react-router-dom";
-import { useEffect, useRef } from "react";
+import { useEffect, useRef, useState } from "react";
 import styled from "styled-components";
 
 import Puzzle from "../Puzzle/Puzzle";
@@ -14,11 +14,13 @@ import {
   usePuzzlesStore,
   useClickModeStore,
   useOrbitControlStore,
-  useCameraPositionStore,
-  useLayerStore,
   useAnswerStore,
 } from "../../store/store";
 import { GameCompleteModal } from "../GameCompleteModal/GameCompleteModal";
+import AutoCamera from "../Edge/AutoCamera";
+
+import getMarkingNumbers from "../../utils/getMarkingNumbers";
+import getDefaultPuzzle from "../../utils/getDefaultPuzzle";
 
 const Stage = styled.div`
   position: relative;
@@ -29,15 +31,38 @@ function GameStage() {
   const { puzzles } = usePuzzlesStore();
   const { clickMode, setClickMode } = useClickModeStore();
   const { isOrbitEnable } = useOrbitControlStore();
-  const { setCameraPosition } = useCameraPositionStore();
-  const { layerDirection, setLayerDirection, setCurrentLayer, setLayers } =
-    useLayerStore();
   const { difficulty, stageNumber } = useParams();
   const { isComplete } = useAnswerStore();
   const controls = useRef();
   const camera = useRef();
 
   const puzzle = puzzles[difficulty][stageNumber];
+  const { size, answers, showingNumbers } = puzzle;
+
+  const defaultPuzzle = getDefaultPuzzle(size);
+  const [markingNumbers, setMarkingNumbers] = useState({});
+
+  useEffect(() => {
+    const numbers = getMarkingNumbers(answers, showingNumbers, size);
+
+    setMarkingNumbers(numbers);
+    console.log(numbers);
+  }, []);
+
+  // useEffect(() => {
+  //   const numbers = {};
+
+  //   defaultPuzzle.forEach((position) => {
+  //     numbers[position.join("")] = getMarkingNumbers(
+  //       position,
+  //       answers,
+  //       size,
+  //       showingNumbers,
+  //     );
+  //   });
+
+  //   setMarkingNumbers(numbers);
+  // }, []);
 
   useEffect(() => {
     function handleContextMenu(event) {
@@ -54,77 +79,6 @@ function GameStage() {
     return () => window.removeEventListener("keydown", handleContextMenu);
   }, [clickMode]);
 
-  function checkCameraPosition(cameraPosition) {
-    const posX = cameraPosition.x >= 0 ? 1 : 0;
-    const posY = cameraPosition.y >= 0 ? 1 : 0;
-    const posZ = cameraPosition.z >= 0 ? 1 : 0;
-
-    return [posX, posY, posZ];
-  }
-
-  function checkLayerDirection(cameraPosition) {
-    const X = cameraPosition.x;
-    const Z = cameraPosition.z;
-
-    if (Z < X && Z >= -1 * X) {
-      if (layerDirection !== "RIGHT") {
-        const newLayers = [];
-
-        for (let x = -1 * puzzle.size[0] + 1; x <= puzzle.size[0] - 1; x += 2) {
-          newLayers.push(x);
-        }
-
-        setCurrentLayer(puzzle.size[0]);
-        setLayers(newLayers);
-        setLayerDirection("RIGHT");
-      }
-    } else if (Z >= X && Z < -1 * X) {
-      if (layerDirection !== "LEFT") {
-        const newLayers = [];
-
-        for (let x = -1 * puzzle.size[0] + 1; x <= puzzle.size[0] - 1; x += 2) {
-          newLayers.push(x);
-        }
-
-        setCurrentLayer(1);
-        setLayers(newLayers);
-        setLayerDirection("LEFT");
-      }
-    } else if (Z >= X && Z >= -1 * X) {
-      if (layerDirection !== "FRONT") {
-        const newLayers = [];
-
-        for (let z = -1 * puzzle.size[2] + 1; z <= puzzle.size[2] - 1; z += 2) {
-          newLayers.push(z);
-        }
-
-        setCurrentLayer(puzzle.size[2]);
-        setLayers(newLayers);
-        setLayerDirection("FRONT");
-      }
-    } else if (Z < X && Z < -1 * X) {
-      if (layerDirection !== "BACK") {
-        const newLayers = [];
-
-        for (let z = -1 * puzzle.size[2] + 1; z <= puzzle.size[2] - 1; z += 2) {
-          newLayers.push(z);
-        }
-
-        setCurrentLayer(1);
-        setLayers(newLayers);
-        setLayerDirection("BACK");
-      }
-    }
-  }
-
-  const handleRotate = () => {
-    const cam = camera.current;
-    const position = cam.position.clone();
-
-    setCameraPosition(checkCameraPosition(position));
-    checkLayerDirection(position);
-  };
-
   return (
     <Stage>
       {isComplete && <GameCompleteModal />}
@@ -138,28 +92,33 @@ function GameStage() {
         <directionalLight intensity={1} position={[10, 5, -10]} />
         <directionalLight intensity={1} position={[10, 5, 10]} />
 
+        <AutoCamera puzzle={puzzle} />
+
         <OrthographicCamera
           ref={camera}
           makeDefault
-          position={[-10, 10, 10]}
+          position={[-12, 12, 12]}
           fov={100}
           near={1}
           far={1000}
           zoom={Math.floor(300 / Math.max(...puzzle.size))}
         />
 
-        <Puzzle puzzle={puzzle} />
+        <Puzzle
+          puzzle={puzzle}
+          markingNumbers={markingNumbers}
+          defaultPuzzle={defaultPuzzle}
+        />
         <BackGround />
-        {/* <axesHelper scale={[10, 10, 10]} /> */}
+        <axesHelper scale={[10, 10, 10]} />
 
         <OrbitControls
           ref={controls}
           enableZoom={false}
           enablePan={false}
           enabled={isOrbitEnable}
-          enableDamping
-          dampingFactor={0.2}
-          onChange={handleRotate}
+          enableDamping={false}
+          // dampingFactor={0.2}
         />
       </Canvas>
     </Stage>
