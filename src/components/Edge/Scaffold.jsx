@@ -47,7 +47,7 @@ function Scaffold({ layerPosition, size, color, thickness }) {
   cornerDots[3][indexTwo] = size[indexTwo];
 
   if (layerDirection === "FRONT") {
-    const zPosition = 2 * currentLayer - size[2]; // size[2] - (size[2] - currentLayer) * 2;
+    const zPosition = 2 * currentLayer - size[2];
 
     cornerDots.forEach((cornerDot) => {
       cornerDot[2] = zPosition < cornerDot[2] ? zPosition : cornerDot[2];
@@ -63,7 +63,7 @@ function Scaffold({ layerPosition, size, color, thickness }) {
   }
 
   if (layerDirection === "RIGHT") {
-    const xPosition = 2 * currentLayer - size[0]; // size[0] - (size[0] - currentLayer) * 2;
+    const xPosition = 2 * currentLayer - size[0];
 
     cornerDots.forEach((cornerDot) => {
       cornerDot[0] = xPosition < cornerDot[0] ? xPosition : cornerDot[0];

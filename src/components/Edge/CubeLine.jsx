@@ -1,19 +1,11 @@
 import { useRef } from "react";
 import * as THREE from "three";
 
-function GridLine({ start, end, thickness, color }) {
+function CubeLine({ start, end, cubeLineGeometry, cubeLineMaterial }) {
   const line = useRef();
 
   const direction = new THREE.Vector3().subVectors(end, start).normalize();
-  const length = start.distanceTo(end);
-  const cylinderGeometry = new THREE.CylinderGeometry(
-    thickness,
-    thickness,
-    length,
-    8,
-  );
-  const cylinderMaterial = new THREE.MeshBasicMaterial({ color });
-  const cylinder = new THREE.Mesh(cylinderGeometry, cylinderMaterial);
+  const cylinder = new THREE.Mesh(cubeLineGeometry, cubeLineMaterial);
 
   const center = new THREE.Vector3(
     (start.x + end.x) / 2,
@@ -26,4 +18,4 @@ function GridLine({ start, end, thickness, color }) {
   return <primitive object={cylinder} ref={line} />;
 }
 
-export default GridLine;
+export default CubeLine;

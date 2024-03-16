@@ -1,17 +1,16 @@
 import { useMemo } from "react";
 import * as THREE from "three";
-
-import GridLine from "./GridLine";
+import { Line } from "@react-three/drei";
 
 function verifyCornerDots(cornerDots) {
   const xPositions = [
-    ...new Set(cornerDots.map((gridLine) => gridLine[0])),
+    ...new Set(cornerDots.map((cornerDot) => cornerDot[0])),
   ].sort();
   const yPositions = [
-    ...new Set(cornerDots.map((gridLine) => gridLine[1])),
+    ...new Set(cornerDots.map((cornerDot) => cornerDot[1])),
   ].sort();
   const zPositions = [
-    ...new Set(cornerDots.map((gridLine) => gridLine[2])),
+    ...new Set(cornerDots.map((cornerDot) => cornerDot[2])),
   ].sort();
 
   if (xPositions.length + yPositions.length + zPositions.length !== 5) {
@@ -28,19 +27,8 @@ function RectangleGrid({ cornerDots, color, thickness }) {
     verifyCornerDots(cornerDots);
 
   if (result === "ng") {
-    console.log();
     return null;
   }
-
-  // const xPositions = [
-  //   ...new Set(cornerDots.map((gridLine) => gridLine[0])),
-  // ].sort();
-  // const yPositions = [
-  //   ...new Set(cornerDots.map((gridLine) => gridLine[1])),
-  // ].sort();
-  // const zPositions = [
-  //   ...new Set(cornerDots.map((gridLine) => gridLine[2])),
-  // ].sort();
 
   // y축 고정
   if (yPositions.length === 1) {
@@ -96,12 +84,14 @@ function RectangleGrid({ cornerDots, color, thickness }) {
   const lines = useMemo(
     () =>
       gridDots.map((gridDot) => (
-        <GridLine
+        <Line
           key={`${gridDot.start.join("")}${gridDot.end.join("")}`}
-          start={new THREE.Vector3(...gridDot.start)}
-          end={new THREE.Vector3(...gridDot.end)}
-          thickness={thickness}
+          points={[
+            new THREE.Vector3(...gridDot.start),
+            new THREE.Vector3(...gridDot.end),
+          ]}
           color={color}
+          lineWidth={thickness}
         />
       )),
     [cornerDots],
