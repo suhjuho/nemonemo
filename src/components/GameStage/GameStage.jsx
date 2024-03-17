@@ -1,5 +1,6 @@
 import { Canvas } from "@react-three/fiber";
 import { OrthographicCamera, OrbitControls } from "@react-three/drei";
+
 import { useParams } from "react-router-dom";
 import { useEffect, useRef, useState } from "react";
 import styled from "styled-components";
@@ -10,12 +11,14 @@ import GameStageHeader from "../Header/GameStageHeader";
 import GameStageSideBar from "../SideBar/GameStageSideBar";
 import GameStageFooter from "../Footer/GameStageFooter";
 
+import usePuzzlesStore from "../../store/puzzle";
+
 import {
-  usePuzzlesStore,
   useClickModeStore,
   useOrbitControlStore,
   useAnswerStore,
 } from "../../store/store";
+
 import { GameCompleteModal } from "../GameCompleteModal/GameCompleteModal";
 import AutoCamera from "../Edge/AutoCamera";
 

@@ -6,7 +6,7 @@ import { useCameraPositionStore, useLayerStore } from "../../store/store";
 function AutoCamera({ puzzle }) {
   const { camera } = useThree();
   const { setCameraPosition } = useCameraPositionStore();
-  const { layerDirection, setLayerDirection, setCurrentLayer, setLayers } =
+  const { layerDirection, setLayerDirection, setCurrentLayer } =
     useLayerStore();
 
   const [prevPosition, setPrevPosition] = useState({ x: 0, y: 0, z: 0 });
@@ -25,50 +25,22 @@ function AutoCamera({ puzzle }) {
 
     if (Z < X && Z >= -1 * X) {
       if (layerDirection !== "RIGHT") {
-        const newLayers = [];
-
-        for (let x = -1 * puzzle.size[0] + 1; x <= puzzle.size[0] - 1; x += 2) {
-          newLayers.push(x);
-        }
-
         setCurrentLayer(puzzle.size[0]);
-        setLayers(newLayers);
         setLayerDirection("RIGHT");
       }
     } else if (Z >= X && Z < -1 * X) {
       if (layerDirection !== "LEFT") {
-        const newLayers = [];
-
-        for (let x = -1 * puzzle.size[0] + 1; x <= puzzle.size[0] - 1; x += 2) {
-          newLayers.push(x);
-        }
-
         setCurrentLayer(1);
-        setLayers(newLayers);
         setLayerDirection("LEFT");
       }
     } else if (Z >= X && Z >= -1 * X) {
       if (layerDirection !== "FRONT") {
-        const newLayers = [];
-
-        for (let z = -1 * puzzle.size[2] + 1; z <= puzzle.size[2] - 1; z += 2) {
-          newLayers.push(z);
-        }
-
         setCurrentLayer(puzzle.size[2]);
-        setLayers(newLayers);
         setLayerDirection("FRONT");
       }
     } else if (Z < X && Z < -1 * X) {
       if (layerDirection !== "BACK") {
-        const newLayers = [];
-
-        for (let z = -1 * puzzle.size[2] + 1; z <= puzzle.size[2] - 1; z += 2) {
-          newLayers.push(z);
-        }
-
         setCurrentLayer(1);
-        setLayers(newLayers);
         setLayerDirection("BACK");
       }
     }
