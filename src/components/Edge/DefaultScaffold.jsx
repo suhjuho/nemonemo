@@ -1,19 +1,11 @@
 import RectangleGrid from "./RectangleGrid";
 
-const GRID_POSITION = {
-  LAYER: {
-    UP: [1, 0, 2],
-    DOWN: [1, 0, 2],
-    LEFT: [0, 1, 2],
-    RIGHT: [0, 1, 2],
-    BACK: [2, 0, 1],
-    FORTH: [2, 0, 1],
-  },
-};
+import GRID_CONSTANT from "../../constants/Grid";
 
 function DefaultScaffold({ layerPosition, size, color, thickness }) {
   const centerPosition = [0, 0, 0];
-  const [fixedIndex, indexOne, indexTwo] = GRID_POSITION.LAYER[layerPosition];
+  const [fixedIndex, indexOne, indexTwo] =
+    GRID_CONSTANT.POSITION.LAYER[layerPosition];
 
   centerPosition[fixedIndex] = size[fixedIndex];
 
