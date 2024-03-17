@@ -1,10 +1,6 @@
-import React, { useState, useRef, useEffect } from "react";
-import { Text } from "@react-three/drei";
-import * as THREE from "three";
+import React, { useState, useRef, useEffect, useMemo } from "react";
 
-import { useNavigate, useParams } from "react-router-dom";
 import {
-  useMarkingNumbersStore,
   useAnswerStore,
   useClickModeStore,
   useCubeStatesStore,
@@ -17,18 +13,21 @@ import checkAnswer from "../../utils/checkAnswer";
 import CUBE_CONSTANT from "../../constants/cube";
 
 import CubeEdge from "./CubeEdge";
+import CubeNumbers from "./CubeNumbers";
 
-function Cube({ position }) {
+function Cube({
+  position,
+  cubeGeometry,
+  cubeLineGeometry,
+  markingNumbers,
+  positivePosition,
+}) {
   const cube = useRef();
-  const navigate = useNavigate();
-  const { difficulty, stageNumber } = useParams();
   const [isClicked, setIsClicked] = useState(false);
   const [isRemoved, setIsRemoved] = useState(false);
   const [isHidden, setIsHidden] = useState(false);
-  const [cubeState, setCubeState] = useState("blank");
   const [hoverState, setHoverState] = useState("default");
 
-  const { markingNumbers } = useMarkingNumbersStore();
   const { answer, setIsComplete } = useAnswerStore();
   const { clickMode } = useClickModeStore();
   const { isRightClick, setIsRightClick } = useRightClickStore();
@@ -44,16 +43,6 @@ function Cube({ position }) {
   } = useCubeStatesStore();
   const { layerDirection, layers, currentLayer, setCurrentLayer } =
     useLayerStore();
-
-  const edges = new THREE.EdgesGeometry(
-    new THREE.BoxGeometry(2.01, 2.01, 2.01),
-  );
-  const lineMaterial = new THREE.LineBasicMaterial({
-    color: 0x00000,
-    linecap: "round",
-    linejoin: "round",
-  });
-  const edgeLines = new THREE.LineSegments(edges, lineMaterial);
 
   function saveCubeStates() {
     cubeStates[position.join("")] = { isClicked, isRemoved, isHidden };
@@ -86,19 +75,18 @@ function Cube({ position }) {
     return result;
   }
 
+  const cubeState = useMemo(
+    () => checkCubeState(),
+    [isClicked, isRemoved, clickMode, isHidden],
+  );
+
   useEffect(() => {
     setIsHidden(false);
   }, [layerDirection]);
 
   useEffect(() => {
-    setCubeState(checkCubeState());
-
     saveCubeStates();
   }, [isClicked, isRemoved, clickMode]);
-
-  useEffect(() => {
-    setCubeState(checkCubeState());
-  }, [isHidden]);
 
   useEffect(() => {
     function handleLayerChange(event) {
@@ -258,8 +246,8 @@ function Cube({ position }) {
             onPointerEnter={handleDrag}
             onPointerOver={() => setHoverState("hover")}
             onPointerLeave={() => setHoverState("default")}
+            geometry={cubeGeometry}
           >
-            <boxGeometry args={[2, 2, 2]} />
             <meshStandardMaterial
               transparent
               {...CUBE_CONSTANT.MATERIAL_ARGS[cubeState]}
@@ -267,55 +255,14 @@ function Cube({ position }) {
             />
           </mesh>
 
-          {cubeState !== "haze" &&
-            markingNumbers[position.join("")] &&
-            markingNumbers[position.join("")].map((number) => (
-              <React.Fragment
-                key={CUBE_CONSTANT.LAYERS[number[0]].center + position}
-              >
-                <Text
-                  position={CUBE_CONSTANT.LAYERS[number[0]].center}
-                  fontSize={1}
-                  color="#000000"
-                  anchorX="center"
-                  anchorY="middle"
-                  rotation={
-                    number[0] === "UP_LAYER" || number[0] === "DOWN_LAYER"
-                      ? CUBE_CONSTANT.ROTATIONS[number[0]][layerDirection]
-                      : CUBE_CONSTANT.ROTATIONS[number[0]]
-                  }
-                >
-                  {number[1] > -1 ? number[1] : null}
-                </Text>
-                <Text
-                  position={
-                    number[0] === "UP_LAYER" || number[0] === "DOWN_LAYER"
-                      ? CUBE_CONSTANT.LAYERS[number[0]].corner[layerDirection]
-                      : CUBE_CONSTANT.LAYERS[number[0]].corner
-                  }
-                  fontSize={0.5}
-                  fontWeight="bold"
-                  color="#000000"
-                  anchorX="center"
-                  anchorY="middle"
-                  rotation={
-                    number[0] === "UP_LAYER" || number[0] === "DOWN_LAYER"
-                      ? CUBE_CONSTANT.ROTATIONS[number[0]][layerDirection]
-                      : CUBE_CONSTANT.ROTATIONS[number[0]]
-                  }
-                >
-                  {number[2] - 1 > 0 ? number[2] - 1 : null}
-                </Text>
-              </React.Fragment>
-            ))}
+          {cubeState !== "haze" && (
+            <CubeNumbers
+              markingNumbers={markingNumbers}
+              positivePosition={positivePosition}
+            />
+          )}
 
-          <primitive object={edgeLines} />
-          <CubeEdge layerPosition="UP" />
-          <CubeEdge layerPosition="DOWN" />
-          <CubeEdge layerPosition="LEFT" />
-          <CubeEdge layerPosition="RIGHT" />
-          <CubeEdge layerPosition="BACK" />
-          <CubeEdge layerPosition="FORWARD" />
+          <CubeEdge cubeLineGeometry={cubeLineGeometry} />
         </>
       )}
     </group>
