@@ -50,9 +50,9 @@ const CUBE_CONSTANT = {
     RIGHT_LAYER: [0, Math.PI / 2, 0],
   },
   MATERIAL_ARGS: {
-    blank: { color: "#ffffff" },
-    marked: { color: "#55cd55" },
-    invisible: {},
+    blank: { opacity: 1, color: "#ffffff" },
+    marked: { opacity: 1, color: "#55cd55" },
+    invisible: { color: "#ffffff" },
     haze: { opacity: 0.2, color: "#96c1f0" },
   },
   HOVER_MATERIAL_ARGS: {
@@ -69,12 +69,12 @@ const CUBE_CONSTANT = {
     100: ["FORTH", "LEFT", "UP"],
     "000": ["FORTH", "RIGHT", "UP"],
   },
-  INSIDE_CUBE_KEYS: ["q", "Q", "ㅂ"],
-  OUTSIDE_CUBE_KEYS: ["w", "W", "ㅈ"],
-  UNDO_KEYS: ["z", "Z", "ㅋ"],
-  REDO_KEYS: ["x", "X", "ㅌ"],
-  INSIDE_DIRECTIONS: ["FRONT", "RIGHT"],
-  OUTSIDE_DIRECTIONS: ["BACK", "LEFT"],
+  INSIDE_CUBE_KEYS: { q: true, Q: true, ㅂ: true },
+  OUTSIDE_CUBE_KEYS: { w: true, W: true, ㅈ: true },
+  UNDO_KEYS: { z: true, Z: true, ㅋ: true },
+  REDO_KEYS: { x: true, X: true, ㅌ: true },
+  INSIDE_DIRECTIONS: { FRONT: true, RIGHT: true },
+  OUTSIDE_DIRECTIONS: { BACK: true, LEFT: true },
 };
 
 export default CUBE_CONSTANT;

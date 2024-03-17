@@ -1,4 +1,11 @@
-import React, { useState, useRef, useEffect, useMemo } from "react";
+import React, {
+  useState,
+  useRef,
+  useEffect,
+  useMemo,
+  useCallback,
+} from "react";
+import { useSpring, animated, config } from "@react-spring/three";
 
 import {
   useAnswerStore,
@@ -26,7 +33,8 @@ function Cube({
   const [isClicked, setIsClicked] = useState(false);
   const [isRemoved, setIsRemoved] = useState(false);
   const [isHidden, setIsHidden] = useState(false);
-  const [hoverState, setHoverState] = useState("default");
+  const [isHover, setIsHover] = useState(false);
+  const [isVisible, setIsVisible] = useState(true);
 
   const { answer, setIsComplete } = useAnswerStore();
   const { clickMode } = useClickModeStore();
@@ -80,6 +88,24 @@ function Cube({
     [isClicked, isRemoved, clickMode, isHidden],
   );
 
+  const { color, opacity } = useSpring({
+    color: CUBE_CONSTANT.MATERIAL_ARGS[cubeState].color,
+    opacity: CUBE_CONSTANT.MATERIAL_ARGS[cubeState].opacity,
+    config: config.wobbly,
+  });
+
+  const { scale } = useSpring({
+    scale: cubeState === "invisible" ? [0.01, 0.01, 0.01] : [1, 1, 1],
+    onStart: () => {
+      setIsVisible(true);
+    },
+    onRest: () => {
+      if (cubeState === "invisible") {
+        setIsVisible(false);
+      }
+    },
+  });
+
   useEffect(() => {
     setIsHidden(false);
   }, [layerDirection]);
@@ -90,24 +116,24 @@ function Cube({
 
   useEffect(() => {
     function handleLayerChange(event) {
-      const isInside = CUBE_CONSTANT.INSIDE_CUBE_KEYS.includes(event.key);
-      const isOutside = CUBE_CONSTANT.OUTSIDE_CUBE_KEYS.includes(event.key);
+      const isInside = CUBE_CONSTANT.INSIDE_CUBE_KEYS[event.key];
+      const isOutside = CUBE_CONSTANT.OUTSIDE_CUBE_KEYS[event.key];
 
-      const targetPosition =
+      const [targetPosition, layer] =
         layerDirection === "FRONT" || layerDirection === "BACK"
-          ? position[2]
-          : position[0];
+          ? [position[2], layers.z]
+          : [position[0], layers.x];
 
       if (isInside) {
-        if (CUBE_CONSTANT.INSIDE_DIRECTIONS.includes(layerDirection)) {
-          if (currentLayer > 1 && targetPosition === layers[currentLayer - 1]) {
+        if (CUBE_CONSTANT.INSIDE_DIRECTIONS[layerDirection]) {
+          if (currentLayer > 1 && targetPosition === layer[currentLayer - 1]) {
             setIsHidden(true);
             setCurrentLayer(currentLayer - 1);
           }
-        } else if (CUBE_CONSTANT.OUTSIDE_DIRECTIONS.includes(layerDirection)) {
+        } else if (CUBE_CONSTANT.OUTSIDE_DIRECTIONS[layerDirection]) {
           if (
-            currentLayer < layers.length &&
-            targetPosition === layers[currentLayer - 1]
+            currentLayer < layer.length &&
+            targetPosition === layer[currentLayer - 1]
           ) {
             setIsHidden(true);
             setCurrentLayer(currentLayer + 1);
@@ -116,13 +142,13 @@ function Cube({
       }
 
       if (isOutside) {
-        if (CUBE_CONSTANT.INSIDE_DIRECTIONS.includes(layerDirection)) {
-          if (targetPosition === layers[currentLayer]) {
+        if (CUBE_CONSTANT.INSIDE_DIRECTIONS[layerDirection]) {
+          if (targetPosition === layer[currentLayer]) {
             setIsHidden(false);
             setCurrentLayer(currentLayer + 1);
           }
-        } else if (CUBE_CONSTANT.OUTSIDE_DIRECTIONS.includes(layerDirection)) {
-          if (targetPosition === layers[currentLayer - 2]) {
+        } else if (CUBE_CONSTANT.OUTSIDE_DIRECTIONS[layerDirection]) {
+          if (targetPosition === layer[currentLayer - 2]) {
             setIsHidden(false);
             setCurrentLayer(currentLayer - 1);
           }
@@ -136,8 +162,8 @@ function Cube({
 
   useEffect(() => {
     function handleCubeHistory(event) {
-      const isUndo = CUBE_CONSTANT.UNDO_KEYS.includes(event.key);
-      const isRedo = CUBE_CONSTANT.REDO_KEYS.includes(event.key);
+      const isUndo = CUBE_CONSTANT.UNDO_KEYS[event.key];
+      const isRedo = CUBE_CONSTANT.REDO_KEYS[event.key];
 
       if (isUndo && historyIndex > 0) {
         const newCubeStates = cubeStatesHistory[historyIndex - 1];
@@ -145,7 +171,7 @@ function Cube({
         setHistoryIndex(historyIndex - 1);
         setIsClicked(newCubeStates[position.join("")].isClicked);
         setIsRemoved(newCubeStates[position.join("")].isRemoved);
-        setHoverState("default");
+        setIsHover(false);
       }
 
       if (isRedo && historyIndex < cubeStatesHistory.length - 1) {
@@ -154,7 +180,7 @@ function Cube({
         setHistoryIndex(historyIndex + 1);
         setIsClicked(newCubeStates[position.join("")].isClicked);
         setIsRemoved(newCubeStates[position.join("")].isRemoved);
-        setHoverState("default");
+        setIsHover(false);
       }
     }
 
@@ -162,7 +188,7 @@ function Cube({
     return () => window.removeEventListener("keydown", handleCubeHistory);
   }, [cubeStates, cubeStatesHistory, historyIndex]);
 
-  function handleRightClick(event) {
+  const handleRightClick = useCallback((event) => {
     event.stopPropagation();
     setOrbitEnableState(false);
     setIsRightClick(true);
@@ -170,9 +196,9 @@ function Cube({
 
     setIsClicked(false);
     setIsRemoved(true);
-  }
+  });
 
-  function handleDrag(event) {
+  const handleDrag = useCallback((event) => {
     event.stopPropagation();
 
     if (isOrbitEnable) {
@@ -196,9 +222,9 @@ function Cube({
       setIsClicked(false);
       setIsRemoved(!isRemoved);
     }
-  }
+  });
 
-  const handleDragStart = (event) => {
+  const handleDragStart = useCallback((event) => {
     event.stopPropagation();
     setOrbitEnableState(false);
 
@@ -210,7 +236,7 @@ function Cube({
       setIsClicked(false);
       setIsRemoved(!isRemoved);
     }
-  };
+  });
 
   const handleDragEnd = (event) => {
     event.stopPropagation();
@@ -236,33 +262,38 @@ function Cube({
 
   return (
     <group position={position}>
-      {cubeState === "invisible" ? null : (
+      {isVisible && (
         <>
-          <mesh
+          <animated.mesh
             ref={cube}
             onContextMenu={handleRightClick}
             onPointerDown={handleDragStart}
             onPointerUp={handleDragEnd}
             onPointerEnter={handleDrag}
-            onPointerOver={() => setHoverState("hover")}
-            onPointerLeave={() => setHoverState("default")}
+            onPointerOver={() => {
+              setIsHover(true);
+            }}
+            onPointerLeave={() => setIsHover(false)}
             geometry={cubeGeometry}
+            scale={scale}
           >
-            <meshStandardMaterial
+            <animated.meshStandardMaterial
               transparent
-              {...CUBE_CONSTANT.MATERIAL_ARGS[cubeState]}
-              {...CUBE_CONSTANT.HOVER_MATERIAL_ARGS[hoverState]}
+              color={color}
+              opacity={opacity}
+              emissive={isHover ? "#5bea5b" : "#000000"}
             />
-          </mesh>
+          </animated.mesh>
 
-          {cubeState !== "haze" && (
-            <CubeNumbers
-              markingNumbers={markingNumbers}
-              positivePosition={positivePosition}
-            />
+          {cubeState !== "invisible" && (
+            <>
+              <CubeNumbers
+                markingNumbers={markingNumbers}
+                positivePosition={positivePosition}
+              />
+              <CubeEdge cubeLineGeometry={cubeLineGeometry} />
+            </>
           )}
-
-          <CubeEdge cubeLineGeometry={cubeLineGeometry} />
         </>
       )}
     </group>
