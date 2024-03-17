@@ -2,9 +2,16 @@ function getDefaultPuzzle(size) {
   const [sizeX, sizeY, sizeZ] = size;
   const defaultPuzzle = [];
 
-  for (let x = -1 * sizeX + 1; x <= sizeX - 1; x += 2) {
-    for (let y = -1 * sizeY + 1; y <= sizeY - 1; y += 2) {
-      for (let z = -1 * sizeZ + 1; z <= sizeZ - 1; z += 2) {
+  const startX = -1 * sizeX + 1;
+  const endX = sizeX - 1;
+  const startY = -1 * sizeY + 1;
+  const endY = sizeY - 1;
+  const startZ = -1 * sizeZ + 1;
+  const endZ = sizeZ - 1;
+
+  for (let x = startX; x <= endX; x += 2) {
+    for (let y = startY; y <= endY; y += 2) {
+      for (let z = startZ; z <= endZ; z += 2) {
         defaultPuzzle.push([x, y, z]);
       }
     }

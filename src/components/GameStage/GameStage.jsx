@@ -46,23 +46,7 @@ function GameStage() {
     const numbers = getMarkingNumbers(answers, showingNumbers, size);
 
     setMarkingNumbers(numbers);
-    console.log(numbers);
   }, []);
-
-  // useEffect(() => {
-  //   const numbers = {};
-
-  //   defaultPuzzle.forEach((position) => {
-  //     numbers[position.join("")] = getMarkingNumbers(
-  //       position,
-  //       answers,
-  //       size,
-  //       showingNumbers,
-  //     );
-  //   });
-
-  //   setMarkingNumbers(numbers);
-  // }, []);
 
   useEffect(() => {
     function handleContextMenu(event) {
@@ -110,7 +94,6 @@ function GameStage() {
           defaultPuzzle={defaultPuzzle}
         />
         <BackGround />
-        <axesHelper scale={[10, 10, 10]} />
 
         <OrbitControls
           ref={controls}
@@ -118,7 +101,6 @@ function GameStage() {
           enablePan={false}
           enabled={isOrbitEnable}
           enableDamping={false}
-          // dampingFactor={0.2}
         />
       </Canvas>
     </Stage>

@@ -1,10 +1,9 @@
 import { useEffect } from "react";
+import * as THREE from "three";
+
 import convertCoordinate from "../../utils/convertCoordinate";
-import getMarkingNumbers from "../../utils/getMarkingNumbers";
-import getDefaultPuzzle from "../../utils/getDefaultPuzzle";
 
 import {
-  useMarkingNumbersStore,
   useAnswerStore,
   useCubeStatesStore,
   useCameraPositionStore,
@@ -17,12 +16,14 @@ import CUBE_CONSTANT from "../../constants/cube";
 
 import Scaffold from "../Edge/Scaffold";
 import DefaultScaffold from "../Edge/DefaultScaffold";
+import revertCoordinate from "../../utils/revertCoordinate";
 
-function Puzzle({ puzzle }) {
-  const { size, positions, showingNumbers } = puzzle;
-  const defaultPuzzle = getDefaultPuzzle(size);
+const cubeGeometry = new THREE.BoxGeometry(2, 2, 2);
+const cubeLineGeometry = new THREE.CylinderGeometry(0.03, 0.03, 2, 8);
 
-  const { markingNumbers, setMarkingNumbers } = useMarkingNumbersStore();
+function Puzzle({ puzzle, markingNumbers, defaultPuzzle }) {
+  const { size, answers } = puzzle;
+
   const { answer, setAnswer, setIsComplete } = useAnswerStore();
   const { cubeStates, setCubeStates, setCubeStatesHistory, setHistoryIndex } =
     useCubeStatesStore();
@@ -30,8 +31,8 @@ function Puzzle({ puzzle }) {
   const { setCurrentLayer, setLayers } = useLayerStore();
 
   useEffect(() => {
-    positions.forEach((position) => {
-      answer[convertCoordinate(position, size).join("")] = true;
+    Object.entries(answers).forEach((position) => {
+      answer[convertCoordinate(position[0], size).join("")] = true;
     });
 
     defaultPuzzle.forEach((position) => {
@@ -40,13 +41,6 @@ function Puzzle({ puzzle }) {
         isRemoved: false,
         isHidden: false,
       };
-
-      markingNumbers[position.join("")] = getMarkingNumbers(
-        position,
-        positions,
-        size,
-        showingNumbers,
-      );
     });
 
     const newLayers = [];
@@ -63,13 +57,19 @@ function Puzzle({ puzzle }) {
     setCubeStates(cubeStates);
     setCubeStatesHistory([JSON.parse(JSON.stringify(cubeStates))]);
     setHistoryIndex(0);
-    setMarkingNumbers(markingNumbers);
   }, []);
 
   return (
     <>
       {defaultPuzzle.map((position) => (
-        <Cube key={position} position={position}></Cube>
+        <Cube
+          key={position}
+          cubeGeometry={cubeGeometry}
+          cubeLineGeometry={cubeLineGeometry}
+          position={position}
+          markingNumbers={markingNumbers}
+          positivePosition={revertCoordinate(position, size)}
+        ></Cube>
       ))}
 
       {CUBE_CONSTANT.BACK_SCAFFOLD[cameraPosition.join("")].map((position) => (
@@ -77,8 +77,8 @@ function Puzzle({ puzzle }) {
           key={position}
           layerPosition={position}
           size={puzzle.size}
-          color="#ff0000"
-          thickness={0.01}
+          color="#ce4817"
+          thickness={1}
         />
       ))}
 
@@ -88,7 +88,7 @@ function Puzzle({ puzzle }) {
           layerPosition={position}
           size={puzzle.size}
           color="#ffffff"
-          thickness={0.02}
+          thickness={3}
         />
       ))}
     </>

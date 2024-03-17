@@ -6,13 +6,13 @@ const puzzlesStore = (set) => ({
       1: {
         title: "bamboo",
         size: [2, 5, 1],
-        positions: [
-          [0, 0, 0],
-          [0, 1, 0],
-          [0, 2, 0],
-          [0, 3, 0],
-          [0, 4, 0],
-        ],
+        answers: {
+          "000": true,
+          "010": true,
+          "020": true,
+          "030": true,
+          "040": true,
+        },
         showingNumbers: {
           layerX: [[0, 0]],
           layerY: [
@@ -25,7 +25,7 @@ const puzzlesStore = (set) => ({
       2: {
         title: "laptop",
         size: [5, 4, 4],
-        positions: [[0, 0, 0]],
+        answers: { "000": true, "001": true },
         showingNumbers: {
           layerX: [[0, 0]],
           layerY: [[0, 0]],
@@ -35,39 +35,38 @@ const puzzlesStore = (set) => ({
       3: {
         title: "chair",
         size: [3, 6, 3],
-        positions: [
-          [0, 5, 0],
-          [1, 5, 0],
-          [2, 5, 0],
+        answers: {
+          "050": true,
+          150: true,
+          250: true,
+          "040": true,
+          140: true,
+          240: true,
 
-          [0, 4, 0],
-          [1, 4, 0],
-          [2, 4, 0],
+          "030": true,
+          130: true,
+          230: true,
 
-          [0, 3, 0],
-          [1, 3, 0],
-          [2, 3, 0],
+          "020": true,
+          120: true,
+          220: true,
+          "021": true,
+          121: true,
+          221: true,
+          "022": true,
+          122: true,
+          222: true,
 
-          [0, 2, 0],
-          [1, 2, 0],
-          [2, 2, 0],
-          [0, 2, 1],
-          [1, 2, 1],
-          [2, 2, 1],
-          [0, 2, 2],
-          [1, 2, 2],
-          [2, 2, 2],
+          "010": true,
+          210: true,
+          "012": true,
+          212: true,
 
-          [0, 1, 0],
-          [2, 1, 0],
-          [0, 1, 2],
-          [2, 1, 2],
-
-          [0, 0, 0],
-          [2, 0, 0],
-          [0, 0, 2],
-          [2, 0, 2],
-        ],
+          "000": true,
+          200: true,
+          "002": true,
+          202: true,
+        },
         showingNumbers: {
           layerX: [
             [0, 0],
@@ -103,8 +102,48 @@ const puzzlesStore = (set) => ({
         },
       },
     },
-    normal: {},
-    hard: {},
+    normal: {
+      1: {
+        title: "boat",
+        size: [10, 4, 10],
+        answers: [
+          [0, 0, 0],
+          [0, 1, 0],
+          [0, 2, 0],
+          [0, 3, 0],
+          [0, 4, 0],
+        ],
+        showingNumbers: {
+          layerX: [[0, 0]],
+          layerY: [
+            [0, 0],
+            [1, 0],
+          ],
+          layerZ: [[0, 0]],
+        },
+      },
+    },
+    hard: {
+      1: {
+        title: "Jordan",
+        size: [10, 10, 10],
+        answers: [
+          [0, 0, 0],
+          [0, 1, 0],
+          [0, 2, 0],
+          [0, 3, 0],
+          [0, 4, 0],
+        ],
+        showingNumbers: {
+          layerX: [[0, 0]],
+          layerY: [
+            [0, 0],
+            [1, 0],
+          ],
+          layerZ: [[0, 0]],
+        },
+      },
+    },
   },
   setPuzzles: (puzzles) => set({ puzzles }),
 });
@@ -117,7 +156,7 @@ const markingNumbersStore = (set) => ({
 const answerStore = (set) => ({
   answer: {},
   isComplete: false,
-  setAnswer: (newAnswer) => set({ newAnswer }),
+  setAnswer: (answer) => set({ answer }),
   setIsComplete: (isComplete) => set({ isComplete }),
 });
 
