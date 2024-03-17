@@ -1,4 +1,4 @@
-import { useRef, useMemo, useState } from "react";
+import { useRef, useState } from "react";
 import { Canvas } from "@react-three/fiber";
 import { OrthographicCamera, OrbitControls, Text } from "@react-three/drei";
 
@@ -25,7 +25,6 @@ function Main() {
   return (
     <Stage>
       <GameStageHeader title="main" />
-
       <Canvas>
         <ambientLight intensity={1} />
         <pointLight position={[0, 15, 20]} />
@@ -40,8 +39,6 @@ function Main() {
           far={1000}
           zoom={80}
         />
-
-        {/* <axesHelper scale={[5, 5, 5]} /> */}
 
         <group position={[-4, 0, 0]}>
           <mesh
@@ -68,6 +65,7 @@ function Main() {
         </group>
         <group position={[0, 0, 0]}>
           <mesh
+            onClick={() => navigate("/puzzles/normal")}
             onPointerEnter={() => setIsHoveredNormal(true)}
             onPointerLeave={() => setIsHoveredNormal(false)}
           >
@@ -90,6 +88,7 @@ function Main() {
         </group>
         <group position={[4, 0, 0]}>
           <mesh
+            onClick={() => navigate("/puzzles/hard")}
             onPointerEnter={() => setIsHoveredHard(true)}
             onPointerLeave={() => setIsHoveredHard(false)}
           >
@@ -116,7 +115,6 @@ function Main() {
           ref={controls}
           enableZoom={false}
           enablePan={false}
-          // enableRotate={false}
           enableDamping
           dampingFactor={0.2}
         />

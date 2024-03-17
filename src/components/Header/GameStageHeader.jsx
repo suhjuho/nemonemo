@@ -91,7 +91,10 @@ function GameStageHeader({ title }) {
   return (
     <Header>
       <div className="header-left-icons">
-        <IoIosBackspace className="backButton" />
+        <IoIosBackspace
+          className="backButton"
+          onClick={() => window.history.go(-1)}
+        />
       </div>
       {title === "main" ? (
         <div className="title">NEMO NEMO</div>

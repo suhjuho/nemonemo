@@ -1,10 +1,10 @@
-import { useRef, useMemo, useState, useEffect } from "react";
+import { useRef, useState, useEffect } from "react";
 import { Canvas } from "@react-three/fiber";
 import { OrthographicCamera, OrbitControls, Text } from "@react-three/drei";
 
 import styled from "styled-components";
 
-import { useNavigate } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
 import GameSelectBackground from "./GameSelectBackground";
 import GameStageHeader from "../Header/GameStageHeader";
 import { useAnswerStore } from "../../store/store";
@@ -16,6 +16,7 @@ const Stage = styled.div`
 
 function GameSelectPage() {
   const navigate = useNavigate();
+  const { difficulty } = useParams();
   const controls = useRef();
   const camera = useRef();
 
@@ -48,11 +49,9 @@ function GameSelectPage() {
           zoom={80}
         />
 
-        {/* <axesHelper scale={[5, 5, 5]} /> */}
-
         <group position={[-4, 0, 0]}>
           <mesh
-            onClick={() => navigate("/puzzles/tutorial/1")}
+            onClick={() => navigate(`/puzzles/${difficulty}/1`)}
             onPointerEnter={() => setIsHoveredEasy(true)}
             onPointerLeave={() => setIsHoveredEasy(false)}
           >
@@ -75,7 +74,7 @@ function GameSelectPage() {
         </group>
         <group position={[0, 0, 0]}>
           <mesh
-            onClick={() => navigate("/puzzles/tutorial/2")}
+            onClick={() => navigate(`/puzzles/${difficulty}/2`)}
             onPointerEnter={() => setIsHoveredNormal(true)}
             onPointerLeave={() => setIsHoveredNormal(false)}
           >
@@ -98,7 +97,7 @@ function GameSelectPage() {
         </group>
         <group position={[4, 0, 0]}>
           <mesh
-            onClick={() => navigate("/puzzles/tutorial/3")}
+            onClick={() => navigate(`/puzzles/${difficulty}/3`)}
             onPointerEnter={() => setIsHoveredHard(true)}
             onPointerLeave={() => setIsHoveredHard(false)}
           >
