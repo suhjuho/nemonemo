@@ -1,45 +1,26 @@
-import { useNavigate } from "react-router-dom";
-
+import * as THREE from "three";
 import BACKGROUND_CONSTANT from "../../constants/background";
 
+const planeGeometry = new THREE.PlaneGeometry(
+  ...BACKGROUND_CONSTANT.GEOMETRY_ARGS,
+);
+const backgroundMaterial = new THREE.MeshBasicMaterial({
+  ...BACKGROUND_CONSTANT.MATERIAL_ARGS,
+});
+
 function GameSelectBackground() {
-  const navigate = useNavigate();
-
   return (
-    <>
-      {/* y-wall bottom ceil */}
-      <mesh rotation={[-Math.PI / 2, 0, 0]} position={[0, -100, 0]}>
-        <planeGeometry args={[200, 200]} />
-        <meshBasicMaterial {...BACKGROUND_CONSTANT.MATERIAL_ARGS} />
-      </mesh>
-
-      <mesh rotation={[Math.PI / 2, 0, 0]} position={[0, 100, 0]}>
-        <planeGeometry args={[200, 200]} />
-        <meshBasicMaterial {...BACKGROUND_CONSTANT.MATERIAL_ARGS} />
-      </mesh>
-
-      {/* x-wall */}
-      <mesh rotation={[0, -Math.PI / 2, -Math.PI / 2]} position={[100, 0, 0]}>
-        <planeGeometry args={[200, 200]} />
-        <meshBasicMaterial {...BACKGROUND_CONSTANT.MATERIAL_ARGS} />
-      </mesh>
-
-      <mesh rotation={[0, Math.PI / 2, -Math.PI / 2]} position={[-100, 0, 0]}>
-        <planeGeometry args={[200, 200]} />
-        <meshBasicMaterial {...BACKGROUND_CONSTANT.MATERIAL_ARGS} />
-      </mesh>
-
-      {/* z-wall */}
-      <mesh rotation={[0, 0, -Math.PI / 2]} position={[0, 0, -100]}>
-        <planeGeometry args={[200, 200]} />
-        <meshBasicMaterial {...BACKGROUND_CONSTANT.MATERIAL_ARGS} />
-      </mesh>
-
-      <mesh rotation={[0, Math.PI, -Math.PI / 2]} position={[0, 0, 100]}>
-        <planeGeometry args={[200, 200]} />
-        <meshBasicMaterial {...BACKGROUND_CONSTANT.MATERIAL_ARGS} />
-      </mesh>
-    </>
+    <group>
+      {BACKGROUND_CONSTANT.DIRECTIONS.map((direction) => (
+        <mesh
+          key={`${direction.rotation.join("")}`}
+          rotation={direction.rotation}
+          position={direction.position}
+          geometry={planeGeometry}
+          material={backgroundMaterial}
+        />
+      ))}
+    </group>
   );
 }
 
