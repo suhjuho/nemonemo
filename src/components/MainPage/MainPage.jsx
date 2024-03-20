@@ -1,124 +1,116 @@
-import { useRef, useState } from "react";
-import { Canvas } from "@react-three/fiber";
-import { OrthographicCamera, OrbitControls, Text } from "@react-three/drei";
+import { useState } from "react";
 
 import styled from "styled-components";
 
 import { useNavigate } from "react-router-dom";
-import MainBackGround from "./MainBackGround";
 import GameStageHeader from "../Header/GameStageHeader";
+
+import usePuzzlesStore from "../../store/puzzle";
+
+import Fox from "../../assets/puzzle/fox.png";
+import Shark from "../../assets/puzzle/shark.png";
+import Duck from "../../assets/puzzle/duck.png";
+import Sunflower from "../../assets/puzzle/sunflower.png";
+import Matchstick from "../../assets/puzzle/matchstick.png";
+import Cookie from "../../assets/puzzle/cookie.png";
+import Donut from "../../assets/puzzle/donut.png";
+
+import Wallpaper from "../../assets/wallpaper.png";
 
 const Stage = styled.div`
   position: relative;
   height: 100vh;
 `;
 
+const StageBackgroundImg = styled.img`
+  position: absolute;
+  width: 100vw;
+  z-index: -10;
+  opacity: 40%;
+`;
+
+const Difficulty = styled.div`
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+`;
+
+const Difficulties = styled.div`
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 30px;
+  height: 100vh;
+`;
+
+const DifficultyImg = styled.img`
+  width: 300px;
+  border-radius: 10px;
+`;
+
+const DifficultyLabel = styled.div`
+  font-size: 64px;
+`;
+
 function Main() {
   const navigate = useNavigate();
-  const controls = useRef();
-  const camera = useRef();
-
-  const [isHoveredEasy, setIsHoveredEasy] = useState(false);
-  const [isHoveredNormal, setIsHoveredNormal] = useState(false);
-  const [isHoveredHard, setIsHoveredHard] = useState(false);
+  const { puzzles } = usePuzzlesStore();
 
   return (
     <Stage>
-      <GameStageHeader title="main" />
-      <Canvas>
-        <ambientLight intensity={1} />
-        <pointLight position={[0, 15, 20]} />
-        <directionalLight intensity={1} position={[10, 5, -10]} />
-        <directionalLight intensity={1} position={[10, 5, 10]} />
-        <OrthographicCamera
-          ref={camera}
-          makeDefault
-          position={[0, 0, 10]}
-          fov={100}
-          near={1}
-          far={1000}
-          zoom={80}
-        />
+      <GameStageHeader type="main" />
+      <StageBackgroundImg src={Wallpaper} alt="wallpaper" />
 
-        <group position={[-4, 0, 0]}>
-          <mesh
+      <Difficulties>
+        <Difficulty>
+          <DifficultyImg
+            src={Donut}
+            alt="donut"
             onClick={() => navigate("/puzzles/tutorial")}
-            onPointerEnter={() => setIsHoveredEasy(true)}
-            onPointerLeave={() => setIsHoveredEasy(false)}
-          >
-            <boxGeometry args={[2, 2, 2]} />
-            <meshStandardMaterial
-              color={isHoveredEasy ? "#8ad71d" : "#9dea30"}
-              transparent
-            />
-          </mesh>
-          <Text
-            position={[0, 0, 1.01]}
-            fontSize={0.5}
-            color="#000000"
-            anchorX="center"
-            anchorY="middle"
-            rotation={[0, 0, 0]}
-          >
-            Easy
-          </Text>
-        </group>
-        <group position={[0, 0, 0]}>
-          <mesh
-            onClick={() => navigate("/puzzles/normal")}
-            onPointerEnter={() => setIsHoveredNormal(true)}
-            onPointerLeave={() => setIsHoveredNormal(false)}
-          >
-            <boxGeometry args={[2, 2, 2]} />
-            <meshStandardMaterial
-              color={isHoveredNormal ? "#76bade" : "#8ac9eb"}
-              transparent
-            />
-          </mesh>
-          <Text
-            position={[0, 0, 1.01]}
-            fontSize={0.5}
-            color="#000000"
-            anchorX="center"
-            anchorY="middle"
-            rotation={[0, 0, 0]}
-          >
-            Normal
-          </Text>
-        </group>
-        <group position={[4, 0, 0]}>
-          <mesh
-            onClick={() => navigate("/puzzles/hard")}
-            onPointerEnter={() => setIsHoveredHard(true)}
-            onPointerLeave={() => setIsHoveredHard(false)}
-          >
-            <boxGeometry args={[2, 2, 2]} />
-            <meshStandardMaterial
-              color={isHoveredHard ? "#d748d7" : "#da74da"}
-              transparent
-            />
-          </mesh>
-          <Text
-            position={[0, 0, 1.01]}
-            fontSize={0.5}
-            color="#000000"
-            anchorX="center"
-            anchorY="middle"
-            rotation={[0, 0, 0]}
-          >
-            Hard
-          </Text>
-        </group>
+          />
+          <DifficultyLabel>Tutorial</DifficultyLabel>
+          <DifficultyLabel>
+            {`0 / ${Object.entries(puzzles.tutorial).length}`}
+          </DifficultyLabel>
+        </Difficulty>
 
-        <MainBackGround />
-        <OrbitControls
-          ref={controls}
-          enableZoom={false}
-          enablePan={false}
-          enableDamping
-          dampingFactor={0.2}
-        />
-      </Canvas>
+        <Difficulty>
+          <DifficultyImg
+            src={Sunflower}
+            alt="sunflower"
+            onClick={() => navigate("/puzzles/easy")}
+          />
+          <DifficultyLabel>Easy </DifficultyLabel>
+          <DifficultyLabel>
+            {`0 / ${Object.entries(puzzles.easy).length}`}
+          </DifficultyLabel>
+        </Difficulty>
+
+        <Difficulty>
+          <DifficultyImg
+            src={Duck}
+            alt="duck"
+            onClick={() => navigate("/puzzles/normal")}
+          />
+          <DifficultyLabel>Normal</DifficultyLabel>
+          <DifficultyLabel>
+            {`0 / ${Object.entries(puzzles.normal).length}`}
+          </DifficultyLabel>
+        </Difficulty>
+
+        <Difficulty>
+          <DifficultyImg
+            src={Fox}
+            alt="fox"
+            onClick={() => navigate("/puzzles/hard")}
+          />
+          <DifficultyLabel>Hard</DifficultyLabel>
+          <DifficultyLabel>
+            {`0 / ${Object.entries(puzzles.hard).length}`}
+          </DifficultyLabel>
+        </Difficulty>
+      </Difficulties>
     </Stage>
   );
 }
