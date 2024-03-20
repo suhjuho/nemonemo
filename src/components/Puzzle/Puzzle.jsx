@@ -31,12 +31,15 @@ function Puzzle({ puzzle, markingNumbers, defaultPuzzle }) {
   const { setCurrentLayer, setLayers } = useLayerStore();
 
   useEffect(() => {
+    const newAnswer = {};
+    const newCubeStates = {};
+
     Object.entries(answers).forEach((position) => {
-      answer[convertCoordinate(position[0], size).join("")] = true;
+      newAnswer[convertCoordinate(position[0], size).join("")] = true;
     });
 
     defaultPuzzle.forEach((position) => {
-      cubeStates[position.join("")] = {
+      newCubeStates[position.join("")] = {
         isClicked: false,
         isRemoved: false,
         isHidden: false,
@@ -56,10 +59,10 @@ function Puzzle({ puzzle, markingNumbers, defaultPuzzle }) {
     setLayers(layers);
     setCurrentLayer(puzzle.size[2]);
 
-    setAnswer(answer);
+    setAnswer(newAnswer);
     setIsComplete(false);
-    setCubeStates(cubeStates);
-    setCubeStatesHistory([JSON.parse(JSON.stringify(cubeStates))]);
+    setCubeStates(newCubeStates);
+    setCubeStatesHistory([JSON.parse(JSON.stringify(newCubeStates))]);
     setHistoryIndex(0);
   }, []);
 

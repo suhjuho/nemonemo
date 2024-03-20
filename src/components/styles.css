@@ -7,3 +7,13 @@ body {
   width: 100%;
   height: 100vh;
 }
+
+@font-face {
+  font-family: "Micro";
+  font-weight: normal;
+  src: url("/Cantarell-Regular.ttf") format("truetype");
+}
+
+body {
+  font-family: "Micro";
+}
