@@ -1,134 +1,123 @@
-import { useRef, useState, useEffect } from "react";
-import { Canvas } from "@react-three/fiber";
-import { OrthographicCamera, OrbitControls, Text } from "@react-three/drei";
+import { useState, useEffect } from "react";
 
 import styled from "styled-components";
 
 import { useNavigate, useParams } from "react-router-dom";
-import GameSelectBackground from "./GameSelectBackground";
 import GameStageHeader from "../Header/GameStageHeader";
+
 import { useAnswerStore } from "../../store/store";
+import usePuzzlesStore from "../../store/puzzle";
+import usePuzzlesIndexStore from "../../store/solve";
+
+import Unsolved from "../../assets/puzzle/unsolved.png";
+import Wallpaper from "../../assets/wallpaper.png";
+import Back from "../../assets/icon/back.png";
+import Next from "../../assets/icon/next.png";
 
 const Stage = styled.div`
   position: relative;
   height: 100vh;
 `;
 
+const Icon = styled.img`
+  width: 60px;
+  margin: 0px 10px;
+`;
+
+const StageBackgroundImg = styled.img`
+  position: absolute;
+  width: 100vw;
+  z-index: -10;
+  opacity: 40%;
+`;
+
+const Puzzles = styled.div`
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 30px;
+  height: 100vh;
+`;
+
+const Puzzle = styled.div`
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  width: 300px;
+`;
+
+const PuzzleImg = styled.img`
+  width: 300px;
+  border-radius: 10px;
+`;
+
+const PuzzleLabel = styled.div`
+  font-size: 64px;
+`;
+
 function GameSelectPage() {
   const navigate = useNavigate();
   const { difficulty } = useParams();
-  const controls = useRef();
-  const camera = useRef();
-
-  const [isHoveredEasy, setIsHoveredEasy] = useState(false);
-  const [isHoveredNormal, setIsHoveredNormal] = useState(false);
-  const [isHoveredHard, setIsHoveredHard] = useState(false);
-
+  const { puzzles } = usePuzzlesStore();
   const { setIsComplete } = useAnswerStore();
+  const { puzzlesIndex, setPuzzlesIndex } = usePuzzlesIndexStore();
+  const [allPuzzles, setAllPuzzles] = useState([]);
+  const [currentIndex, setCurrentIndex] = useState(1);
+
+  useEffect(() => {
+    setCurrentIndex(puzzlesIndex[difficulty]);
+  }, []);
 
   useEffect(() => {
     setIsComplete(false);
   }, []);
 
+  useEffect(() => {
+    setAllPuzzles(Object.entries(puzzles[difficulty]));
+  }, []);
+
+  const handleIndexIncrease = () => {
+    if (allPuzzles.length > currentIndex) {
+      setCurrentIndex(currentIndex + 1);
+    }
+  };
+
+  const handleIndexDecrease = () => {
+    if (currentIndex > 1) {
+      setCurrentIndex(currentIndex - 1);
+    }
+  };
+
   return (
     <Stage>
-      <GameStageHeader title="main" />
+      <GameStageHeader type="select" difficulty={difficulty} />
+      <StageBackgroundImg src={Wallpaper} alt="wallpaper" />
 
-      <Canvas>
-        <ambientLight intensity={1} />
-        <pointLight position={[0, 15, 20]} />
-        <directionalLight intensity={1} position={[10, 5, -10]} />
-        <directionalLight intensity={1} position={[10, 5, 10]} />
-        <OrthographicCamera
-          ref={camera}
-          makeDefault
-          position={[0, 0, 10]}
-          fov={100}
-          near={1}
-          far={1000}
-          zoom={80}
-        />
+      <Puzzles>
+        <Icon src={Back} onClick={handleIndexDecrease} />
+        {[-2, -1, 0, 1, 2].map((idx) => {
+          const currentPuzzle = puzzles[difficulty][currentIndex + idx];
 
-        <group position={[-4, 0, 0]}>
-          <mesh
-            onClick={() => navigate(`/puzzles/${difficulty}/1`)}
-            onPointerEnter={() => setIsHoveredEasy(true)}
-            onPointerLeave={() => setIsHoveredEasy(false)}
-          >
-            <boxGeometry args={[2, 2, 2]} />
-            <meshStandardMaterial
-              color={isHoveredEasy ? "#8ad71d" : "#9dea30"}
-              transparent
-            />
-          </mesh>
-          <Text
-            position={[0, 0, 1.01]}
-            fontSize={0.5}
-            color="#000000"
-            anchorX="center"
-            anchorY="middle"
-            rotation={[0, 0, 0]}
-          >
-            1
-          </Text>
-        </group>
-        <group position={[0, 0, 0]}>
-          <mesh
-            onClick={() => navigate(`/puzzles/${difficulty}/2`)}
-            onPointerEnter={() => setIsHoveredNormal(true)}
-            onPointerLeave={() => setIsHoveredNormal(false)}
-          >
-            <boxGeometry args={[2, 2, 2]} />
-            <meshStandardMaterial
-              color={isHoveredNormal ? "#76bade" : "#8ac9eb"}
-              transparent
-            />
-          </mesh>
-          <Text
-            position={[0, 0, 1.01]}
-            fontSize={0.5}
-            color="#000000"
-            anchorX="center"
-            anchorY="middle"
-            rotation={[0, 0, 0]}
-          >
-            2
-          </Text>
-        </group>
-        <group position={[4, 0, 0]}>
-          <mesh
-            onClick={() => navigate(`/puzzles/${difficulty}/3`)}
-            onPointerEnter={() => setIsHoveredHard(true)}
-            onPointerLeave={() => setIsHoveredHard(false)}
-          >
-            <boxGeometry args={[2, 2, 2]} />
-            <meshStandardMaterial
-              color={isHoveredHard ? "#d748d7" : "#da74da"}
-              transparent
-            />
-          </mesh>
-          <Text
-            position={[0, 0, 1.01]}
-            fontSize={0.5}
-            color="#000000"
-            anchorX="center"
-            anchorY="middle"
-            rotation={[0, 0, 0]}
-          >
-            3
-          </Text>
-        </group>
-
-        <GameSelectBackground />
-        <OrbitControls
-          ref={controls}
-          enableZoom={false}
-          enablePan={false}
-          // enableRotate={false}
-          enableDamping
-          dampingFactor={0.2}
-        />
-      </Canvas>
+          return currentPuzzle ? (
+            <Puzzle key={currentPuzzle.title}>
+              <PuzzleImg
+                src={Unsolved}
+                alt="UnsolvedPuzzle"
+                onClick={() => {
+                  puzzlesIndex[difficulty] = currentIndex + idx;
+                  setPuzzlesIndex(puzzlesIndex);
+                  navigate(`/puzzles/${difficulty}/${currentIndex + idx}`);
+                }}
+              />
+              <PuzzleLabel>{currentPuzzle.title}</PuzzleLabel>
+            </Puzzle>
+          ) : (
+            <Puzzle />
+          );
+        })}
+        <Icon src={Next} onClick={handleIndexIncrease} />
+      </Puzzles>
     </Stage>
   );
 }
