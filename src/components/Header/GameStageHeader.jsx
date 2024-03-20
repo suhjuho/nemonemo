@@ -1,16 +1,23 @@
 import styled from "styled-components";
-import { FcSettings, FcSpeaker } from "react-icons/fc";
-import { IoIosBackspace } from "react-icons/io";
-import { RxCross1 } from "react-icons/rx";
-import { useState } from "react";
+
+import { useNavigate } from "react-router-dom";
+import Speaker from "../../assets/icon/icon-speaker.png";
+import MutedSpeaker from "../../assets/icon/icon-mute.png";
+import Setting from "../../assets/icon/icon-setting.png";
+import Out from "../../assets/icon/icon-out.png";
 
 import { useSoundStore } from "../../store/store";
 
 import Timer from "../Timer/Timer";
 
+const Icon = styled.img`
+  width: 60px;
+  margin: 0px 10px;
+`;
+
 const Header = styled.header`
   position: fixed;
-  top: 0;
+  top: 20px;
   left: 0;
   display: flex;
   justify-content: space-between;
@@ -18,71 +25,42 @@ const Header = styled.header`
   width: 100%;
   z-index: 10;
 
-  .title {
-    font-size: 3rem;
-    width: 40%;
-    color: orange;
+  .content {
+    font-size: 80px;
+    font-weight: 700;
+    color: Black;
     text-align: center;
   }
 
   .timer {
-    font-size: 3rem;
+    font-size: 80px;
   }
 
   .header-left-icons {
-    width: 200px;
+    width: 20%;
   }
 
   .header-right-icons {
-    width: 200px;
+    width: 20%;
     position: relative;
     display: flex;
     justify-content: end;
   }
 
-  .settingButton {
-    width: 3rem;
-    height: 3rem;
-    background-color: #ffffff;
-    border-radius: 10px;
-    margin: 1rem;
+  .header-middle {
+    width: 60%;
   }
 
-  .soundButton {
-    width: 3rem;
-    height: 3rem;
-    background-color: #ffffff;
-    border-radius: 10px;
-    margin: 1rem;
-  }
-
-  .crossSign {
-    position: absolute;
-    top: 0;
-    left: 0;
-    width: 3rem;
-    height: 3rem;
-    color: #d84444;
-    border-radius: 10px;
-    margin: 1rem;
-  }
-
-  .backButton {
-    width: 3rem;
-    height: 3rem;
-    background-color: #ffffff;
-    border-radius: 10px;
-    margin: 1rem;
+  .game-status {
+    display: flex;
+    justify-content: space-around;
+    align-items: center;
   }
 `;
 
-function GameStageHeader({ title }) {
-  const [isHintOpen, setIsHintOpen] = useState(false);
+function GameStageHeader({ type, difficulty, puzzleTitle }) {
+  const navigate = useNavigate();
   const { isMuted, changeMuteState } = useSoundStore();
-
-  const handleClick = () => {
-    setIsHintOpen((prev) => !prev);
-  };
 
   const handleSound = () => {
     changeMuteState();
@@ -91,27 +69,30 @@ function GameStageHeader({ title }) {
   return (
     <Header>
       <div className="header-left-icons">
-        <IoIosBackspace
-          className="backButton"
-          onClick={() => window.history.go(-1)}
-        />
+        {type === "select" && <Icon src={Out} onClick={() => navigate("/")} />}
+        {type === "game" && (
+          <Icon src={Out} onClick={() => navigate(`/puzzles/${difficulty}`)} />
+        )}
       </div>
-      {title === "main" ? (
-        <div className="title">NEMO NEMO</div>
-      ) : (
-        <>
-          <div className="title" onClick={handleClick}>
-            {isHintOpen ? title : "Hint"}
+      <div className="header-middle">
+        {type === "main" && <div className="content">NEMO NEMO</div>}
+        {type === "select" && <div className="content">{difficulty}</div>}
+        {type === "game" && (
+          <div className="game-status">
+            <div className="content">{puzzleTitle}</div>
+            <div className="timer">
+              <Timer />
+            </div>
           </div>
-          <div className="timer">
-            <Timer />
-          </div>
-        </>
-      )}
+        )}
+      </div>
       <div className="header-right-icons">
-        <FcSpeaker onClick={handleSound} className="soundButton" />
-        {!isMuted && <RxCross1 onClick={handleSound} className="crossSign" />}
-        <FcSettings className="settingButton" />
+        {isMuted ? (
+          <Icon src={MutedSpeaker} onClick={handleSound} />
+        ) : (
+          <Icon src={Speaker} onClick={handleSound} />
+        )}
+        <Icon src={Setting} />
       </div>
     </Header>
   );

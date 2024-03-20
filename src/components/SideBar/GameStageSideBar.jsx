@@ -16,7 +16,7 @@ const SideBar = styled.section`
   justify-content: center;
   align-items: start;
   height: 100vh;
-  z-index: 10;
+  z-index: 5;
 
   .icon {
     width: 3rem;
@@ -83,7 +83,7 @@ function GameStageSideBar() {
         <Icon>
           <div style={{ position: "relative" }}>
             <MainIcon>
-              <TbCube className="icon" />
+              <TbCube className="icon icon-animation" />
               <PiEyedropperSampleFill className="event-icon color-dropper-icon" />
             </MainIcon>
             <Command>C</Command>
