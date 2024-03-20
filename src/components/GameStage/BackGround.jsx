@@ -1,5 +1,3 @@
-import { useNavigate, useParams } from "react-router-dom";
-
 import * as THREE from "three";
 import {
   useClickModeStore,
@@ -12,6 +10,7 @@ import {
 import BACKGROUND_CONSTANT from "../../constants/background";
 
 import checkAnswer from "../../utils/checkAnswer";
+import { clickColorSound } from "../../utils/soundEffect";
 
 const planeGeometry = new THREE.PlaneGeometry(
   ...BACKGROUND_CONSTANT.GEOMETRY_ARGS,
@@ -21,11 +20,9 @@ const backgroundMaterial = new THREE.MeshBasicMaterial({
 });
 
 function BackGround() {
-  const navigate = useNavigate();
-  const { difficulty, stageNumber } = useParams();
   const { clickMode, setClickMode } = useClickModeStore();
   const { setOrbitEnableState } = useOrbitControlStore();
-  const { setIsRightClick } = useRightClickStore();
+  const { isRightClick, setIsRightClick } = useRightClickStore();
   const { answer, setIsComplete } = useAnswerStore();
   const {
     cubeStates,
@@ -48,6 +45,11 @@ function BackGround() {
   const handleDragEnd = (event) => {
     event.stopPropagation();
     setOrbitEnableState(true);
+
+    if (isRightClick) {
+      clickColorSound();
+    }
+
     setIsRightClick(false);
 
     if (

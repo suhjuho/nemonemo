@@ -73,6 +73,7 @@ const CUBE_CONSTANT = {
   OUTSIDE_CUBE_KEYS: { w: true, W: true, ㅈ: true },
   UNDO_KEYS: { z: true, Z: true, ㅋ: true },
   REDO_KEYS: { x: true, X: true, ㅌ: true },
+  MODE_CHANGE_KEYS: { c: true, C: true, ㅊ: true },
   INSIDE_DIRECTIONS: { FRONT: true, RIGHT: true },
   OUTSIDE_DIRECTIONS: { BACK: true, LEFT: true },
 };

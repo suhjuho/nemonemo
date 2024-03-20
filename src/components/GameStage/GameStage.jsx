@@ -13,6 +13,10 @@ import GameStageFooter from "../Footer/GameStageFooter";
 
 import usePuzzlesStore from "../../store/puzzle";
 
+import CUBE_CONSTANT from "../../constants/cube";
+
+import { clickCubeSound } from "../../utils/soundEffect";
+
 import {
   useClickModeStore,
   useOrbitControlStore,
@@ -53,7 +57,9 @@ function GameStage() {
 
   useEffect(() => {
     function handleContextMenu(event) {
-      if (event.key === "c" || event.key === "C" || event.key === "ㅊ") {
+      const isModeChange = CUBE_CONSTANT.MODE_CHANGE_KEYS[event.key];
+
+      if (isModeChange) {
         if (clickMode === "color") {
           setClickMode("cube");
         } else {
@@ -66,10 +72,31 @@ function GameStage() {
     return () => window.removeEventListener("keydown", handleContextMenu);
   }, [clickMode]);
 
+  useEffect(() => {
+    function handleContextMenu(event) {
+      const isInside = CUBE_CONSTANT.INSIDE_CUBE_KEYS[event.key];
+      const isOutside = CUBE_CONSTANT.OUTSIDE_CUBE_KEYS[event.key];
+      const isUndo = CUBE_CONSTANT.UNDO_KEYS[event.key];
+      const isRedo = CUBE_CONSTANT.REDO_KEYS[event.key];
+      const isModeChange = CUBE_CONSTANT.MODE_CHANGE_KEYS[event.key];
+
+      if (isInside || isOutside || isUndo || isRedo || isModeChange) {
+        clickCubeSound();
+      }
+    }
+
+    window.addEventListener("keydown", handleContextMenu);
+    return () => window.removeEventListener("keydown", handleContextMenu);
+  }, []);
+
   return (
     <Stage>
       {isComplete && <GameCompleteModal />}
-      <GameStageHeader title={puzzle.title} />
+      <GameStageHeader
+        difficulty={difficulty}
+        type="game"
+        puzzleTitle={puzzle.title}
+      />
       <GameStageSideBar />
       <GameStageFooter />
 

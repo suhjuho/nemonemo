@@ -22,6 +22,8 @@ import CUBE_CONSTANT from "../../constants/cube";
 import CubeEdge from "./CubeEdge";
 import CubeNumbers from "./CubeNumbers";
 
+import { clickColorSound } from "../../utils/soundEffect";
+
 function Cube({
   position,
   cubeGeometry,
@@ -59,7 +61,6 @@ function Cube({
 
   function checkCubeState() {
     let result;
-
     if (!isClicked && !isRemoved) {
       result = "blank";
     }
@@ -243,6 +244,7 @@ function Cube({
     setOrbitEnableState(true);
     setIsRightClick(false);
     setDragPosition([]);
+    clickColorSound();
 
     if (historyIndex !== cubeStatesHistory.length - 1) {
       cubeStatesHistory.push(
@@ -285,7 +287,7 @@ function Cube({
             />
           </animated.mesh>
 
-          {cubeState !== "invisible" && (
+          {cubeState !== "invisible" && cubeState !== "haze" && (
             <>
               <CubeNumbers
                 markingNumbers={markingNumbers}
