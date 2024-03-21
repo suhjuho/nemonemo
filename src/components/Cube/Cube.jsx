@@ -7,6 +7,8 @@ import React, {
 } from "react";
 import { useSpring, animated, config } from "@react-spring/three";
 
+import { useParams } from "react-router-dom";
+import usePuzzlesStore from "../../store/puzzle";
 import {
   useAnswerStore,
   useClickModeStore,
@@ -23,6 +25,7 @@ import CubeEdge from "./CubeEdge";
 import CubeNumbers from "./CubeNumbers";
 
 import { clickColorSound } from "../../utils/soundEffect";
+import revertCoordinate from "../../utils/revertCoordinate";
 
 function Cube({
   position,
@@ -30,6 +33,8 @@ function Cube({
   cubeLineGeometry,
   markingNumbers,
   positivePosition,
+  colors,
+  size,
 }) {
   const cube = useRef();
   const [isClicked, setIsClicked] = useState(false);
@@ -38,7 +43,10 @@ function Cube({
   const [isHover, setIsHover] = useState(false);
   const [isVisible, setIsVisible] = useState(true);
 
-  const { answer, setIsComplete } = useAnswerStore();
+  const { puzzles, setPuzzles } = usePuzzlesStore();
+  const { difficulty, stageNumber } = useParams();
+
+  const { answer, isComplete, setIsComplete } = useAnswerStore();
   const { clickMode } = useClickModeStore();
   const { isRightClick, setIsRightClick } = useRightClickStore();
   const { dragPosition, setDragPosition } = useDragPositionStore();
@@ -90,7 +98,9 @@ function Cube({
   );
 
   const { color, opacity } = useSpring({
-    color: CUBE_CONSTANT.MATERIAL_ARGS[cubeState].color,
+    color: isComplete
+      ? colors[revertCoordinate(position, size).join("")]
+      : CUBE_CONSTANT.MATERIAL_ARGS[cubeState].color,
     opacity: CUBE_CONSTANT.MATERIAL_ARGS[cubeState].opacity,
     config: config.wobbly,
   });
@@ -258,6 +268,9 @@ function Cube({
     setHistoryIndex(cubeStatesHistory.length - 1);
 
     if (checkAnswer(answer, cubeStates)) {
+      puzzles[difficulty][stageNumber].isSolved = true;
+
+      setPuzzles(puzzles);
       setIsComplete(true);
     }
   };
@@ -289,10 +302,12 @@ function Cube({
 
           {cubeState !== "invisible" && cubeState !== "haze" && (
             <>
-              <CubeNumbers
-                markingNumbers={markingNumbers}
-                positivePosition={positivePosition}
-              />
+              {!isComplete && (
+                <CubeNumbers
+                  markingNumbers={markingNumbers}
+                  positivePosition={positivePosition}
+                />
+              )}
               <CubeEdge cubeLineGeometry={cubeLineGeometry} />
             </>
           )}

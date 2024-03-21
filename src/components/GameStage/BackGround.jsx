@@ -1,4 +1,5 @@
 import * as THREE from "three";
+import { useParams } from "react-router-dom";
 import {
   useClickModeStore,
   useCubeStatesStore,
@@ -6,6 +7,7 @@ import {
   useRightClickStore,
   useAnswerStore,
 } from "../../store/store";
+import usePuzzlesStore from "../../store/puzzle";
 
 import BACKGROUND_CONSTANT from "../../constants/background";
 
@@ -31,6 +33,8 @@ function BackGround() {
     setCubeStatesHistory,
     setHistoryIndex,
   } = useCubeStatesStore();
+  const { puzzles, setPuzzles } = usePuzzlesStore();
+  const { difficulty, stageNumber } = useParams();
 
   function handleContextMenu(event) {
     event.stopPropagation();
@@ -63,6 +67,9 @@ function BackGround() {
     }
 
     if (checkAnswer(answer, cubeStates)) {
+      puzzles[difficulty][stageNumber].isSolved = true;
+
+      setPuzzles(puzzles);
       setIsComplete(true);
     }
   };
