@@ -15,18 +15,9 @@ import Matchstick from "../../assets/puzzle/matchstick.png";
 import Cookie from "../../assets/puzzle/cookie.png";
 import Donut from "../../assets/puzzle/donut.png";
 
-import Wallpaper from "../../assets/wallpaper.png";
-
 const Stage = styled.div`
   position: relative;
   height: 100vh;
-`;
-
-const StageBackgroundImg = styled.img`
-  position: absolute;
-  width: 100vw;
-  z-index: -10;
-  opacity: 40%;
 `;
 
 const Difficulty = styled.div`
@@ -60,7 +51,6 @@ function Main() {
   return (
     <Stage>
       <GameStageHeader type="main" />
-      <StageBackgroundImg src={Wallpaper} alt="wallpaper" />
 
       <Difficulties>
         <Difficulty>

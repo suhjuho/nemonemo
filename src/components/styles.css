@@ -16,4 +16,6 @@ body {
 
 body {
   font-family: "Micro";
+  background-image: url("../assets/wallpaper.png");
+  min-height: 100vh;
 }
