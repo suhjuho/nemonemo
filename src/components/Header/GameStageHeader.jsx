@@ -6,7 +6,7 @@ import MutedSpeaker from "../../assets/icon/icon-mute.png";
 import Setting from "../../assets/icon/icon-setting.png";
 import Out from "../../assets/icon/icon-out.png";
 
-import { useSoundStore } from "../../store/store";
+import { useAnswerStore, useSoundStore } from "../../store/store";
 
 import Timer from "../Timer/Timer";
 
@@ -61,6 +61,7 @@ const Header = styled.header`
 function GameStageHeader({ type, difficulty, puzzleTitle }) {
   const navigate = useNavigate();
   const { isMuted, changeMuteState } = useSoundStore();
+  const { isComplete } = useAnswerStore();
 
   const handleSound = () => {
     changeMuteState();
@@ -79,7 +80,7 @@ function GameStageHeader({ type, difficulty, puzzleTitle }) {
         {type === "select" && <div className="content">{difficulty}</div>}
         {type === "game" && (
           <div className="game-status">
-            <div className="content">{puzzleTitle}</div>
+            {isComplete && <div className="content">{puzzleTitle} </div>}
             <div className="timer">
               <Timer />
             </div>

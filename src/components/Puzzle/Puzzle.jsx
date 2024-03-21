@@ -22,9 +22,9 @@ const cubeGeometry = new THREE.BoxGeometry(2, 2, 2);
 const cubeLineGeometry = new THREE.CylinderGeometry(0.03, 0.03, 2, 8);
 
 function Puzzle({ puzzle, markingNumbers, defaultPuzzle }) {
-  const { size, answers } = puzzle;
+  const { size, answers, colors } = puzzle;
 
-  const { answer, setAnswer, setIsComplete } = useAnswerStore();
+  const { answer, setAnswer, isComplete, setIsComplete } = useAnswerStore();
   const { cubeStates, setCubeStates, setCubeStatesHistory, setHistoryIndex } =
     useCubeStatesStore();
   const { cameraPosition } = useCameraPositionStore();
@@ -77,37 +77,43 @@ function Puzzle({ puzzle, markingNumbers, defaultPuzzle }) {
             position={position}
             markingNumbers={markingNumbers}
             positivePosition={revertCoordinate(position, size)}
+            colors={colors}
+            size={size}
           ></Cube>
         ))}
       </group>
 
-      <group>
-        {CUBE_CONSTANT.BACK_SCAFFOLD[cameraPosition.join("")].map(
-          (position) => (
-            <DefaultScaffold
-              key={position}
-              layerPosition={position}
-              size={puzzle.size}
-              color="#ce4817"
-              thickness={1}
-            />
-          ),
-        )}
-      </group>
+      {!isComplete && (
+        <>
+          <group>
+            {CUBE_CONSTANT.BACK_SCAFFOLD[cameraPosition.join("")].map(
+              (position) => (
+                <DefaultScaffold
+                  key={position}
+                  layerPosition={position}
+                  size={puzzle.size}
+                  color="#ce4817"
+                  thickness={1}
+                />
+              ),
+            )}
+          </group>
 
-      <group>
-        {CUBE_CONSTANT.BACK_SCAFFOLD[cameraPosition.join("")].map(
-          (position) => (
-            <Scaffold
-              key={position}
-              layerPosition={position}
-              size={puzzle.size}
-              color="#ffffff"
-              thickness={3}
-            />
-          ),
-        )}
-      </group>
+          <group>
+            {CUBE_CONSTANT.BACK_SCAFFOLD[cameraPosition.join("")].map(
+              (position) => (
+                <Scaffold
+                  key={position}
+                  layerPosition={position}
+                  size={puzzle.size}
+                  color="#ffffff"
+                  thickness={3}
+                />
+              ),
+            )}
+          </group>
+        </>
+      )}
     </>
   );
 }

@@ -5,6 +5,8 @@ import { useParams } from "react-router-dom";
 import { useEffect, useRef, useState } from "react";
 import styled from "styled-components";
 
+import * as TWEEN from "@tweenjs/tween.js";
+
 import Puzzle from "../Puzzle/Puzzle";
 import BackGround from "./BackGround";
 import GameStageHeader from "../Header/GameStageHeader";
@@ -16,14 +18,12 @@ import usePuzzlesStore from "../../store/puzzle";
 import CUBE_CONSTANT from "../../constants/cube";
 
 import { clickCubeSound } from "../../utils/soundEffect";
-
 import {
   useClickModeStore,
   useOrbitControlStore,
   useAnswerStore,
 } from "../../store/store";
 
-import { GameCompleteModal } from "../GameCompleteModal/GameCompleteModal";
 import AutoCamera from "../Edge/AutoCamera";
 
 import getMarkingNumbers from "../../utils/getMarkingNumbers";
@@ -89,9 +89,33 @@ function GameStage() {
     return () => window.removeEventListener("keydown", handleContextMenu);
   }, []);
 
+  useEffect(() => {
+    if (camera.current && isComplete) {
+      const coords = {
+        x: camera.current.position.x,
+        y: camera.current.position.y,
+        z: camera.current.position.z,
+      };
+
+      const tween = new TWEEN.Tween(coords, false)
+        .to({ x: -12, y: 12, z: 12 }, 1000)
+        .easing(TWEEN.Easing.Quadratic.InOut)
+        .onUpdate(() =>
+          camera.current.position.set(coords.x, coords.y, coords.z),
+        )
+        .start();
+
+      function animate(time) {
+        tween.update(time);
+        requestAnimationFrame(animate);
+      }
+
+      requestAnimationFrame(animate);
+    }
+  }, [isComplete]);
+
   return (
     <Stage>
-      {isComplete && <GameCompleteModal />}
       <GameStageHeader
         difficulty={difficulty}
         type="game"
@@ -115,7 +139,7 @@ function GameStage() {
           fov={100}
           near={1}
           far={1000}
-          zoom={Math.floor(300 / Math.max(...puzzle.size))}
+          zoom={Math.floor(250 / Math.max(...puzzle.size))}
         />
 
         <Puzzle
