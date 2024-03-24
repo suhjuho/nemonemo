@@ -64,6 +64,15 @@ const soundStore = (set) => ({
   changeSoundState: (sound) => set({ sound }),
 });
 
+const tutorialStep = (set) => ({
+  tutorialStep: {
+    1: 1,
+    2: 1,
+    3: 1,
+  },
+  nextTutorialStep: (step) => set({ step }),
+});
+
 const useMarkingNumbersStore = create(markingNumbersStore);
 const useAnswerStore = create(answerStore);
 const useCubeStatesStore = create(cubeStatesStore);
@@ -74,6 +83,7 @@ const useDragPositionStore = create(dragPositionStore);
 const useCameraPositionStore = create(cameraPositionStore);
 const useLayerStore = create(layerStore);
 const useSoundStore = create(soundStore);
+const useTutorialStepStore = create(tutorialStep);
 
 export {
   useMarkingNumbersStore,
@@ -86,4 +96,5 @@ export {
   useCameraPositionStore,
   useLayerStore,
   useSoundStore,
+  useTutorialStepStore,
 };

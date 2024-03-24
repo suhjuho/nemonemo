@@ -54,6 +54,44 @@ const puzzlesStore = (set) => ({
         isSolved: false,
       },
       3: {
+        title: "Equal Sign",
+        size: [3, 3, 1],
+        answers: {
+          "000": true,
+          100: true,
+          200: true,
+
+          "020": true,
+          120: true,
+          220: true,
+        },
+        colors: {
+          "000": "#1a1a1a",
+          100: "#1a1a1a",
+          200: "#1a1a1a",
+
+          "020": "#1a1a1a",
+          120: "#1a1a1a",
+          220: "#1a1a1a",
+        },
+        showingNumbers: {
+          layerX: [
+            [0, 0],
+            [1, 0],
+            [2, 0],
+          ],
+          layerY: [
+            [0, 0],
+            [1, 0],
+            [2, 0],
+          ],
+          layerZ: [],
+        },
+        mainColor: "#1a1a1a",
+        subColor: "#f0f0f0",
+        isSolved: false,
+      },
+      4: {
         title: "Donut",
         size: [3, 2, 3],
         answers: {
