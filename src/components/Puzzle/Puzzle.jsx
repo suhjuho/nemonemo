@@ -1,6 +1,7 @@
 import { useEffect } from "react";
 import * as THREE from "three";
 
+import { useParams } from "react-router-dom";
 import convertCoordinate from "../../utils/convertCoordinate";
 
 import {
@@ -23,6 +24,7 @@ const cubeLineGeometry = new THREE.CylinderGeometry(0.03, 0.03, 2, 8);
 
 function Puzzle({ puzzle, markingNumbers, defaultPuzzle }) {
   const { size, answers, colors } = puzzle;
+  const { difficulty, stageNumber } = useParams();
 
   const { answer, setAnswer, isComplete, setIsComplete } = useAnswerStore();
   const { cubeStates, setCubeStates, setCubeStatesHistory, setHistoryIndex } =
@@ -64,7 +66,7 @@ function Puzzle({ puzzle, markingNumbers, defaultPuzzle }) {
     setCubeStates(newCubeStates);
     setCubeStatesHistory([JSON.parse(JSON.stringify(newCubeStates))]);
     setHistoryIndex(0);
-  }, []);
+  }, [difficulty, stageNumber, defaultPuzzle]);
 
   return (
     <>

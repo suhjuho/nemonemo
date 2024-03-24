@@ -17,6 +17,7 @@ import {
   useRightClickStore,
   useDragPositionStore,
   useLayerStore,
+  useSoundStore,
 } from "../../store/store";
 import checkAnswer from "../../utils/checkAnswer";
 import CUBE_CONSTANT from "../../constants/cube";
@@ -24,7 +25,7 @@ import CUBE_CONSTANT from "../../constants/cube";
 import CubeEdge from "./CubeEdge";
 import CubeNumbers from "./CubeNumbers";
 
-import { clickColorSound } from "../../utils/soundEffect";
+import { soundClick } from "../../utils/soundEffect";
 import revertCoordinate from "../../utils/revertCoordinate";
 
 function Cube({
@@ -47,10 +48,11 @@ function Cube({
   const { difficulty, stageNumber } = useParams();
 
   const { answer, isComplete, setIsComplete } = useAnswerStore();
-  const { clickMode } = useClickModeStore();
+  const { clickMode, setClickMode } = useClickModeStore();
   const { isRightClick, setIsRightClick } = useRightClickStore();
   const { dragPosition, setDragPosition } = useDragPositionStore();
   const { isOrbitEnable, setOrbitEnableState } = useOrbitControlStore();
+  const { sound } = useSoundStore();
   const {
     cubeStates,
     cubeStatesHistory,
@@ -61,6 +63,20 @@ function Cube({
   } = useCubeStatesStore();
   const { layerDirection, layers, currentLayer, setCurrentLayer } =
     useLayerStore();
+
+  useEffect(() => {
+    setIsClicked(false);
+    setIsRemoved(false);
+    setIsHidden(false);
+    setIsHover(false);
+    setClickMode("color");
+  }, [stageNumber]);
+
+  useEffect(() => {
+    if (isComplete) {
+      setIsHidden(false);
+    }
+  }, [isComplete]);
 
   function saveCubeStates() {
     cubeStates[position.join("")] = { isClicked, isRemoved, isHidden };
@@ -94,7 +110,7 @@ function Cube({
 
   const cubeState = useMemo(
     () => checkCubeState(),
-    [isClicked, isRemoved, clickMode, isHidden],
+    [isClicked, isRemoved, clickMode, isHidden, stageNumber],
   );
 
   const { color, opacity } = useSpring({
@@ -254,7 +270,10 @@ function Cube({
     setOrbitEnableState(true);
     setIsRightClick(false);
     setDragPosition([]);
-    clickColorSound();
+
+    if (!sound.isMuted) {
+      soundClick(sound.effectSound);
+    }
 
     if (historyIndex !== cubeStatesHistory.length - 1) {
       cubeStatesHistory.push(
@@ -268,8 +287,13 @@ function Cube({
     setHistoryIndex(cubeStatesHistory.length - 1);
 
     if (checkAnswer(answer, cubeStates)) {
-      puzzles[difficulty][stageNumber].isSolved = true;
+      if (puzzles[difficulty]) {
+        puzzles[difficulty][stageNumber].isSolved = true;
+      } else {
+        puzzles.tutorial[stageNumber].isSolved = true;
+      }
 
+      setClickMode("color");
       setPuzzles(puzzles);
       setIsComplete(true);
     }
