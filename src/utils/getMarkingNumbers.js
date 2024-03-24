@@ -6,7 +6,7 @@ function getMarkingNumbers(answers, showingNumbers, size) {
   };
 
   showingNumbers.layerX.forEach((showingNumber) => {
-    let [total, piece] = [0, 0];
+    let [total, piece] = [0, -1];
     let isContinuous = false;
 
     for (let x = 0; x < size[0]; x += 1) {
@@ -28,7 +28,7 @@ function getMarkingNumbers(answers, showingNumbers, size) {
   });
 
   showingNumbers.layerY.forEach((showingNumber) => {
-    let [total, piece] = [0, 0];
+    let [total, piece] = [0, -1];
     let isContinuous = false;
 
     for (let y = 0; y < size[1]; y += 1) {
@@ -50,7 +50,7 @@ function getMarkingNumbers(answers, showingNumbers, size) {
   });
 
   showingNumbers.layerZ.forEach((showingNumber) => {
-    let [total, piece] = [0, 0];
+    let [total, piece] = [0, -1];
     let isContinuous = false;
 
     for (let z = 0; z < size[2]; z += 1) {
