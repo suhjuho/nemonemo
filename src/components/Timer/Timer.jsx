@@ -1,15 +1,23 @@
 import { useState, useEffect } from "react";
+import { useAnswerStore } from "../../store/store";
 
-function Timer() {
+function Timer({ state }) {
   const [time, setTime] = useState(0);
+  const { isComplete } = useAnswerStore();
 
   useEffect(() => {
-    const timerId = setInterval(() => {
-      setTime((prev) => prev + 1);
-    }, 1000);
+    let timerId;
+
+    if (!isComplete) {
+      timerId = setInterval(() => {
+        setTime((prev) => prev + 1);
+      }, 1000);
+    } else {
+      clearInterval(timerId);
+    }
 
     return () => clearInterval(timerId);
-  }, []);
+  }, [state, isComplete]);
 
   function formatTime(currentTime) {
     const hours = Math.floor(currentTime / 3600);

@@ -6,26 +6,27 @@ import {
   useOrbitControlStore,
   useRightClickStore,
   useAnswerStore,
+  useSoundStore,
 } from "../../store/store";
 import usePuzzlesStore from "../../store/puzzle";
 
 import BACKGROUND_CONSTANT from "../../constants/background";
 
 import checkAnswer from "../../utils/checkAnswer";
-import { clickColorSound } from "../../utils/soundEffect";
+import { soundClick } from "../../utils/soundEffect";
 
-const planeGeometry = new THREE.PlaneGeometry(
-  ...BACKGROUND_CONSTANT.GEOMETRY_ARGS,
-);
-const backgroundMaterial = new THREE.MeshBasicMaterial({
-  ...BACKGROUND_CONSTANT.MATERIAL_ARGS,
-});
-
-function BackGround() {
+function BackGround({ color }) {
+  const planeGeometry = new THREE.PlaneGeometry(
+    ...BACKGROUND_CONSTANT.GEOMETRY_ARGS,
+  );
+  const backgroundMaterial = new THREE.MeshBasicMaterial({
+    color,
+  });
   const { clickMode, setClickMode } = useClickModeStore();
   const { setOrbitEnableState } = useOrbitControlStore();
   const { isRightClick, setIsRightClick } = useRightClickStore();
   const { answer, setIsComplete } = useAnswerStore();
+  const { sound } = useSoundStore();
   const {
     cubeStates,
     cubeStatesHistory,
@@ -51,7 +52,9 @@ function BackGround() {
     setOrbitEnableState(true);
 
     if (isRightClick) {
-      clickColorSound();
+      if (!sound.isMuted) {
+        soundClick(sound.effectSound);
+      }
     }
 
     setIsRightClick(false);
@@ -69,6 +72,7 @@ function BackGround() {
     if (checkAnswer(answer, cubeStates)) {
       puzzles[difficulty][stageNumber].isSolved = true;
 
+      setClickMode("color");
       setPuzzles(puzzles);
       setIsComplete(true);
     }

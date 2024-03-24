@@ -17,11 +17,13 @@ import usePuzzlesStore from "../../store/puzzle";
 
 import CUBE_CONSTANT from "../../constants/cube";
 
-import { clickCubeSound } from "../../utils/soundEffect";
+import { soundCube, soundEnding } from "../../utils/soundEffect";
 import {
   useClickModeStore,
   useOrbitControlStore,
   useAnswerStore,
+  useSoundStore,
+  useTutorialStepStore,
 } from "../../store/store";
 
 import AutoCamera from "../Edge/AutoCamera";
@@ -29,31 +31,40 @@ import AutoCamera from "../Edge/AutoCamera";
 import getMarkingNumbers from "../../utils/getMarkingNumbers";
 import getDefaultPuzzle from "../../utils/getDefaultPuzzle";
 
+import TutorialScene from "../TutorialScene/TutorialScene";
+
 const Stage = styled.div`
   position: relative;
   height: 100vh;
 `;
 
 function GameStage() {
+  const { tutorialStep } = useTutorialStepStore();
   const { puzzles } = usePuzzlesStore();
   const { clickMode, setClickMode } = useClickModeStore();
   const { isOrbitEnable } = useOrbitControlStore();
   const { difficulty, stageNumber } = useParams();
-  const { isComplete } = useAnswerStore();
+  const { isComplete, setIsComplete } = useAnswerStore();
+  const { sound } = useSoundStore();
   const controls = useRef();
   const camera = useRef();
 
   const puzzle = puzzles[difficulty][stageNumber];
   const { size, answers, showingNumbers } = puzzle;
 
-  const defaultPuzzle = getDefaultPuzzle(size);
+  const [defaultPuzzle, setDefaultPuzzle] = useState([]);
   const [markingNumbers, setMarkingNumbers] = useState({});
+
+  useEffect(() => {
+    setDefaultPuzzle(getDefaultPuzzle(size));
+    setIsComplete(false);
+  }, [difficulty, stageNumber]);
 
   useEffect(() => {
     const numbers = getMarkingNumbers(answers, showingNumbers, size);
 
     setMarkingNumbers(numbers);
-  }, []);
+  }, [difficulty, stageNumber]);
 
   useEffect(() => {
     function handleContextMenu(event) {
@@ -70,7 +81,7 @@ function GameStage() {
 
     window.addEventListener("keydown", handleContextMenu);
     return () => window.removeEventListener("keydown", handleContextMenu);
-  }, [clickMode]);
+  }, [clickMode, difficulty, stageNumber]);
 
   useEffect(() => {
     function handleContextMenu(event) {
@@ -81,13 +92,15 @@ function GameStage() {
       const isModeChange = CUBE_CONSTANT.MODE_CHANGE_KEYS[event.key];
 
       if (isInside || isOutside || isUndo || isRedo || isModeChange) {
-        clickCubeSound();
+        if (!sound.isMuted) {
+          soundCube(sound.effectSound);
+        }
       }
     }
 
     window.addEventListener("keydown", handleContextMenu);
     return () => window.removeEventListener("keydown", handleContextMenu);
-  }, []);
+  }, [difficulty, stageNumber]);
 
   useEffect(() => {
     if (camera.current && isComplete) {
@@ -111,24 +124,39 @@ function GameStage() {
       }
 
       requestAnimationFrame(animate);
+
+      if (!sound.isMuted) {
+        soundEnding(sound.bgmSound);
+      }
     }
-  }, [isComplete]);
+  }, [isComplete, difficulty, stageNumber]);
 
   return (
     <Stage>
+      {difficulty === "tutorial" && tutorialStep[stageNumber] !== 0 && (
+        <TutorialScene />
+      )}
+
       <GameStageHeader
         difficulty={difficulty}
         type="game"
         puzzleTitle={puzzle.title}
+        puzzleSize={puzzle.size}
       />
       <GameStageSideBar />
-      <GameStageFooter />
+      {isComplete && (
+        <GameStageFooter
+          difficulty={difficulty}
+          puzzleLength={Object.keys(puzzles[difficulty]).length}
+          currentIndex={stageNumber}
+        />
+      )}
 
       <Canvas>
         <ambientLight intensity={1} />
         <pointLight position={[0, 15, 20]} />
-        <directionalLight intensity={1} position={[10, 5, -10]} />
-        <directionalLight intensity={1} position={[10, 5, 10]} />
+        <directionalLight intensity={3} position={[-10, -8, -6]} />
+        <directionalLight intensity={5} position={[10, 8, 6]} />
 
         <AutoCamera puzzle={puzzle} />
 
@@ -147,7 +175,7 @@ function GameStage() {
           markingNumbers={markingNumbers}
           defaultPuzzle={defaultPuzzle}
         />
-        <BackGround />
+        <BackGround color={puzzle.subColor} />
 
         <OrbitControls
           ref={controls}

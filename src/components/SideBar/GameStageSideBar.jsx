@@ -1,144 +1,65 @@
-import { BiLayerMinus, BiLayerPlus, BiMouseAlt } from "react-icons/bi";
-import { TbCubePlus, TbClick, TbCube, TbCubeOff } from "react-icons/tb";
-import { PiEyedropperSampleFill } from "react-icons/pi";
-import { CgScrollV } from "react-icons/cg";
-
 import styled from "styled-components";
+import LayerIn from "../../assets/icon/layer-in.png";
+import LayerOut from "../../assets/icon/layer-out.png";
+import RightClick from "../../assets/icon/right-click.png";
+import LeftClick from "../../assets/icon/left-click.png";
+import CubeColor from "../../assets/icon/cube-color.png";
+import CubeRemove from "../../assets/icon/cube-remove.png";
+import CubeAdd from "../../assets/icon/cube-add.png";
+import Undo from "../../assets/icon/undo.png";
+import Redo from "../../assets/icon/redo.png";
 
-import { useClickModeStore, useLayerStore } from "../../store/store";
+import { useClickModeStore, useAnswerStore } from "../../store/store";
+import StyledIcon from "../StyledIcon/StyledIcon";
 
 const SideBar = styled.section`
   position: fixed;
-  top: 0;
   left: 0;
+  height: 100vh;
   display: flex;
   flex-direction: column;
   justify-content: center;
   align-items: start;
-  height: 100vh;
   z-index: 5;
 
-  .icon {
-    width: 3rem;
-    height: 3rem;
-    margin: 1rem;
+  .history {
+    display: flex;
+    position: fixed;
+    bottom: 10px;
   }
-`;
-
-const Icon = styled.div`
-  position: relative;
-  display: flex;
-  align-items: center;
-`;
-
-const MainIcon = styled.div`
-  position: relative;
-  margin-right: 5px;
-
-  .event-icon {
-    position: absolute;
-
-    width: 1.5rem;
-    height: 1.5rem;
-  }
-
-  .left-click-icon {
-    top: 15%;
-    left: 0%;
-  }
-
-  .right-click-icon {
-    top: 15%;
-    left: 70%;
-  }
-
-  .scroll-icon {
-    top: 30%;
-    left: 70%;
-
-    width: 2rem;
-    height: 2rem;
-  }
-
-  .color-dropper-icon {
-    left: 70%;
-  }
-`;
-
-const Command = styled.div`
-  position: absolute;
-  right: 0;
-  bottom: 0;
-
-  font-size: 1.8rem;
 `;
 
 function GameStageSideBar() {
   const { clickMode } = useClickModeStore();
-  const { layerMode } = useLayerStore();
+  const { isComplete } = useAnswerStore();
 
   return (
-    <SideBar>
-      {clickMode === "color" && (
-        <Icon>
-          <div style={{ position: "relative" }}>
-            <MainIcon>
-              <TbCube className="icon icon-animation" />
-              <PiEyedropperSampleFill className="event-icon color-dropper-icon" />
-            </MainIcon>
-            <Command>C</Command>
-          </div>
-          <h3>Color Mode</h3>
-        </Icon>
-      )}
+    <SideBar style={{ visibility: `${isComplete ? "hidden" : "visible"}` }}>
+      {clickMode === "color" && <StyledIcon src={CubeColor} command="C" />}
 
       {clickMode === "cube" && (
-        <Icon>
-          <div style={{ position: "relative" }}>
-            <TbCubePlus className="icon" />
-            <Command>C</Command>
-          </div>
-          <div style={{ position: "relative" }}>
-            <TbCubeOff className="icon" />
-            <Command>C</Command>
-          </div>
-          <h3>Cube Mode</h3>
-        </Icon>
+        <div style={{ display: "flex" }}>
+          <StyledIcon src={CubeRemove} command="C" />
+          <StyledIcon src={CubeAdd} command="C" />
+        </div>
       )}
 
-      <Icon>
-        <MainIcon>
-          <BiMouseAlt className="icon" />
-          <TbClick
-            className="event-icon left-click-icon"
-            style={{ transform: "scaleX(-1)" }}
-          />
-        </MainIcon>
-        <h3>Mark</h3>
-      </Icon>
-      <Icon>
-        <MainIcon>
-          <BiMouseAlt className="icon" />
-          <TbClick className="event-icon right-click-icon" />
-        </MainIcon>
-        <h3>Mode Change</h3>
-      </Icon>
-      <Icon>
-        <MainIcon>
-          <BiMouseAlt className="icon" />
-          <CgScrollV className="event-icon scroll-icon" />
-        </MainIcon>
-        <h3>Layer Change</h3>
-      </Icon>
+      <StyledIcon
+        src={LeftClick}
+        description={clickMode === "color" ? "Mark" : "Remove"}
+      />
+      <StyledIcon
+        src={RightClick}
+        description={clickMode === "color" ? "Remove" : "Restore"}
+      />
 
-      <Icon>
-        <BiLayerMinus className="icon" />
-        <Command>Q</Command>
-      </Icon>
-      <Icon>
-        <BiLayerPlus className="icon" />
-        <Command>W</Command>
-      </Icon>
+      <StyledIcon src={LayerIn} command="Q" />
+      <StyledIcon src={LayerOut} command="W" />
+
+      <div className="history">
+        <StyledIcon src={Undo} command="Z" />
+        <StyledIcon src={Redo} command="X" />
+      </div>
     </SideBar>
   );
 }
