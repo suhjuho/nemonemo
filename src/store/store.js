@@ -56,8 +56,12 @@ const layerStore = (set) => ({
 });
 
 const soundStore = (set) => ({
-  isMuted: true,
-  changeMuteState: () => set((state) => ({ isMuted: !state.isMuted })),
+  sound: {
+    isMuted: true,
+    bgmSound: 0.3,
+    effectSound: 0.3,
+  },
+  changeSoundState: (sound) => set({ sound }),
 });
 
 const useMarkingNumbersStore = create(markingNumbersStore);

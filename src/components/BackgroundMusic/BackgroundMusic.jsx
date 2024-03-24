@@ -5,15 +5,17 @@ import { useSoundStore } from "../../store/store";
 
 function BackgroundMusic() {
   const audioRef = useRef();
-  const { isMuted } = useSoundStore();
+  const { sound } = useSoundStore();
 
   useEffect(() => {
-    if (!isMuted) {
+    if (!sound.isMuted) {
       audioRef.current.play();
     } else {
       audioRef.current.pause();
     }
-  }, [isMuted]);
+
+    audioRef.current.volume = sound.bgmSound;
+  }, [sound.isMuted, sound.bgmSound]);
 
   return (
     <audio ref={audioRef} loop>

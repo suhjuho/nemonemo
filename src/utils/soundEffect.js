@@ -1,27 +1,37 @@
 import * as THREE from "three";
 
 import cubeSound from "../assets/music/cubeSound.wav";
-import colorSound from "../assets/music/colorSound.wav";
+import colorSound from "../assets/music/click.mp3";
+import endingSound from "../assets/music/endingSound.wav";
 
 const listener = new THREE.AudioListener();
 const audioLoader = new THREE.AudioLoader();
 
-const clickCubeSound = () => {
+const soundCube = (effectSound) => {
   audioLoader.load(cubeSound, (buffer) => {
     const sound = new THREE.Audio(listener);
     sound.setBuffer(buffer);
-    sound.setVolume(0.3);
+    sound.setVolume(effectSound);
     sound.play();
   });
 };
 
-const clickColorSound = () => {
+const soundEnding = (effectSound) => {
+  audioLoader.load(endingSound, (buffer) => {
+    const sound = new THREE.Audio(listener);
+    sound.setBuffer(buffer);
+    sound.setVolume(effectSound);
+    sound.play();
+  });
+};
+
+const soundClick = (effectSound) => {
   audioLoader.load(colorSound, (buffer) => {
     const sound = new THREE.Audio(listener);
     sound.setBuffer(buffer);
-    sound.setVolume(0.3);
+    sound.setVolume(effectSound);
     sound.play();
   });
 };
 
-export { clickCubeSound, clickColorSound };
+export { soundCube, soundEnding, soundClick };
