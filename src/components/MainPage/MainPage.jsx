@@ -38,10 +38,21 @@ const Difficulties = styled.div`
 const DifficultyImg = styled.img`
   width: 300px;
   border-radius: 10px;
+  box-shadow: 2px 4px 8px;
+  transition: transform 0.3s ease-in-out;
+
+  &:hover {
+    transform: translateY(-5px);
+  }
+
+  &:active {
+    color: #007302;
+  }
 `;
 
 const DifficultyLabel = styled.div`
   font-size: 64px;
+  font-weight: 900;
 `;
 
 function Main() {

@@ -26,6 +26,18 @@ const Stage = styled.div`
 const Icon = styled.img`
   width: 60px;
   margin: 0px 10px;
+  border-radius: 10px;
+  box-shadow: 2px 4px 8px;
+
+  transition: transform 0.3s ease-in-out;
+
+  &:hover {
+    transform: translateY(-1px);
+  }
+
+  &:active {
+    color: #007302;
+  }
 `;
 
 const Puzzles = styled.div`
@@ -45,7 +57,8 @@ const Puzzle = styled.div`
 `;
 
 const PuzzleLabel = styled.div`
-  font-size: 64px;
+  font-size: 48px;
+  font-weight: 700;
 `;
 
 const PuzzlePreview = styled.div`
@@ -53,6 +66,8 @@ const PuzzlePreview = styled.div`
   width: 200px;
   height: 200px;
   border-radius: 30px;
+  box-shadow: 2px 4px 8px;
+
   ${({ idx }) =>
     idx === 0 &&
     `
@@ -63,20 +78,30 @@ const PuzzlePreview = styled.div`
 
 const PlayButton = styled.div`
   position: absolute;
-  bottom: 25vh;
+  bottom: 10vh;
   width: 100vw;
   display: flex;
   justify-content: center;
 
   .play-button {
     width: 300px;
-    height: 60px;
+    height: 80px;
     border-radius: 30px;
     background-color: #ffffff;
     text-align: center;
-    line-height: 60px;
+    line-height: 80px;
     font-size: 36px;
-    box-shadow: #000000;
+    font-weight: 900;
+    box-shadow: 2px 4px 8px;
+    transition: transform 0.3s ease-in-out;
+
+    &:hover {
+      transform: translateY(-1px);
+    }
+
+    &:active {
+      color: #000073;
+    }
   }
 `;
 
@@ -102,7 +127,6 @@ function GameSelectPage() {
   }, []);
 
   const handleIndexIncrease = () => {
-    console.log(currentIndex, allPuzzles.length);
     if (allPuzzles.length > currentIndex) {
       setCurrentIndex(currentIndex + 1);
     }
@@ -202,7 +226,9 @@ function GameSelectPage() {
                 )}
               </PuzzlePreview>
               <PuzzleLabel>
-                {currentPuzzle.isSolved ? currentPuzzle.title : "?"}
+                {currentPuzzle.isSolved
+                  ? currentPuzzle.title
+                  : currentPuzzle.size.join("x")}
               </PuzzleLabel>
             </Puzzle>
           ) : (

@@ -9,13 +9,12 @@ body {
 }
 
 @font-face {
-  font-family: "Micro";
-  font-weight: normal;
+  font-family: "Cantarell";
   src: url("/Cantarell-Regular.ttf") format("truetype");
 }
 
 body {
-  font-family: "Micro";
+  font-family: "Cantarell";
   background-image: url("../assets/wallpaper.png");
   min-height: 100vh;
 }
