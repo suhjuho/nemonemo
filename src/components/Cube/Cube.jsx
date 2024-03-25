@@ -8,6 +8,7 @@ import React, {
 import { useSpring, animated, config } from "@react-spring/three";
 
 import { useParams } from "react-router-dom";
+import axios from "axios";
 import usePuzzlesStore from "../../store/puzzle";
 import {
   useAnswerStore,
@@ -18,7 +19,10 @@ import {
   useDragPositionStore,
   useLayerStore,
   useSoundStore,
+  useGameTimeStore,
 } from "../../store/store";
+
+import useSolvedPuzzlesStore from "../../store/solvedPuzzles";
 import checkAnswer from "../../utils/checkAnswer";
 import CUBE_CONSTANT from "../../constants/cube";
 
@@ -27,6 +31,23 @@ import CubeNumbers from "./CubeNumbers";
 
 import { soundClick } from "../../utils/soundEffect";
 import revertCoordinate from "../../utils/revertCoordinate";
+
+function rank(difficulty, stageNumber, time) {
+  async function saveScore() {
+    try {
+      const response = await axios.post(
+        `${import.meta.env.VITE_SAVE_PUZZLE_API}`,
+        { score: { difficulty, stageNumber, time } },
+      );
+
+      console.log(response);
+    } catch (error) {
+      console.error(error);
+    }
+  }
+
+  saveScore();
+}
 
 function Cube({
   position,
@@ -44,9 +65,10 @@ function Cube({
   const [isHover, setIsHover] = useState(false);
   const [isVisible, setIsVisible] = useState(true);
 
+  const { difficulty = "tutorial", stageNumber } = useParams();
+  const { gameTime } = useGameTimeStore();
+  const { solvedPuzzles, setSolvedPuzzles } = useSolvedPuzzlesStore();
   const { puzzles, setPuzzles } = usePuzzlesStore();
-  const { difficulty, stageNumber } = useParams();
-
   const { answer, isComplete, setIsComplete } = useAnswerStore();
   const { clickMode, setClickMode } = useClickModeStore();
   const { isRightClick, setIsRightClick } = useRightClickStore();
@@ -287,11 +309,10 @@ function Cube({
     setHistoryIndex(cubeStatesHistory.length - 1);
 
     if (checkAnswer(answer, cubeStates)) {
-      if (puzzles[difficulty]) {
-        puzzles[difficulty][stageNumber].isSolved = true;
-      } else {
-        puzzles.tutorial[stageNumber].isSolved = true;
-      }
+      rank(difficulty, stageNumber, gameTime);
+
+      solvedPuzzles[difficulty][stageNumber] = true;
+      setSolvedPuzzles(solvedPuzzles);
 
       setClickMode("color");
       setPuzzles(puzzles);

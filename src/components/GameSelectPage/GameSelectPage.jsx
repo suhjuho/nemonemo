@@ -10,13 +10,16 @@ import GameStageHeader from "../Header/GameStageHeader";
 
 import { useAnswerStore } from "../../store/store";
 import usePuzzlesStore from "../../store/puzzle";
-import usePuzzlesIndexStore from "../../store/solve";
+import usePuzzlesIndexStore from "../../store/selectPuzzlesIndex";
+import useSolvedPuzzlesStore from "../../store/solvedPuzzles";
 
 import getDefaultPuzzle from "../../utils/getDefaultPuzzle";
 import convertCoordinate from "../../utils/convertCoordinate";
 
 import Back from "../../assets/icon/back.png";
 import Next from "../../assets/icon/next.png";
+import Detail from "../../assets/icon/detail.png";
+import formatTime from "../../utils/formatTime";
 
 const Stage = styled.div`
   position: relative;
@@ -105,14 +108,77 @@ const PlayButton = styled.div`
   }
 `;
 
+const DetailIcon = styled.img`
+  position: absolute;
+  top: 10px;
+  right: 10px;
+  width: 30px;
+  height: 30px;
+  background-color: #ffffff;
+  border-radius: 10px;
+  box-shadow: 0px 0px 8px;
+
+  transition: transform 0.3s ease-in-out;
+  z-index: 50;
+
+  &:hover {
+    transform: translateY(-1px);
+  }
+
+  &:active {
+    color: #c5dd0e;
+  }
+`;
+
+const RankingModal = styled.div`
+  position: absolute;
+  z-index: 50;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-around;
+  align-items: center;
+  border: 3px solid white;
+  padding: 20px;
+  background-color: rgba(255, 255, 255);
+  border-radius: 20px;
+  box-shadow: 0px 0px 8px black;
+  top: 40px;
+  right: 40px;
+  width: 100px;
+  height: 100px;
+  overflow: scroll;
+
+  ${({ idx }) =>
+    idx === 0 &&
+    `
+    width: 180px;
+    height: 180px;
+  `}
+`;
+
+const PlayTime = styled.div`
+  font-size: 16px;
+  margin-bottom: 4px;
+
+  ${({ idx }) =>
+    idx === 0 &&
+    `
+    font-size: 24px;
+  `}
+`;
+
 function GameSelectPage() {
   const navigate = useNavigate();
   const { difficulty } = useParams();
   const { puzzles } = usePuzzlesStore();
   const { setIsComplete } = useAnswerStore();
   const { puzzlesIndex, setPuzzlesIndex } = usePuzzlesIndexStore();
+  const { solvedPuzzles } = useSolvedPuzzlesStore();
   const [allPuzzles, setAllPuzzles] = useState([]);
   const [currentIndex, setCurrentIndex] = useState(1);
+  const [isRankShown, setIsRankShown] = useState(false);
+  const [ranking, setRanking] = useState([]);
+  const [rankIndex, setRankIndex] = useState(-1);
 
   useEffect(() => {
     setCurrentIndex(puzzlesIndex[difficulty]);
@@ -145,11 +211,35 @@ function GameSelectPage() {
         <Icon src={Back} onClick={handleIndexDecrease} />
         {[-2, -1, 0, 1, 2].map((idx) => {
           const currentPuzzle = puzzles[difficulty][currentIndex + idx];
+          const isSolved = solvedPuzzles[difficulty][currentIndex + idx];
 
           return currentPuzzle ? (
             <Puzzle key={currentPuzzle.title + currentPuzzle.size}>
               <PuzzlePreview idx={idx}>
-                {currentPuzzle.isSolved ? (
+                {isSolved && (
+                  <DetailIcon
+                    src={Detail}
+                    onClick={() => {
+                      setRankIndex(currentIndex + idx);
+                      setIsRankShown((prev) => !prev);
+                      setRanking(currentPuzzle.ranking);
+                    }}
+                  />
+                )}
+                {isSolved &&
+                  isRankShown &&
+                  rankIndex === currentIndex + idx && (
+                    <RankingModal idx={idx}>
+                      <span>풀이 시간</span>
+                      {ranking.map((time, i) => (
+                        <PlayTime
+                          key={time + i}
+                          idx={idx}
+                        >{`${i}등 ${formatTime(ranking[i]).slice(3)}초`}</PlayTime>
+                      ))}
+                    </RankingModal>
+                  )}
+                {isSolved ? (
                   <Canvas
                     style={{
                       background: currentPuzzle.subColor,
@@ -226,9 +316,7 @@ function GameSelectPage() {
                 )}
               </PuzzlePreview>
               <PuzzleLabel>
-                {currentPuzzle.isSolved
-                  ? currentPuzzle.title
-                  : currentPuzzle.size.join("x")}
+                {isSolved ? currentPuzzle.title : currentPuzzle.size.join("x")}
               </PuzzleLabel>
             </Puzzle>
           ) : (

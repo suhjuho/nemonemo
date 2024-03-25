@@ -1,5 +1,6 @@
 import * as THREE from "three";
 import { useParams } from "react-router-dom";
+import axios from "axios";
 import {
   useClickModeStore,
   useCubeStatesStore,
@@ -7,6 +8,7 @@ import {
   useRightClickStore,
   useAnswerStore,
   useSoundStore,
+  useGameTimeStore,
 } from "../../store/store";
 import usePuzzlesStore from "../../store/puzzle";
 
@@ -14,6 +16,24 @@ import BACKGROUND_CONSTANT from "../../constants/background";
 
 import checkAnswer from "../../utils/checkAnswer";
 import { soundClick } from "../../utils/soundEffect";
+import useSolvedPuzzlesStore from "../../store/solvedPuzzles";
+
+function rank(difficulty, stageNumber, time) {
+  async function saveScore() {
+    try {
+      const response = await axios.post(
+        `${import.meta.env.VITE_SAVE_PUZZLE_API}`,
+        { score: { difficulty, stageNumber, time } },
+      );
+
+      console.log(response);
+    } catch (error) {
+      console.error(error);
+    }
+  }
+
+  saveScore();
+}
 
 function BackGround({ color }) {
   const planeGeometry = new THREE.PlaneGeometry(
@@ -35,7 +55,9 @@ function BackGround({ color }) {
     setHistoryIndex,
   } = useCubeStatesStore();
   const { puzzles, setPuzzles } = usePuzzlesStore();
+  const { solvedPuzzles, setSolvedPuzzles } = useSolvedPuzzlesStore();
   const { difficulty, stageNumber } = useParams();
+  const { gameTime } = useGameTimeStore();
 
   function handleContextMenu(event) {
     event.stopPropagation();
@@ -70,7 +92,10 @@ function BackGround({ color }) {
     }
 
     if (checkAnswer(answer, cubeStates)) {
-      puzzles[difficulty][stageNumber].isSolved = true;
+      rank(difficulty, stageNumber, gameTime);
+
+      solvedPuzzles[difficulty][stageNumber] = true;
+      setSolvedPuzzles(solvedPuzzles);
 
       setClickMode("color");
       setPuzzles(puzzles);

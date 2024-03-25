@@ -1,8 +1,10 @@
 import { useState, useEffect } from "react";
-import { useAnswerStore } from "../../store/store";
+import { useAnswerStore, useGameTimeStore } from "../../store/store";
+import formatTime from "../../utils/formatTime";
 
 function Timer({ state }) {
   const [time, setTime] = useState(0);
+  const { changeGameTimeState } = useGameTimeStore();
   const { isComplete } = useAnswerStore();
 
   useEffect(() => {
@@ -11,21 +13,14 @@ function Timer({ state }) {
     if (!isComplete) {
       timerId = setInterval(() => {
         setTime((prev) => prev + 1);
+        changeGameTimeState(time + 1);
       }, 1000);
     } else {
       clearInterval(timerId);
     }
 
     return () => clearInterval(timerId);
-  }, [state, isComplete]);
-
-  function formatTime(currentTime) {
-    const hours = Math.floor(currentTime / 3600);
-    const minutes = Math.floor(currentTime / 60) - hours * 60;
-    const seconds = currentTime % 60;
-
-    return `${hours < 10 ? "0" : ""}${hours}:${minutes < 10 ? "0" : ""}${minutes}:${seconds < 10 ? "0" : ""}${seconds}`;
-  }
+  }, [time, state, isComplete]);
 
   return <div>{formatTime(time)}</div>;
 }

@@ -64,6 +64,11 @@ const soundStore = (set) => ({
   changeSoundState: (sound) => set({ sound }),
 });
 
+const gameTimeStore = (set) => ({
+  gameTime: 0,
+  changeGameTimeState: (gameTime) => set({ gameTime }),
+});
+
 const tutorialStep = (set) => ({
   tutorialStep: {
     1: 1,
@@ -83,6 +88,7 @@ const useDragPositionStore = create(dragPositionStore);
 const useCameraPositionStore = create(cameraPositionStore);
 const useLayerStore = create(layerStore);
 const useSoundStore = create(soundStore);
+const useGameTimeStore = create(gameTimeStore);
 const useTutorialStepStore = create(tutorialStep);
 
 export {
@@ -96,5 +102,6 @@ export {
   useCameraPositionStore,
   useLayerStore,
   useSoundStore,
+  useGameTimeStore,
   useTutorialStepStore,
 };
