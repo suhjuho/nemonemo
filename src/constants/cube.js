@@ -53,10 +53,10 @@ const CUBE_CONSTANT = {
     blank: { opacity: 1, color: "#ffffff" },
     marked: { opacity: 1, color: "#55cd55" },
     invisible: { color: "#ffffff" },
-    haze: { opacity: 0.2, color: "#96c1f0" },
+    haze: { opacity: 0.5, color: "#96c1f0" },
   },
   HOVER_MATERIAL_ARGS: {
-    hover: { emissive: "#5bea5b" },
+    hover: { emissive: "#ffffff" },
     default: {},
   },
   BACK_SCAFFOLD: {
@@ -68,6 +68,7 @@ const CUBE_CONSTANT = {
     101: ["BACK", "LEFT", "UP"],
     100: ["FORTH", "LEFT", "UP"],
     "000": ["FORTH", "RIGHT", "UP"],
+    moving: [],
   },
   INSIDE_CUBE_KEYS: { q: true, Q: true, ㅂ: true },
   OUTSIDE_CUBE_KEYS: { w: true, W: true, ㅈ: true },

@@ -5,7 +5,7 @@ function getMarkingNumbers(answers, showingNumbers, size) {
     layerZ: {},
   };
 
-  showingNumbers.layerX.forEach((showingNumber) => {
+  Object.keys(showingNumbers.layerX).forEach((showingNumber) => {
     let [total, piece] = [0, -1];
     let isContinuous = false;
 
@@ -24,10 +24,10 @@ function getMarkingNumbers(answers, showingNumbers, size) {
       }
     }
 
-    markingNumbers.layerX[showingNumber.join("")] = { total, piece };
+    markingNumbers.layerX[showingNumber] = { total, piece };
   });
 
-  showingNumbers.layerY.forEach((showingNumber) => {
+  Object.keys(showingNumbers.layerY).forEach((showingNumber) => {
     let [total, piece] = [0, -1];
     let isContinuous = false;
 
@@ -46,10 +46,10 @@ function getMarkingNumbers(answers, showingNumbers, size) {
       }
     }
 
-    markingNumbers.layerY[showingNumber.join("")] = { total, piece };
+    markingNumbers.layerY[showingNumber] = { total, piece };
   });
 
-  showingNumbers.layerZ.forEach((showingNumber) => {
+  Object.keys(showingNumbers.layerZ).forEach((showingNumber) => {
     let [total, piece] = [0, -1];
     let isContinuous = false;
 
@@ -68,7 +68,7 @@ function getMarkingNumbers(answers, showingNumbers, size) {
       }
     }
 
-    markingNumbers.layerZ[showingNumber.join("")] = { total, piece };
+    markingNumbers.layerZ[showingNumber] = { total, piece };
   });
 
   return markingNumbers;
