@@ -106,10 +106,12 @@ function CustomPuzzleFooter({ customCubesState }) {
   const handleSubmitCustomPuzzle = () => {
     async function saveCustomPuzzle() {
       try {
-        await axios.post(
+        const response = await axios.post(
           `${import.meta.env.VITE_SAVE_PUZZLE_API}`,
-          puzzleMaking,
+          { puzzle: puzzleMaking },
         );
+
+        console.log(response);
       } catch (error) {
         console.error(error);
       }
