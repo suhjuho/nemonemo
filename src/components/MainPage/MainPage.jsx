@@ -1,8 +1,9 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 
 import styled from "styled-components";
 
 import { useNavigate } from "react-router-dom";
+import axios from "axios";
 import GameStageHeader from "../Header/GameStageHeader";
 
 import usePuzzlesStore from "../../store/puzzle";
@@ -13,7 +14,28 @@ import Duck from "../../assets/puzzle/duck.png";
 import Sunflower from "../../assets/puzzle/sunflower.png";
 import Matchstick from "../../assets/puzzle/matchstick.png";
 import Cookie from "../../assets/puzzle/cookie.png";
+import Custom from "../../assets/puzzle/custom.png";
 import Donut from "../../assets/puzzle/donut.png";
+import Plus from "../../assets/icon/icon-plus.png";
+
+const Icon = styled.img`
+  position: fixed;
+  bottom: 20px;
+  right: 20px;
+  width: 60px;
+  margin: 0px 10px;
+  border-radius: 10px;
+  box-shadow: 2px 4px 8px;
+  transition: transform 0.3s ease-in-out;
+
+  &:hover {
+    transform: translateY(-1px);
+  }
+
+  &:active {
+    color: #007302;
+  }
+`;
 
 const Stage = styled.div`
   position: relative;
@@ -57,7 +79,54 @@ const DifficultyLabel = styled.div`
 
 function Main() {
   const navigate = useNavigate();
-  const { puzzles } = usePuzzlesStore();
+  const { puzzles, setPuzzles } = usePuzzlesStore();
+  const [solvedPuzzleCount, setSolvedPuzzleCount] = useState([0, 0, 0, 0, 0]);
+
+  useEffect(() => {
+    async function fetchCustomPuzzles() {
+      try {
+        const response = await axios.get(
+          `${import.meta.env.VITE_FETCH_PUZZLE_API}`,
+        );
+
+        const { customPuzzle } = response.data;
+
+        customPuzzle.forEach((puzzle, index) => {
+          if (
+            !puzzles.custom[index + 1] ||
+            puzzles.custom[index + 1]._id !== puzzle._id
+          ) {
+            puzzles.custom[index + 1] = puzzle;
+          }
+        });
+
+        setPuzzles(puzzles);
+      } catch (error) {
+        console.error(error);
+      }
+    }
+
+    fetchCustomPuzzles();
+  }, []);
+
+  useEffect(() => {
+    const newSolvedPuzzleCount = [];
+
+    ["tutorial", "easy", "normal", "hard", "custom"].forEach((gameType) => {
+      const solvedPuzzles = Object.entries(puzzles[gameType]).reduce(
+        (accumulate, current) => {
+          const addNumber = current[1].isSolved ? 1 : 0;
+
+          return accumulate + addNumber;
+        },
+        0,
+      );
+
+      newSolvedPuzzleCount.push(solvedPuzzles);
+    });
+
+    setSolvedPuzzleCount(newSolvedPuzzleCount);
+  }, []);
 
   return (
     <Stage>
@@ -72,7 +141,7 @@ function Main() {
           />
           <DifficultyLabel>Tutorial</DifficultyLabel>
           <DifficultyLabel>
-            {`0 / ${Object.entries(puzzles.tutorial).length}`}
+            {`${solvedPuzzleCount[0]} / ${Object.entries(puzzles.tutorial).length}`}
           </DifficultyLabel>
         </Difficulty>
 
@@ -84,7 +153,7 @@ function Main() {
           />
           <DifficultyLabel>Easy </DifficultyLabel>
           <DifficultyLabel>
-            {`0 / ${Object.entries(puzzles.easy).length}`}
+            {`${solvedPuzzleCount[1]} / ${Object.entries(puzzles.easy).length}`}
           </DifficultyLabel>
         </Difficulty>
 
@@ -96,7 +165,7 @@ function Main() {
           />
           <DifficultyLabel>Normal</DifficultyLabel>
           <DifficultyLabel>
-            {`0 / ${Object.entries(puzzles.normal).length}`}
+            {`${solvedPuzzleCount[2]} / ${Object.entries(puzzles.normal).length}`}
           </DifficultyLabel>
         </Difficulty>
 
@@ -108,10 +177,23 @@ function Main() {
           />
           <DifficultyLabel>Hard</DifficultyLabel>
           <DifficultyLabel>
-            {`0 / ${Object.entries(puzzles.hard).length}`}
+            {`${solvedPuzzleCount[3]} / ${Object.entries(puzzles.hard).length}`}
+          </DifficultyLabel>
+        </Difficulty>
+
+        <Difficulty>
+          <DifficultyImg
+            src={Custom}
+            alt="custom"
+            onClick={() => navigate("/puzzles/custom")}
+          />
+          <DifficultyLabel>Custom</DifficultyLabel>
+          <DifficultyLabel>
+            {`${solvedPuzzleCount[4]} / ${Object.entries(puzzles.custom).length}`}
           </DifficultyLabel>
         </Difficulty>
       </Difficulties>
+      <Icon src={Plus} onClick={() => navigate("/puzzle/making")} />
     </Stage>
   );
 }

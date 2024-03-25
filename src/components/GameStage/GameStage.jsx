@@ -23,7 +23,6 @@ import {
   useOrbitControlStore,
   useAnswerStore,
   useSoundStore,
-  useTutorialStepStore,
 } from "../../store/store";
 
 import AutoCamera from "../Edge/AutoCamera";
@@ -31,15 +30,12 @@ import AutoCamera from "../Edge/AutoCamera";
 import getMarkingNumbers from "../../utils/getMarkingNumbers";
 import getDefaultPuzzle from "../../utils/getDefaultPuzzle";
 
-import TutorialScene from "../TutorialScene/TutorialScene";
-
 const Stage = styled.div`
   position: relative;
   height: 100vh;
 `;
 
 function GameStage() {
-  const { tutorialStep } = useTutorialStepStore();
   const { puzzles } = usePuzzlesStore();
   const { clickMode, setClickMode } = useClickModeStore();
   const { isOrbitEnable } = useOrbitControlStore();
@@ -133,10 +129,6 @@ function GameStage() {
 
   return (
     <Stage>
-      {difficulty === "tutorial" && tutorialStep[stageNumber] !== 0 && (
-        <TutorialScene />
-      )}
-
       <GameStageHeader
         difficulty={difficulty}
         type="game"

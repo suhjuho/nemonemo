@@ -3,6 +3,7 @@ import MainPage from "./MainPage/MainPage";
 import GameStage from "./GameStage/GameStage";
 import GameSelectPage from "./GameSelectPage/GameSelectPage";
 import TutorialGameStage from "./GameStage/TutorialGameStage";
+import CustomPuzzle from "./CustomPuzzle/CustomPuzzle";
 
 import BackgroundMusic from "./BackgroundMusic/BackgroundMusic";
 
@@ -23,6 +24,7 @@ function App() {
           path="/puzzles/:difficulty/:stageNumber"
           element={<GameStage />}
         />
+        <Route path="/puzzle/making" element={<CustomPuzzle />} />
       </Routes>
       <BackgroundMusic />
     </>

@@ -38,7 +38,7 @@ const Button = styled.button`
   height: 50px;
   font-size: 24px;
   font-weight: 700;
-  background-color: ${(props) => props.buttonColor || "#ffffff"};
+  background-color: ${(props) => props.buttoncolor || "#ffffff"};
 `;
 
 function TutorialModal({
@@ -51,7 +51,7 @@ function TutorialModal({
 }) {
   const { tutorialStep, nextTutorialStep } = useTutorialStepStore();
   const { stageNumber } = useParams();
-  const buttonColors = {
+  const buttoncolors = {
     1: "rgba(228, 180, 180, 0.5)",
     2: "rgba(181, 228, 180, 0.5);",
     3: "rgba(89, 88, 86, 0.5);",
@@ -85,12 +85,12 @@ function TutorialModal({
           {currentStep === 1 && (
             <Button
               onClick={handleSkip}
-              buttonColor={buttonColors[stageNumber]}
+              buttoncolor={buttoncolors[stageNumber]}
             >
               스킵
             </Button>
           )}
-          <Button onClick={handleClick} buttonColor={buttonColors[stageNumber]}>
+          <Button onClick={handleClick} buttoncolor={buttoncolors[stageNumber]}>
             다음
           </Button>
         </Buttons>
