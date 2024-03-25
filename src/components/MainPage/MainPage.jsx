@@ -7,6 +7,7 @@ import axios from "axios";
 import GameStageHeader from "../Header/GameStageHeader";
 
 import usePuzzlesStore from "../../store/puzzle";
+import useSolvedPuzzlesStore from "../../store/solvedPuzzles";
 
 import Fox from "../../assets/puzzle/fox.png";
 import Shark from "../../assets/puzzle/shark.png";
@@ -80,7 +81,7 @@ const DifficultyLabel = styled.div`
 function Main() {
   const navigate = useNavigate();
   const { puzzles, setPuzzles } = usePuzzlesStore();
-  const [solvedPuzzleCount, setSolvedPuzzleCount] = useState([0, 0, 0, 0, 0]);
+  const { solvedPuzzles } = useSolvedPuzzlesStore();
 
   useEffect(() => {
     async function fetchCustomPuzzles() {
@@ -89,16 +90,19 @@ function Main() {
           `${import.meta.env.VITE_FETCH_PUZZLE_API}`,
         );
 
-        const { customPuzzle } = response.data;
+        const {
+          customPuzzle,
+          tutorialPuzzle,
+          easyPuzzle,
+          normalPuzzle,
+          hardPuzzle,
+        } = response.data;
 
-        customPuzzle.forEach((puzzle, index) => {
-          if (
-            !puzzles.custom[index + 1] ||
-            puzzles.custom[index + 1]._id !== puzzle._id
-          ) {
-            puzzles.custom[index + 1] = puzzle;
-          }
-        });
+        puzzles.custom = customPuzzle.custom;
+        puzzles.tutorial = tutorialPuzzle.tutorial;
+        puzzles.easy = easyPuzzle.easy;
+        puzzles.normal = normalPuzzle.normal;
+        puzzles.hard = hardPuzzle.hard;
 
         setPuzzles(puzzles);
       } catch (error) {
@@ -107,25 +111,6 @@ function Main() {
     }
 
     fetchCustomPuzzles();
-  }, []);
-
-  useEffect(() => {
-    const newSolvedPuzzleCount = [];
-
-    ["tutorial", "easy", "normal", "hard", "custom"].forEach((gameType) => {
-      const solvedPuzzles = Object.entries(puzzles[gameType]).reduce(
-        (accumulate, current) => {
-          const addNumber = current[1].isSolved ? 1 : 0;
-
-          return accumulate + addNumber;
-        },
-        0,
-      );
-
-      newSolvedPuzzleCount.push(solvedPuzzles);
-    });
-
-    setSolvedPuzzleCount(newSolvedPuzzleCount);
   }, []);
 
   return (
@@ -141,7 +126,7 @@ function Main() {
           />
           <DifficultyLabel>Tutorial</DifficultyLabel>
           <DifficultyLabel>
-            {`${solvedPuzzleCount[0]} / ${Object.entries(puzzles.tutorial).length}`}
+            {`${Object.keys(solvedPuzzles.tutorial).length} / ${Object.entries(puzzles.tutorial).length}`}
           </DifficultyLabel>
         </Difficulty>
 
@@ -153,7 +138,7 @@ function Main() {
           />
           <DifficultyLabel>Easy </DifficultyLabel>
           <DifficultyLabel>
-            {`${solvedPuzzleCount[1]} / ${Object.entries(puzzles.easy).length}`}
+            {`${Object.keys(solvedPuzzles.easy).length}  / ${Object.entries(puzzles.easy).length}`}
           </DifficultyLabel>
         </Difficulty>
 
@@ -165,7 +150,7 @@ function Main() {
           />
           <DifficultyLabel>Normal</DifficultyLabel>
           <DifficultyLabel>
-            {`${solvedPuzzleCount[2]} / ${Object.entries(puzzles.normal).length}`}
+            {`${Object.keys(solvedPuzzles.normal).length} / ${Object.entries(puzzles.normal).length}`}
           </DifficultyLabel>
         </Difficulty>
 
@@ -177,7 +162,7 @@ function Main() {
           />
           <DifficultyLabel>Hard</DifficultyLabel>
           <DifficultyLabel>
-            {`${solvedPuzzleCount[3]} / ${Object.entries(puzzles.hard).length}`}
+            {`${Object.keys(solvedPuzzles.hard).length} / ${Object.entries(puzzles.hard).length}`}
           </DifficultyLabel>
         </Difficulty>
 
@@ -189,7 +174,7 @@ function Main() {
           />
           <DifficultyLabel>Custom</DifficultyLabel>
           <DifficultyLabel>
-            {`${solvedPuzzleCount[4]} / ${Object.entries(puzzles.custom).length}`}
+            {`${Object.keys(solvedPuzzles.custom).length} / ${Object.entries(puzzles.custom).length}`}
           </DifficultyLabel>
         </Difficulty>
       </Difficulties>
