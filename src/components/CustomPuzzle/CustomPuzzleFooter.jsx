@@ -1,6 +1,8 @@
 import styled from "styled-components";
 import { useEffect } from "react";
+
 import axios from "axios";
+import { useNavigate } from "react-router-dom";
 import usePuzzleMakingStore from "../../store/making";
 import getMarkingNumbers from "../../utils/getMarkingNumbers";
 import { useMarkingNumbersStore } from "../../store/store";
@@ -61,6 +63,7 @@ function CustomPuzzleFooter({ customCubesState }) {
     getNumbers,
   } = usePuzzleMakingStore();
   const { setMarkingNumbers } = useMarkingNumbersStore();
+  const navigate = useNavigate();
 
   useEffect(() => {
     getAnswers(false);
@@ -112,6 +115,9 @@ function CustomPuzzleFooter({ customCubesState }) {
         );
 
         console.log(response);
+        if (response.data.result === "ok") {
+          navigate("/puzzles/custom");
+        }
       } catch (error) {
         console.error(error);
       }

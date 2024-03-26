@@ -191,6 +191,7 @@ function CustomCube({
       puzzleMaking.colors[
         revertCoordinate(position, size.map(Number)).join("")
       ] = cubeColor;
+      puzzleMaking.mainColor = cubeColor;
 
       setAnswerColor(cubeColor);
       setPuzzleMaking(puzzleMaking);
@@ -229,6 +230,8 @@ function CustomCube({
       puzzleMaking.colors[
         revertCoordinate(position, size.map(Number)).join("")
       ] = cubeColor;
+
+      puzzleMaking.mainColor = cubeColor;
 
       setAnswerColor(cubeColor);
       setPuzzleMaking(puzzleMaking);

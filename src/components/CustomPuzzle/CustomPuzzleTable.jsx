@@ -12,6 +12,11 @@ const SideBar = styled.section`
   justify-content: center;
   align-items: start;
   z-index: 5;
+
+  .layer-direction {
+    font-size: 32px;
+    font-weight: 900;
+  }
 `;
 
 const Layer = styled.div`
@@ -30,12 +35,14 @@ const CubeSide = styled.div`
   width: 50px;
   height: 50px;
   border: 1px solid white;
+  font-size: 16px;
+  font-weight: 900;
 `;
 
 function CustomPuzzleTable({ size }) {
   const [sizeX, sizeY, sizeZ] = size;
   const { puzzleMaking, setPuzzleMaking } = usePuzzleMakingStore();
-  const { markingNumbers, setMarkingNumbers } = useMarkingNumbersStore();
+  const { setMarkingNumbers } = useMarkingNumbersStore();
 
   const positionsLayerX = [];
   const positionsLayerY = [];
@@ -127,7 +134,7 @@ function CustomPuzzleTable({ size }) {
 
   return (
     <SideBar>
-      <div>x축 방향 </div>
+      <div className="layer-direction">가로 방향(YZ평면)</div>
       <Layer>
         {positionsLayerX.map((row) => (
           <CubeSides key={row}>
@@ -145,7 +152,7 @@ function CustomPuzzleTable({ size }) {
         ))}
       </Layer>
 
-      <div>y축 방향 </div>
+      <div className="layer-direction">높이 방향(XZ평면) </div>
       <Layer>
         {positionsLayerY.map((row) => (
           <CubeSides key={row}>
@@ -163,7 +170,7 @@ function CustomPuzzleTable({ size }) {
         ))}
       </Layer>
 
-      <div>z축 방향 </div>
+      <div className="layer-direction">세로 방향(XY평면) </div>
       <Layer>
         {positionsLayerZ.map((row) => (
           <CubeSides key={row}>

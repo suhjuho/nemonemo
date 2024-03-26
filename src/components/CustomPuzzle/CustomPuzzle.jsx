@@ -31,7 +31,8 @@ import CustomPuzzleFooter from "./CustomPuzzleFooter";
 import revertCoordinate from "../../utils/revertCoordinate";
 import CustomPuzzleColorPicker from "./CustomPuzzleColorPicker";
 import CustomPuzzleTable from "./CustomPuzzleTable";
-import DirectionArrow from "../CubePointer/DirectionArrow";
+import AxisArrow from "../CubePointer/AxisArrow";
+import { AxisX, AxisY, AxisZ } from "../CubePointer/AxisMarker";
 
 const Stage = styled.div`
   position: relative;
@@ -178,7 +179,7 @@ function CustomPuzzle() {
 
         <AutoCamera puzzle={puzzleMaking} />
 
-        <CustomBackground color="#e8e68e" />
+        <CustomBackground color="#eeee80" />
 
         <OrthographicCamera
           ref={camera}
@@ -187,32 +188,65 @@ function CustomPuzzle() {
           fov={100}
           near={1}
           far={1000}
-          zoom={Math.floor(250 / Math.max(...puzzleMaking.size))}
+          zoom={
+            Math.floor(250 / Math.max(...puzzleMaking.size)) > 80
+              ? 80
+              : Math.floor(250 / Math.max(...puzzleMaking.size))
+          }
         />
 
-        <DirectionArrow
+        <AxisZ
           position={[
-            -1 * puzzleMaking.size[0] - 0.5,
-            -1 * puzzleMaking.size[1] - 0.5,
-            -1 * puzzleMaking.size[2] + 0.3,
+            -1 * puzzleMaking.size[0] - 2,
+            -1 * puzzleMaking.size[1],
+            -1 * puzzleMaking.size[2] + 2 + 2 * (puzzleMaking.size[2] - 1),
           ]}
-          rotation={[0, -Math.PI / 2, 0]}
+          rotation={[Math.PI / 2, 0, Math.PI / 2]}
         />
-        <DirectionArrow
+        <AxisArrow
           position={[
-            -1 * puzzleMaking.size[0] - 0.5,
-            -1 * puzzleMaking.size[1] + 0.5,
-            -1 * puzzleMaking.size[2] - 0.5,
+            -1 * puzzleMaking.size[0] - 1,
+            -1 * puzzleMaking.size[1],
+            -1 * puzzleMaking.size[2] + 1 + 2 * (puzzleMaking.size[2] - 1),
           ]}
-          rotation={[0, Math.PI / 4, Math.PI / 2]}
+          rotation={[-Math.PI / 2, 0, 0]}
+          size={puzzleMaking.size[2]}
         />
-        <DirectionArrow
+
+        <AxisY
           position={[
-            -1 * puzzleMaking.size[0] + 0.3,
-            -1 * puzzleMaking.size[1] - 0.5,
-            -1 * puzzleMaking.size[2] - 0.5,
+            -1 * puzzleMaking.size[0] - 1.5,
+            -1 * puzzleMaking.size[1] + 2.5 + 2 * (puzzleMaking.size[1] - 1),
+            -1 * puzzleMaking.size[2] - 1.5,
           ]}
-          rotation={[0, 0, 0]}
+          rotation={[Math.PI / 2, 0, -Math.PI / 4]}
+        />
+        <AxisArrow
+          position={[
+            -1 * puzzleMaking.size[0] - 1,
+            -1 * puzzleMaking.size[1] + 2 + 2 * (puzzleMaking.size[1] - 1),
+            -1 * puzzleMaking.size[2] - 1,
+          ]}
+          rotation={[0, 0, -Math.PI]}
+          size={puzzleMaking.size[1]}
+        />
+
+        <AxisX
+          position={[
+            -1 * puzzleMaking.size[0] + 2 + 2 * (puzzleMaking.size[0] - 1),
+            -1 * puzzleMaking.size[1],
+            -1 * puzzleMaking.size[2] - 2,
+          ]}
+          rotation={[Math.PI / 2, 0, 0]}
+        />
+        <AxisArrow
+          position={[
+            -1 * puzzleMaking.size[0] + 1 + 2 * (puzzleMaking.size[0] - 1),
+            -1 * puzzleMaking.size[1],
+            -1 * puzzleMaking.size[2] - 1,
+          ]}
+          rotation={[0, 0, Math.PI / 2]}
+          size={puzzleMaking.size[0]}
         />
 
         {defaultPuzzle && (
@@ -232,8 +266,6 @@ function CustomPuzzle() {
             ))}
           </group>
         )}
-
-        <axesHelper scale={[10, 10, 10]} />
 
         {!hasAnswers &&
           puzzleMaking.size[0] > 0 &&
