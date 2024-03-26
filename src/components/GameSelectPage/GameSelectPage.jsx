@@ -6,6 +6,7 @@ import { useState, useEffect } from "react";
 import styled from "styled-components";
 
 import { useNavigate, useParams } from "react-router-dom";
+import axios from "axios";
 import GameStageHeader from "../Header/GameStageHeader";
 
 import { useAnswerStore } from "../../store/store";
@@ -170,7 +171,7 @@ const PlayTime = styled.div`
 function GameSelectPage() {
   const navigate = useNavigate();
   const { difficulty } = useParams();
-  const { puzzles } = usePuzzlesStore();
+  const { puzzles, setPuzzles } = usePuzzlesStore();
   const { setIsComplete } = useAnswerStore();
   const { puzzlesIndex, setPuzzlesIndex } = usePuzzlesIndexStore();
   const { solvedPuzzles } = useSolvedPuzzlesStore();
@@ -181,15 +182,36 @@ function GameSelectPage() {
   const [rankIndex, setRankIndex] = useState(-1);
 
   useEffect(() => {
+    async function fetchCustomPuzzles() {
+      try {
+        const response = await axios.get(
+          `${import.meta.env.VITE_FETCH_PUZZLE_API}`,
+        );
+
+        const {
+          customPuzzle,
+          tutorialPuzzle,
+          easyPuzzle,
+          normalPuzzle,
+          hardPuzzle,
+        } = response.data;
+
+        puzzles.custom = customPuzzle.custom;
+        puzzles.tutorial = tutorialPuzzle.tutorial;
+        puzzles.easy = easyPuzzle.easy;
+        puzzles.normal = normalPuzzle.normal;
+        puzzles.hard = hardPuzzle.hard;
+
+        setPuzzles(puzzles);
+        setAllPuzzles(Object.entries(puzzles[difficulty]));
+      } catch (error) {
+        console.error(error);
+      }
+    }
+
+    fetchCustomPuzzles();
     setCurrentIndex(puzzlesIndex[difficulty]);
-  }, []);
-
-  useEffect(() => {
     setIsComplete(false);
-  }, []);
-
-  useEffect(() => {
-    setAllPuzzles(Object.entries(puzzles[difficulty]));
   }, []);
 
   const handleIndexIncrease = () => {
@@ -216,7 +238,7 @@ function GameSelectPage() {
           return currentPuzzle ? (
             <Puzzle key={currentPuzzle.title + currentPuzzle.size}>
               <PuzzlePreview idx={idx}>
-                {isSolved && (
+                {difficulty !== "tutorial" && isSolved && (
                   <DetailIcon
                     src={Detail}
                     onClick={() => {

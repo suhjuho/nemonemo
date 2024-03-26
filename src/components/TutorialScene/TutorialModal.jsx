@@ -7,17 +7,17 @@ const Modal = styled.div`
   z-index: 50;
   display: flex;
   flex-direction: column;
-  justify-content: space-around;
+  justify-content: ${(props) => (props.hasButton ? "space-around" : "center")};
   align-items: center;
   border: 3px solid white;
   padding: 20px;
   background-color: rgba(255, 255, 255);
   border-radius: 20px;
   box-shadow: 0px 0px 8px black;
-  top: ${(props) => props.top || "20px"};
+  top: ${(props) => props.top || "10px"};
   left: ${(props) => props.left || "0px"};
   width: ${(props) => props.width || "50vw"};
-  height: ${(props) => props.height || "15vh"};
+  height: ${(props) => props.height || "20vh"};
 `;
 
 const Content = styled.div`
@@ -78,7 +78,7 @@ function TutorialModal({
   };
 
   return (
-    <Modal {...ModalProps}>
+    <Modal {...ModalProps} hasButton={hasButton}>
       <Content {...ContentProps}>{content}</Content>
       {hasButton && (
         <Buttons className="buttons">

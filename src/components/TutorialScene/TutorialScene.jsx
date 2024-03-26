@@ -1,10 +1,15 @@
 import styled from "styled-components";
 import { useParams } from "react-router-dom";
-import { useEffect } from "react";
-import { useCubeStatesStore, useTutorialStepStore } from "../../store/store";
+import { useEffect, useState } from "react";
+import {
+  useCubeStatesStore,
+  useLayerStore,
+  useTutorialStepStore,
+} from "../../store/store";
 
 import TutorialModal from "./TutorialModal";
 import usePuzzlesStore from "../../store/puzzle";
+import useSolvedPuzzlesStore from "../../store/solvedPuzzles";
 
 const ModalBackground = styled.div`
   position: absolute;
@@ -21,6 +26,9 @@ function TutorialScene() {
   const { stageNumber } = useParams();
   const { cubeStates } = useCubeStatesStore();
   const { puzzles } = usePuzzlesStore();
+  const { solvedPuzzles } = useSolvedPuzzlesStore();
+  const [showTip, setShowTip] = useState(false);
+  const { currentLayer } = useLayerStore();
 
   useEffect(() => {
     tutorialStep[stageNumber] = 1;
@@ -100,27 +108,43 @@ function TutorialScene() {
       ) {
         tutorialStep[stageNumber] += 1;
         nextTutorialStep(tutorialStep);
+        setShowTip(false);
+      }
+
+      if (cubeStates["2-20"].isRemoved || cubeStates["220"].isRemoved) {
+        setShowTip(true);
       }
     }
   }, [cubeStates["2-20"], cubeStates["200"], cubeStates["220"]]);
 
   useEffect(() => {
     if (stageNumber === "3" && tutorialStep[stageNumber] === 6) {
-      if (puzzles.tutorial[stageNumber].isSolved) {
+      if (
+        cubeStates["200"].isRemoved &&
+        cubeStates["000"].isRemoved &&
+        cubeStates["-200"].isRemoved
+      ) {
         tutorialStep[stageNumber] += 1;
         nextTutorialStep(tutorialStep);
       }
     }
-  }, [puzzles.tutorial[stageNumber].isSolved]);
+  }, [cubeStates["200"], cubeStates["000"], cubeStates["-200"]]);
+
+  useEffect(() => {
+    if (stageNumber === "4" && tutorialStep[stageNumber] === 2) {
+      setShowTip(true);
+    }
+  }, [currentLayer]);
 
   useEffect(() => {
     if (stageNumber === "4" && tutorialStep[stageNumber] === 3) {
-      if (puzzles.tutorial[stageNumber].isSolved) {
+      if (cubeStates["010"].isRemoved && cubeStates["0-10"].isRemoved) {
         tutorialStep[stageNumber] += 1;
         nextTutorialStep(tutorialStep);
+        setShowTip(true);
       }
     }
-  }, [puzzles.tutorial[stageNumber].isSolved]);
+  }, [cubeStates["010"], cubeStates["0-10"]]);
 
   return (
     <>
@@ -132,7 +156,7 @@ function TutorialScene() {
               <TutorialModal
                 currentStep={tutorialStep[stageNumber]}
                 content="환영합니다! 튜토리얼을 진행하시겠습니까?"
-                ModalProps={{ top: "40vh", left: "25vw" }}
+                ModalProps={{ top: "40vh", left: "35vw", width: "30vw" }}
                 hasButton
               />
             </>
@@ -143,19 +167,18 @@ function TutorialScene() {
               <TutorialModal
                 currentStep={tutorialStep[stageNumber]}
                 content={`큐브에 적힌 숫자는 퍼즐을 푸는 힌트입니다!\n 힌트를 통해 퍼즐 속에 숨겨진 조각을 찾을 수 있습니다`}
-                ModalProps={{ left: "20vw", width: "60vw" }}
+                ModalProps={{ left: "30vw", width: "40vw", height: "15vh" }}
                 hasButton
               />
             </>
           )}
-
           {tutorialStep[stageNumber] === 3 && (
             <>
               <ModalBackground />
               <TutorialModal
                 currentStep={tutorialStep[stageNumber]}
                 content="숫자는 해당 라인에서 칠해야 할 큐브의 총 개수를 알려줍니다"
-                ModalProps={{ left: "20vw", width: "60vw" }}
+                ModalProps={{ left: "30vw", width: "40vw", height: "15vh" }}
                 hasButton
               />
             </>
@@ -165,7 +188,7 @@ function TutorialScene() {
               <TutorialModal
                 currentStep={tutorialStep[stageNumber]}
                 content="화살표 방향으로는 총 1개의 큐브를 칠해야 합니다. 클릭을 하여 큐브에 색을 칠해보세요!"
-                ModalProps={{ left: "25vw", height: "10vh" }}
+                ModalProps={{ left: "20vw", width: "60vw", height: "10vh" }}
               />
               <TutorialModal
                 currentStep={tutorialStep[stageNumber]}
@@ -173,8 +196,8 @@ function TutorialScene() {
                 ModalProps={{
                   top: "calc(50vh - 127px)",
                   left: "200px",
-                  width: "15vw",
-                  height: "85px",
+                  width: "18vw",
+                  height: "5vh",
                 }}
                 ContentProps={{ fontSize: "24px" }}
               />
@@ -185,16 +208,16 @@ function TutorialScene() {
               <TutorialModal
                 currentStep={tutorialStep[stageNumber]}
                 content="화살표 방향으로는 칠해야 할 큐브가 없습니다! 큐브를 우클릭을 하여 제거해보세요!"
-                ModalProps={{ left: "25vw", height: "10vh" }}
+                ModalProps={{ left: "20vw", width: "60vw", height: "10vh" }}
               />
               <TutorialModal
                 currentStep={tutorialStep[stageNumber]}
                 content="큐브를 우클릭을 하면 제거할 수 있어요!"
                 ModalProps={{
-                  top: "calc(50vh - 42px)",
+                  top: "calc(50vh - 127px)",
                   left: "200px",
-                  width: "15vw",
-                  height: "85px",
+                  width: "18vw",
+                  height: "5vh",
                 }}
                 ContentProps={{ fontSize: "24px" }}
               />
@@ -206,9 +229,9 @@ function TutorialScene() {
               content="축하해요! 퍼즐을 풀었습니다! 다음 스테이지로 이동해 주세요"
               ModalProps={{
                 top: "80vh",
-                left: "calc(50vw + 130px)",
-                width: "30vw",
-                height: "10vh",
+                left: "30vw",
+                width: "40vw",
+                height: "5vh",
               }}
               isEnd
             />
@@ -223,7 +246,7 @@ function TutorialScene() {
               <TutorialModal
                 currentStep={tutorialStep[stageNumber]}
                 content="환영합니다! 튜토리얼을 진행하시겠습니까?"
-                ModalProps={{ top: "5vh", left: "25vw" }}
+                ModalProps={{ top: "40vh", left: "35vw", width: "30vw" }}
                 hasButton
               />
             </>
@@ -232,17 +255,17 @@ function TutorialScene() {
             <>
               <TutorialModal
                 currentStep={tutorialStep[stageNumber]}
-                content={`숫자를 통해 해당 라인에서 칠해야 할\n큐브의 개수를 알 수 있습니다.\n클릭을 하여 큐브에 색을 칠해보세요!`}
-                ModalProps={{ top: "2vh", left: "25vw", height: "15vh" }}
+                content={`숫자를 통해 해당 라인에서 칠해야 할 큐브의 개수를 알 수 있습니다.\n클릭을 하여 큐브에 색을 칠해보세요!`}
+                ModalProps={{ left: "20vw", width: "60vw", height: "10vh" }}
               />
               <TutorialModal
                 currentStep={tutorialStep[stageNumber]}
-                content={`클릭 후 드래그를 하면\n여러 개의 큐브를\n한번에 색칠할 수 있어요!`}
+                content={`클릭 후 드래그를 하면\n여러 개의 큐브를 한번에 색칠할 수 있어요!`}
                 ModalProps={{
                   top: "25vh",
-                  left: "180px",
+                  left: "20vw",
                   width: "20vw",
-                  height: "10vh",
+                  height: "5vh",
                 }}
                 ContentProps={{ fontSize: "24px" }}
               />
@@ -253,16 +276,16 @@ function TutorialScene() {
               <TutorialModal
                 currentStep={tutorialStep[stageNumber]}
                 content={`해당 라인에서 칠해야 할 큐브가 없습니다.\n우클릭으로 큐브를 제거해보세요!`}
-                ModalProps={{ top: "2vh", left: "25vw", height: "15vh" }}
+                ModalProps={{ left: "30vw", width: "40vw", height: "10vh" }}
               />
               <TutorialModal
                 currentStep={tutorialStep[stageNumber]}
-                content={`우클릭 후 드래그를 하면\n여러 개의 큐브를\n한번에 지울 수 있어요!`}
+                content={`우클릭 후 드래그를 하면\n여러 개의 큐브를한번에 지울 수 있어요!`}
                 ModalProps={{
                   top: "25vh",
-                  left: "70vw",
+                  left: "60vw",
                   width: "20vw",
-                  height: "10vh",
+                  height: "5vh",
                 }}
                 ContentProps={{ fontSize: "24px" }}
               />
@@ -274,9 +297,9 @@ function TutorialScene() {
               content="축하해요! 퍼즐을 풀었습니다! 다음 스테이지로 이동해 주세요"
               ModalProps={{
                 top: "80vh",
-                left: "calc(50vw + 130px)",
-                width: "30vw",
-                height: "10vh",
+                left: "30vw",
+                width: "40vw",
+                height: "5vh",
               }}
               isEnd
             />
@@ -291,7 +314,7 @@ function TutorialScene() {
               <TutorialModal
                 currentStep={tutorialStep[stageNumber]}
                 content="환영합니다! 튜토리얼을 진행하시겠습니까?"
-                ModalProps={{ top: "5vh", left: "25vw" }}
+                ModalProps={{ top: "40vh", left: "35vw", width: "30vw" }}
                 hasButton
               />
             </>
@@ -301,8 +324,8 @@ function TutorialScene() {
               <ModalBackground />
               <TutorialModal
                 currentStep={tutorialStep[stageNumber]}
-                content="가운데 숫자는 해당 라인에서 칠해야 할 큐브의 총 개수입니다."
-                ModalProps={{ top: "5vh", left: "25vw" }}
+                content="큐브에 적힌 가운데 숫자는 해당 라인에서 칠해야 할 큐브의 총 개수입니다."
+                ModalProps={{ left: "25vw", width: "50vw", height: "10vh" }}
                 hasButton
               />
             </>
@@ -314,7 +337,7 @@ function TutorialScene() {
               <TutorialModal
                 currentStep={tutorialStep[stageNumber]}
                 content={`우측 상단에 있는 숫자는 색칠된 큐브들 사이의 빈틈 개수입니다.\n 빈틈의 크기는 하나 이상입니다.`}
-                ModalProps={{ top: "5vh", left: "25vw" }}
+                ModalProps={{ left: "25vw", width: "50vw", height: "12vh" }}
                 hasButton
               />
             </>
@@ -325,7 +348,7 @@ function TutorialScene() {
               <TutorialModal
                 currentStep={tutorialStep[stageNumber]}
                 content={`우측 상단에 숫자가 없는 경우는 색칠된 큐브들 사이의 빈틈이 없다는 뜻입니다.\n즉 큐브들은 한줄로 연속되어 칠해집니다. `}
-                ModalProps={{ top: "5vh", left: "25vw" }}
+                ModalProps={{ left: "25vw", width: "50vw", height: "12vh" }}
                 hasButton
               />
             </>
@@ -335,19 +358,21 @@ function TutorialScene() {
               <TutorialModal
                 currentStep={tutorialStep[stageNumber]}
                 content={`화살표 방향으로는 총 2개의 큐브를 칠해야 하고 중간에 빈틈이 하나 있습니다.\n조건에 맞춰 해당라인을 완성해보세요!`}
-                ModalProps={{ top: "5vh", left: "25vw", height: "10vh" }}
+                ModalProps={{ left: "25vw", width: "50vw", height: "12vh" }}
               />
-              <TutorialModal
-                currentStep={tutorialStep[stageNumber]}
-                content="(팁) C 단축키로 클릭 기능을 변경하면 실수로 삭제한 큐브를 생성할 수 있습니다!"
-                ModalProps={{
-                  top: "25vh",
-                  left: "80vw",
-                  width: "15vw",
-                  height: "85px",
-                }}
-                ContentProps={{ fontSize: "24px" }}
-              />
+              {showTip && (
+                <TutorialModal
+                  currentStep={tutorialStep[stageNumber]}
+                  content="(팁) C 단축키로 클릭 기능을 변경하면 실수로 삭제한 큐브를 생성할 수 있습니다!"
+                  ModalProps={{
+                    top: "60vh",
+                    left: "65vw",
+                    width: "20vw",
+                    height: "5vh",
+                  }}
+                  ContentProps={{ fontSize: "24px" }}
+                />
+              )}
             </>
           )}
           {tutorialStep[stageNumber] === 6 && (
@@ -376,9 +401,9 @@ function TutorialScene() {
               content="축하해요! 퍼즐을 풀었습니다! 다음 스테이지로 이동해 주세요"
               ModalProps={{
                 top: "80vh",
-                left: "calc(50vw + 130px)",
-                width: "30vw",
-                height: "10vh",
+                left: "30vw",
+                width: "40vw",
+                height: "5vh",
               }}
               isEnd
             />
@@ -393,7 +418,7 @@ function TutorialScene() {
               <TutorialModal
                 currentStep={tutorialStep[stageNumber]}
                 content="벌써 4번째 스테이지군요! 튜토리얼을 진행하시겠습니까?"
-                ModalProps={{ top: "40vh", left: "25vw", height: "10vh" }}
+                ModalProps={{ top: "40vh", left: "35vw", width: "30vw" }}
                 hasButton
               />
             </>
@@ -402,28 +427,43 @@ function TutorialScene() {
             <>
               <TutorialModal
                 currentStep={tutorialStep[stageNumber]}
-                content={`레이어를 이동하면 퍼즐 속에 있는 큐브를 클릭할 수 있습니다.\nq,w 단축키를 이용하여 레이어 이동을 해보세요`}
-                ModalProps={{ top: "20px", left: "10vw", width: "80vw" }}
+                content={`레이어를 이동하면 퍼즐 속에 있는 큐브를 클릭할 수 있습니다.\nQ,W 단축키를 이용하여 레이어 이동을 해보세요`}
+                ModalProps={{ left: "25vw", width: "50vw", height: "12vh" }}
                 hasButton
               />
-              <TutorialModal
-                currentStep={tutorialStep[stageNumber]}
-                content="(팁) 퍼즐을 회전하여 이동할 레이어를 변경할 수 있어요!"
-                ModalProps={{
-                  top: "calc(50vh + 45px)",
-                  left: "120px",
-                  width: "15vw",
-                  height: "85px",
-                }}
-                ContentProps={{ fontSize: "24px" }}
-              />
+              {!showTip && (
+                <TutorialModal
+                  currentStep={tutorialStep[stageNumber]}
+                  content={`Q버튼은 레이어 안쪽으로,\nW 버튼은 레이어 바깥쪽으로\n 이동할 수 있어요!`}
+                  ModalProps={{
+                    top: "calc(50vh + 45px)",
+                    left: "120px",
+                    width: "15vw",
+                    height: "100px",
+                  }}
+                  ContentProps={{ fontSize: "24px" }}
+                />
+              )}
+              {showTip && (
+                <TutorialModal
+                  currentStep={tutorialStep[stageNumber]}
+                  content="(팁) 퍼즐을 회전하여 이동할 레이어를 변경할 수 있어요!"
+                  ModalProps={{
+                    top: "calc(50vh + 45px)",
+                    left: "70vw",
+                    width: "15vw",
+                    height: "100px",
+                  }}
+                  ContentProps={{ fontSize: "24px" }}
+                />
+              )}
             </>
           )}
           {tutorialStep[stageNumber] === 3 && (
             <TutorialModal
               currentStep={tutorialStep[stageNumber]}
               content="스스로 퍼즐을 완성해보세요!"
-              ModalProps={{ top: "20px", left: "25vw" }}
+              ModalProps={{ left: "25vw", width: "50vw", height: "10vh" }}
             />
           )}
           {tutorialStep[stageNumber] === 4 && (
@@ -432,9 +472,9 @@ function TutorialScene() {
               content="축하해요! 퍼즐을 풀었습니다! 다음 스테이지로 이동해 주세요"
               ModalProps={{
                 top: "80vh",
-                left: "calc(50vw + 130px)",
-                width: "30vw",
-                height: "10vh",
+                left: "30vw",
+                width: "40vw",
+                height: "5vh",
               }}
               isEnd
             />
