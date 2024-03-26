@@ -10,7 +10,6 @@ function AxisArrow({ position, rotation, size }) {
   useEffect(() => {
     if (pointerRef) {
       pointerRef.current.material.color.set("#12e75c");
-      pointerRef.current.material.opacity = 0.1;
     }
   }, [pointerRef]);
 

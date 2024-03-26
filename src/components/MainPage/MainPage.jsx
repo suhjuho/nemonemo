@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useEffect } from "react";
 
 import styled from "styled-components";
 
@@ -18,16 +18,19 @@ import Cookie from "../../assets/puzzle/cookie.png";
 import Custom from "../../assets/puzzle/custom.png";
 import Donut from "../../assets/puzzle/donut.png";
 import Plus from "../../assets/icon/icon-plus.png";
+import Dumbell from "../../assets/puzzle/dumbell.png";
+import Apple from "../../assets/puzzle/apple.png";
 
 const Icon = styled.img`
-  position: fixed;
-  bottom: 20px;
-  right: 20px;
+  position: absolute;
+  top: 10px;
+  right: 10px;
   width: 60px;
   margin: 0px 10px;
   border-radius: 10px;
   box-shadow: 2px 4px 8px;
   transition: transform 0.3s ease-in-out;
+  z-index: 30;
 
   &:hover {
     transform: translateY(-1px);
@@ -44,6 +47,7 @@ const Stage = styled.div`
 `;
 
 const Difficulty = styled.div`
+  position: relative;
   display: flex;
   flex-direction: column;
   align-items: center;
@@ -76,6 +80,16 @@ const DifficultyImg = styled.img`
 const DifficultyLabel = styled.div`
   font-size: 64px;
   font-weight: 900;
+`;
+
+const PuzzlePlus = styled.div`
+  position: fixed;
+  bottom: 60px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  width: 100%;
+  z-index: 20;
 `;
 
 function Main() {
@@ -132,8 +146,8 @@ function Main() {
 
         <Difficulty>
           <DifficultyImg
-            src={Sunflower}
-            alt="sunflower"
+            src={Apple}
+            alt="apple"
             onClick={() => navigate("/puzzles/easy")}
           />
           <DifficultyLabel>Easy </DifficultyLabel>
@@ -144,8 +158,8 @@ function Main() {
 
         <Difficulty>
           <DifficultyImg
-            src={Duck}
-            alt="duck"
+            src={Dumbell}
+            alt="Dumbell"
             onClick={() => navigate("/puzzles/normal")}
           />
           <DifficultyLabel>Normal</DifficultyLabel>
@@ -156,8 +170,8 @@ function Main() {
 
         <Difficulty>
           <DifficultyImg
-            src={Fox}
-            alt="fox"
+            src={Duck}
+            alt="Duck"
             onClick={() => navigate("/puzzles/hard")}
           />
           <DifficultyLabel>Hard</DifficultyLabel>
@@ -167,6 +181,7 @@ function Main() {
         </Difficulty>
 
         <Difficulty>
+          <Icon src={Plus} onClick={() => navigate("/puzzle/making")} />
           <DifficultyImg
             src={Custom}
             alt="custom"
@@ -178,7 +193,6 @@ function Main() {
           </DifficultyLabel>
         </Difficulty>
       </Difficulties>
-      <Icon src={Plus} onClick={() => navigate("/puzzle/making")} />
     </Stage>
   );
 }

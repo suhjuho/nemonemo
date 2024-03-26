@@ -257,7 +257,7 @@ function GameSelectPage() {
                         <PlayTime
                           key={time + i}
                           idx={idx}
-                        >{`${i}등 ${formatTime(ranking[i]).slice(3)}초`}</PlayTime>
+                        >{`${i + 1}등 ${formatTime(ranking[i]).slice(3)}초`}</PlayTime>
                       ))}
                     </RankingModal>
                   )}

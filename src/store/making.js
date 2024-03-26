@@ -9,6 +9,7 @@ const puzzleMakingStore = (set) => ({
     showingNumbers: { layerX: {}, layerY: {}, layerZ: {} },
     mainColor: "#000000",
     subColor: "#ffffff",
+    ranking: [],
   },
   hasAnswers: false,
   hasColors: false,
