@@ -53,7 +53,7 @@ function TutorialStageSideBar() {
 
       <StyledIcon
         src={LeftClick}
-        description={clickMode === "color" ? "Mark" : "Remove"}
+        description={clickMode === "color" ? "표시" : "제거"}
         highlight={
           stageNumber === "1" && tutorialStep[stageNumber] === 4
             ? "true"
@@ -62,7 +62,7 @@ function TutorialStageSideBar() {
       />
       <StyledIcon
         src={RightClick}
-        description={clickMode === "color" ? "Remove" : "Restore"}
+        description={clickMode === "color" ? "제거" : "복원"}
         highlight={
           stageNumber === "1" && tutorialStep[stageNumber] === 5
             ? "true"

@@ -24,6 +24,7 @@ const Content = styled.div`
   font-size: ${(props) => props.fontSize || "32px"};
   font-weight: 700;
   white-space: pre-line;
+  text-align: start;
 `;
 
 const Buttons = styled.div`

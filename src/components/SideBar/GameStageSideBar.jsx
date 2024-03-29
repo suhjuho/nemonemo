@@ -46,11 +46,11 @@ function GameStageSideBar() {
 
       <StyledIcon
         src={LeftClick}
-        description={clickMode === "color" ? "Mark" : "Remove"}
+        description={clickMode === "color" ? "표시" : "제거"}
       />
       <StyledIcon
         src={RightClick}
-        description={clickMode === "color" ? "Remove" : "Restore"}
+        description={clickMode === "color" ? "제거" : "복원"}
       />
 
       <StyledIcon src={LayerIn} command="Q" />
