@@ -10,7 +10,7 @@ body {
 
 @font-face {
   font-family: "Cantarell";
-  src: url("/Cantarell-Regular.ttf") format("truetype");
+  src: url("/assets/Cantarell-Regular.ttf") format("truetype");
 }
 
 body {
