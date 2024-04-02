@@ -137,6 +137,7 @@ function Main() {
             src={Donut}
             alt="donut"
             onClick={() => navigate("/puzzles/tutorial")}
+            id="tutorialImg"
           />
           <DifficultyLabel>Tutorial</DifficultyLabel>
           <DifficultyLabel>
