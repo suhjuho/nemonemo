@@ -21,7 +21,7 @@ function CubeNumbers({ markingNumbers, positivePosition }) {
             anchorX="center"
             anchorY="middle"
             rotation={CUBE_CONSTANT.ROTATIONS.LEFT_LAYER}
-            font="/Micro5-Regular.ttf"
+            font="/assets/Micro5-Regular.ttf"
           >
             {markingNumbers.layerX[yzPosition].total}
           </Text>
@@ -32,7 +32,7 @@ function CubeNumbers({ markingNumbers, positivePosition }) {
             anchorX="center"
             anchorY="middle"
             rotation={CUBE_CONSTANT.ROTATIONS.LEFT_LAYER}
-            font="/Micro5-Regular.ttf"
+            font="/assets/Micro5-Regular.ttf"
           >
             {markingNumbers.layerX[yzPosition].piece > 0 &&
               markingNumbers.layerX[yzPosition].piece}
@@ -46,7 +46,7 @@ function CubeNumbers({ markingNumbers, positivePosition }) {
               anchorX="center"
               anchorY="end"
               rotation={CUBE_CONSTANT.ROTATIONS.LEFT_LAYER}
-              font="/Micro5-Regular.ttf"
+              font="/assets/Micro5-Regular.ttf"
             >
               _
             </Text>
@@ -59,7 +59,7 @@ function CubeNumbers({ markingNumbers, positivePosition }) {
             anchorX="center"
             anchorY="middle"
             rotation={CUBE_CONSTANT.ROTATIONS.RIGHT_LAYER}
-            font="/Micro5-Regular.ttf"
+            font="/assets/Micro5-Regular.ttf"
           >
             {markingNumbers.layerX[yzPosition].total}
           </Text>
@@ -70,7 +70,7 @@ function CubeNumbers({ markingNumbers, positivePosition }) {
             anchorX="center"
             anchorY="middle"
             rotation={CUBE_CONSTANT.ROTATIONS.RIGHT_LAYER}
-            font="/Micro5-Regular.ttf"
+            font="/assets/Micro5-Regular.ttf"
           >
             {markingNumbers.layerX[yzPosition].piece > 0 &&
               markingNumbers.layerX[yzPosition].piece}
@@ -84,7 +84,7 @@ function CubeNumbers({ markingNumbers, positivePosition }) {
               anchorX="center"
               anchorY="end"
               rotation={CUBE_CONSTANT.ROTATIONS.RIGHT_LAYER}
-              font="/Micro5-Regular.ttf"
+              font="/assets/Micro5-Regular.ttf"
             >
               _
             </Text>
@@ -101,7 +101,7 @@ function CubeNumbers({ markingNumbers, positivePosition }) {
             anchorX="center"
             anchorY="middle"
             rotation={CUBE_CONSTANT.ROTATIONS.UP_LAYER[layerDirection]}
-            font="/Micro5-Regular.ttf"
+            font="/assets/Micro5-Regular.ttf"
           >
             {markingNumbers.layerY[xzPosition].total}
           </Text>
@@ -112,7 +112,7 @@ function CubeNumbers({ markingNumbers, positivePosition }) {
             anchorX="center"
             anchorY="middle"
             rotation={CUBE_CONSTANT.ROTATIONS.UP_LAYER[layerDirection]}
-            font="/Micro5-Regular.ttf"
+            font="/assets/Micro5-Regular.ttf"
           >
             {markingNumbers.layerY[xzPosition].piece > 0 &&
               markingNumbers.layerY[xzPosition].piece}
@@ -126,7 +126,7 @@ function CubeNumbers({ markingNumbers, positivePosition }) {
               anchorX="center"
               anchorY="end"
               rotation={CUBE_CONSTANT.ROTATIONS.UP_LAYER[layerDirection]}
-              font="/Micro5-Regular.ttf"
+              font="/assets/Micro5-Regular.ttf"
             >
               _
             </Text>
@@ -139,7 +139,7 @@ function CubeNumbers({ markingNumbers, positivePosition }) {
             anchorX="center"
             anchorY="middle"
             rotation={CUBE_CONSTANT.ROTATIONS.DOWN_LAYER[layerDirection]}
-            font="/Micro5-Regular.ttf"
+            font="/assets/Micro5-Regular.ttf"
           >
             {markingNumbers.layerY[xzPosition].total}
           </Text>
@@ -150,7 +150,7 @@ function CubeNumbers({ markingNumbers, positivePosition }) {
             anchorX="center"
             anchorY="middle"
             rotation={CUBE_CONSTANT.ROTATIONS.DOWN_LAYER[layerDirection]}
-            font="/Micro5-Regular.ttf"
+            font="/assets/Micro5-Regular.ttf"
           >
             {markingNumbers.layerY[xzPosition].piece > 0 &&
               markingNumbers.layerY[xzPosition].piece}
@@ -164,7 +164,7 @@ function CubeNumbers({ markingNumbers, positivePosition }) {
               anchorX="center"
               anchorY="end"
               rotation={CUBE_CONSTANT.ROTATIONS.DOWN_LAYER[layerDirection]}
-              font="/Micro5-Regular.ttf"
+              font="/assets/Micro5-Regular.ttf"
             >
               _
             </Text>
@@ -181,7 +181,7 @@ function CubeNumbers({ markingNumbers, positivePosition }) {
             anchorX="center"
             anchorY="middle"
             rotation={CUBE_CONSTANT.ROTATIONS.FRONT_LAYER}
-            font="/Micro5-Regular.ttf"
+            font="/assets/Micro5-Regular.ttf"
           >
             {markingNumbers.layerZ[xyPosition].total}
           </Text>
@@ -192,7 +192,7 @@ function CubeNumbers({ markingNumbers, positivePosition }) {
             anchorX="center"
             anchorY="middle"
             rotation={CUBE_CONSTANT.ROTATIONS.FRONT_LAYER}
-            font="/Micro5-Regular.ttf"
+            font="/assets/Micro5-Regular.ttf"
           >
             {markingNumbers.layerZ[xyPosition].piece > 0 &&
               markingNumbers.layerZ[xyPosition].piece}
@@ -206,7 +206,7 @@ function CubeNumbers({ markingNumbers, positivePosition }) {
               anchorX="center"
               anchorY="end"
               rotation={CUBE_CONSTANT.ROTATIONS.FRONT_LAYER.FRONT}
-              font="/Micro5-Regular.ttf"
+              font="/assets/Micro5-Regular.ttf"
             >
               _
             </Text>
@@ -219,7 +219,7 @@ function CubeNumbers({ markingNumbers, positivePosition }) {
             anchorX="center"
             anchorY="middle"
             rotation={CUBE_CONSTANT.ROTATIONS.BACK_LAYER}
-            font="/Micro5-Regular.ttf"
+            font="/assets/Micro5-Regular.ttf"
           >
             {markingNumbers.layerZ[xyPosition].total}
           </Text>
@@ -230,7 +230,7 @@ function CubeNumbers({ markingNumbers, positivePosition }) {
             anchorX="center"
             anchorY="middle"
             rotation={CUBE_CONSTANT.ROTATIONS.BACK_LAYER}
-            font="/Micro5-Regular.ttf"
+            font="/assets/Micro5-Regular.ttf"
           >
             {markingNumbers.layerZ[xyPosition].piece > 0 &&
               markingNumbers.layerZ[xyPosition].piece}
@@ -244,7 +244,7 @@ function CubeNumbers({ markingNumbers, positivePosition }) {
               anchorX="center"
               anchorY="end"
               rotation={CUBE_CONSTANT.ROTATIONS.BACK_LAYER.FRONT}
-              font="/Micro5-Regular.ttf"
+              font="/assets/Micro5-Regular.ttf"
             >
               _
             </Text>
