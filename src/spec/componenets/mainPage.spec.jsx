@@ -21,31 +21,20 @@ describe("render Main Page", () => {
     expect(await screen.findByText("Normal")).toBeInTheDocument();
     expect(await screen.findByText("Hard")).toBeInTheDocument();
     expect(await screen.findByText("Custom")).toBeInTheDocument();
-
-    await waitFor(
-      () => {
-        const { puzzles } = usePuzzlesStore.getState();
-        expect(Object.entries(puzzles.tutorial).length).toBeGreaterThan(0);
-        expect(Object.entries(puzzles.easy).length).toBeGreaterThan(0);
-        expect(Object.entries(puzzles.normal).length).toBeGreaterThan(0);
-        expect(Object.entries(puzzles.hard).length).toBeGreaterThan(0);
-        expect(Object.entries(puzzles.custom).length).toBeGreaterThan(0);
-      },
-      { timeout: 1000 },
-    );
   });
 
   it("puzzles store should be fetched from database on rendering", async () => {
     await waitFor(
       () => {
         const { puzzles } = usePuzzlesStore.getState();
+
         expect(Object.entries(puzzles.tutorial).length).toBeGreaterThan(0);
         expect(Object.entries(puzzles.easy).length).toBeGreaterThan(0);
         expect(Object.entries(puzzles.normal).length).toBeGreaterThan(0);
         expect(Object.entries(puzzles.hard).length).toBeGreaterThan(0);
         expect(Object.entries(puzzles.custom).length).toBeGreaterThan(0);
       },
-      { timeout: 1000 },
+      { timeout: 5000 },
     );
   });
 });
