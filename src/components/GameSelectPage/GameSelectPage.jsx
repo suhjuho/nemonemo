@@ -1,5 +1,6 @@
 import { Canvas } from "@react-three/fiber";
 import { OrbitControls, OrthographicCamera } from "@react-three/drei";
+import { ResizeObserver } from "@juggle/resize-observer";
 
 import { useState, useEffect } from "react";
 
@@ -263,6 +264,7 @@ function GameSelectPage() {
                   )}
                 {isSolved ? (
                   <Canvas
+                    resize={{ polyfill: ResizeObserver }}
                     style={{
                       background: currentPuzzle.subColor,
                       borderRadius: 20,
@@ -303,6 +305,7 @@ function GameSelectPage() {
                   </Canvas>
                 ) : (
                   <Canvas
+                    resize={{ polyfill: ResizeObserver }}
                     style={{
                       background: currentPuzzle.subColor,
                       borderRadius: 20,

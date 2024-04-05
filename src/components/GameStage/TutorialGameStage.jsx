@@ -1,5 +1,6 @@
 import { Canvas } from "@react-three/fiber";
 import { OrthographicCamera, OrbitControls } from "@react-three/drei";
+import { ResizeObserver } from "@juggle/resize-observer";
 
 import { useParams } from "react-router-dom";
 import { useEffect, useRef, useState } from "react";
@@ -223,7 +224,7 @@ function TutorialGameStage() {
         />
       )}
 
-      <Canvas>
+      <Canvas resize={{ polyfill: ResizeObserver }}>
         {/* <ambientLight intensity={1} /> */}
         <pointLight position={[0, 15, 20]} />
         <directionalLight intensity={3} position={[-10, -8, -6]} />

@@ -1,8 +1,7 @@
 import styled from "styled-components";
-import { useNavigate, useParams } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 
 import Out from "../../assets/icon/icon-out.png";
-import { useTutorialStepStore } from "../../store/store";
 
 const Footer = styled.footer`
   position: fixed;
@@ -38,10 +37,8 @@ const NextButton = styled.div`
   `}
 `;
 
-function GameStageFooter({ difficulty, currentIndex, puzzleLength }) {
+function TutorialStageFooter({ difficulty, currentIndex, puzzleLength }) {
   const navigate = useNavigate();
-  const { stageNumber } = useParams();
-  const { tutorialStep } = useTutorialStepStore();
 
   return (
     <Footer>
@@ -64,4 +61,4 @@ function GameStageFooter({ difficulty, currentIndex, puzzleLength }) {
   );
 }
 
-export default GameStageFooter;
+export default TutorialStageFooter;
