@@ -92,14 +92,56 @@ const Header = styled.header`
     border: 3px solid white;
     border-radius: 20px;
     box-shadow: 2px 4px 8px;
+    box-sizing: border-box;
+  }
+
+  .number-input {
+    position: relative;
+    box-sizing: border-box;
   }
 
   .size-input {
+    &::-webkit-inner-spin-button,
+    &::-webkit-outer-spin-button {
+      -webkit-appearance: none;
+      margin: 0;
+    }
+
+    top: 0;
+    left: 0;
+    height: 75px;
     font-size: 36px;
+    font-weight: 900;
     border: 3px solid white;
     border-radius: 20px;
     box-shadow: 2px 4px 8px;
     width: 100px;
+    text-align: center;
+    box-sizing: border-box;
+  }
+
+  .size-input-button-up {
+    position: absolute;
+    top: calc(50% - 10px);
+    right: 0;
+    font-size: 20px;
+    font-weight: 900;
+    border: 1px solid white;
+    background-color: #e8e8e8;
+    border-radius: 20px;
+    text-align: center;
+  }
+
+  .size-input-button-down {
+    position: absolute;
+    top: calc(50% - 10px);
+    left: 0;
+    font-size: 20px;
+    font-weight: 900;
+    border: 1px solid white;
+    background-color: #e8e8e8;
+    border-radius: 20px;
+    text-align: center;
   }
 `;
 
@@ -119,6 +161,21 @@ function CustomPuzzleHeader() {
     setPuzzleMaking(puzzleMaking);
   }, []);
 
+  const handleSizeUp = (direction) => {
+    if (puzzleMaking.size[direction] < 10) {
+      puzzleMaking.size[direction] += 1;
+    }
+
+    setPuzzleMaking(puzzleMaking);
+  };
+
+  const handleSizeDown = (direction) => {
+    if (puzzleMaking.size[direction] > 1) {
+      puzzleMaking.size[direction] -= 1;
+    }
+    setPuzzleMaking(puzzleMaking);
+  };
+
   return (
     <>
       <Header>
@@ -127,44 +184,86 @@ function CustomPuzzleHeader() {
         </div>
         <div className="header-middle">
           <div className="content">가로</div>
-          <input
-            className="size-input"
-            type="number"
-            min="1"
-            max="10"
-            value={puzzleMaking.size[0]}
-            onChange={(event) => {
-              puzzleMaking.size[0] = Number(event.target.value);
+          <div className="number-input">
+            <input
+              className="size-input"
+              type="number"
+              min="1"
+              max="10"
+              value={puzzleMaking.size[0]}
+              onChange={(event) => {
+                puzzleMaking.size[0] = Number(event.target.value);
 
-              setPuzzleMaking(puzzleMaking);
-            }}
-          />
+                setPuzzleMaking(puzzleMaking);
+              }}
+            />
+            <button
+              className="size-input-button-up"
+              onClick={() => handleSizeUp(0)}
+            >
+              +
+            </button>
+            <button
+              className="size-input-button-down"
+              onClick={() => handleSizeDown(0)}
+            >
+              -
+            </button>
+          </div>
           <div className="content">높이</div>
-          <input
-            className="size-input"
-            type="number"
-            min="1"
-            max="10"
-            value={puzzleMaking.size[1]}
-            onChange={(event) => {
-              puzzleMaking.size[1] = Number(event.target.value);
+          <div className="number-input">
+            <input
+              className="size-input"
+              type="number"
+              min="1"
+              max="10"
+              value={puzzleMaking.size[1]}
+              onChange={(event) => {
+                puzzleMaking.size[1] = Number(event.target.value);
 
-              setPuzzleMaking(puzzleMaking);
-            }}
-          />
+                setPuzzleMaking(puzzleMaking);
+              }}
+            />
+            <button
+              className="size-input-button-up"
+              onClick={() => handleSizeUp(1)}
+            >
+              +
+            </button>
+            <button
+              className="size-input-button-down"
+              onClick={() => handleSizeDown(1)}
+            >
+              -
+            </button>
+          </div>
           <div className="content">세로</div>
-          <input
-            className="size-input"
-            type="number"
-            min="1"
-            max="10"
-            value={puzzleMaking.size[2]}
-            onChange={(event) => {
-              puzzleMaking.size[2] = Number(event.target.value);
+          <div className="number-input">
+            <input
+              className="size-input"
+              type="number"
+              min="1"
+              max="10"
+              value={puzzleMaking.size[2]}
+              onChange={(event) => {
+                puzzleMaking.size[2] = Number(event.target.value);
 
-              setPuzzleMaking(puzzleMaking);
-            }}
-          />
+                setPuzzleMaking(puzzleMaking);
+              }}
+            />
+            <button
+              className="size-input-button-up"
+              onClick={() => handleSizeUp(2)}
+            >
+              +
+            </button>
+            <button
+              className="size-input-button-down"
+              onClick={() => handleSizeDown(2)}
+            >
+              -
+            </button>
+          </div>
         </div>
         <div className="header-right-icons">
           {sound.isMuted ? (
