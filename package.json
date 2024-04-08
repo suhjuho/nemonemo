@@ -55,7 +55,6 @@
     "*.{js,css,ts,tsx,jsx}": [
       "prettier --write",
       "eslint --fix"
-    ],
-    "*.{js,jsx}": "eslint --cache --fix"
+    ]
   }
 }
