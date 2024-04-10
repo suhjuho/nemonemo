@@ -4,7 +4,6 @@ import { ResizeObserver } from "@juggle/resize-observer";
 import { useParams } from "react-router-dom";
 import { useEffect, useRef, useState } from "react";
 import styled from "styled-components";
-import * as TWEEN from "@tweenjs/tween.js";
 
 import Puzzle from "../Puzzle/Puzzle";
 import BackGround from "./BackGround";
@@ -13,17 +12,14 @@ import GameStageHeader from "../shared/Header/GameStageHeader";
 import GameStageSideBar from "../shared/SideBar/GameStageSideBar";
 import GameStageFooter from "../Footer/GameStageFooter";
 
-import { soundCube, soundEnding } from "../../utils/soundEffect";
 import getMarkingNumbers from "../../utils/getMarkingNumbers";
 import getDefaultPuzzle from "../../utils/getDefaultPuzzle";
 import usePuzzlesStore from "../../store/puzzle";
-import {
-  useClickModeStore,
-  useOrbitControlStore,
-  useAnswerStore,
-  useSoundStore,
-} from "../../store/store";
-import CUBE_CONSTANT from "../../constants/cube";
+import { useOrbitControlStore, useAnswerStore } from "../../store/store";
+
+import useSetEventClickMode from "../../utils/useSetEventClickMode";
+import useSetEventKeySound from "../../utils/useSetEventKeySound";
+import usePuzzleEnding from "../../utils/usePuzzleEnding";
 
 const Stage = styled.div`
   position: relative;
@@ -31,96 +27,29 @@ const Stage = styled.div`
 `;
 
 function GameStage() {
-  const { puzzles } = usePuzzlesStore();
-  const { clickMode, setClickMode } = useClickModeStore();
-  const { isOrbitEnable } = useOrbitControlStore();
   const { difficulty, stageNumber } = useParams();
+  const [defaultPuzzle, setDefaultPuzzle] = useState([]);
+  const [markingNumbers, setMarkingNumbers] = useState({});
+  const { puzzles } = usePuzzlesStore();
+  const { isOrbitEnable } = useOrbitControlStore();
   const { isComplete, setIsComplete } = useAnswerStore();
-  const { sound } = useSoundStore();
   const controls = useRef();
   const camera = useRef();
 
   const puzzle = puzzles[difficulty][stageNumber];
   const { size, answers, showingNumbers } = puzzle;
 
-  const [defaultPuzzle, setDefaultPuzzle] = useState([]);
-  const [markingNumbers, setMarkingNumbers] = useState({});
-
-  useEffect(() => {
-    setDefaultPuzzle(getDefaultPuzzle(size));
-    setIsComplete(false);
-  }, [difficulty, stageNumber]);
-
   useEffect(() => {
     const numbers = getMarkingNumbers(answers, showingNumbers, size);
 
+    setDefaultPuzzle(getDefaultPuzzle(size));
     setMarkingNumbers(numbers);
+    setIsComplete(false);
   }, [difficulty, stageNumber]);
 
-  useEffect(() => {
-    function handleContextMenu(event) {
-      const isModeChange = CUBE_CONSTANT.MODE_CHANGE_KEYS[event.key];
-
-      if (isModeChange) {
-        if (clickMode === "color") {
-          setClickMode("cube");
-        } else {
-          setClickMode("color");
-        }
-      }
-    }
-
-    window.addEventListener("keydown", handleContextMenu);
-    return () => window.removeEventListener("keydown", handleContextMenu);
-  }, [clickMode, difficulty, stageNumber]);
-
-  useEffect(() => {
-    function handleContextMenu(event) {
-      const isInside = CUBE_CONSTANT.INSIDE_CUBE_KEYS[event.key];
-      const isOutside = CUBE_CONSTANT.OUTSIDE_CUBE_KEYS[event.key];
-      const isUndo = CUBE_CONSTANT.UNDO_KEYS[event.key];
-      const isRedo = CUBE_CONSTANT.REDO_KEYS[event.key];
-      const isModeChange = CUBE_CONSTANT.MODE_CHANGE_KEYS[event.key];
-
-      if (isInside || isOutside || isUndo || isRedo || isModeChange) {
-        if (!sound.isMuted) {
-          soundCube(sound.effectSound);
-        }
-      }
-    }
-
-    window.addEventListener("keydown", handleContextMenu);
-    return () => window.removeEventListener("keydown", handleContextMenu);
-  }, [difficulty, stageNumber]);
-
-  useEffect(() => {
-    if (camera.current && isComplete) {
-      const coords = {
-        x: camera.current.position.x,
-        y: camera.current.position.y,
-        z: camera.current.position.z,
-      };
-
-      const tween = new TWEEN.Tween(coords, false)
-        .to({ x: -12, y: 12, z: 12 }, 1000)
-        .easing(TWEEN.Easing.Quadratic.InOut)
-        .onUpdate(() =>
-          camera.current.position.set(coords.x, coords.y, coords.z),
-        )
-        .start();
-
-      function animate(time) {
-        tween.update(time);
-        requestAnimationFrame(animate);
-      }
-
-      requestAnimationFrame(animate);
-
-      if (!sound.isMuted) {
-        soundEnding(sound.bgmSound);
-      }
-    }
-  }, [isComplete, difficulty, stageNumber]);
+  useSetEventClickMode();
+  useSetEventKeySound();
+  usePuzzleEnding(camera);
 
   return (
     <Stage>
