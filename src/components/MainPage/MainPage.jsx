@@ -14,6 +14,7 @@ import Donut from "../../assets/puzzle/donut.png";
 import Plus from "../../assets/icon/icon-plus.png";
 import Dumbbell from "../../assets/puzzle/dumbbell.png";
 import Apple from "../../assets/puzzle/apple.png";
+import useFetchPuzzles from "../../apis/useFetchPuzzles";
 
 const Icon = styled.img`
   position: absolute;
@@ -76,117 +77,43 @@ const DifficultyLabel = styled.div`
   font-weight: 900;
 `;
 
-const PuzzlePlus = styled.div`
-  position: fixed;
-  bottom: 60px;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  width: 100%;
-  z-index: 20;
-`;
-
 function Main() {
   const navigate = useNavigate();
-  const { puzzles, setPuzzles } = usePuzzlesStore();
+  const { puzzles } = usePuzzlesStore();
   const { solvedPuzzles } = useSolvedPuzzlesStore();
 
-  useEffect(() => {
-    async function fetchCustomPuzzles() {
-      try {
-        const response = await axios.get(
-          `${import.meta.env.VITE_FETCH_PUZZLE_API}`,
-        );
+  useFetchPuzzles();
 
-        const {
-          customPuzzle,
-          tutorialPuzzle,
-          easyPuzzle,
-          normalPuzzle,
-          hardPuzzle,
-        } = response.data;
-
-        puzzles.custom = customPuzzle.custom;
-        puzzles.tutorial = tutorialPuzzle.tutorial;
-        puzzles.easy = easyPuzzle.easy;
-        puzzles.normal = normalPuzzle.normal;
-        puzzles.hard = hardPuzzle.hard;
-
-        setPuzzles(puzzles);
-      } catch (error) {
-        console.error(error);
-      }
-    }
-
-    fetchCustomPuzzles();
-  }, []);
+  const difficultyImg = {
+    tutorial: Donut,
+    easy: Apple,
+    normal: Dumbbell,
+    hard: Duck,
+    custom: Custom,
+  };
 
   return (
     <Stage>
       <GameStageHeader type="main" />
 
       <Difficulties>
-        <Difficulty>
-          <DifficultyImg
-            src={Donut}
-            alt="donut"
-            onClick={() => navigate("/puzzles/tutorial")}
-            id="tutorialImg"
-          />
-          <DifficultyLabel>Tutorial</DifficultyLabel>
-          <DifficultyLabel>
-            {`${Object.keys(solvedPuzzles.tutorial).length} / ${Object.entries(puzzles.tutorial).length}`}
-          </DifficultyLabel>
-        </Difficulty>
-
-        <Difficulty>
-          <DifficultyImg
-            src={Apple}
-            alt="apple"
-            onClick={() => navigate("/puzzles/easy")}
-          />
-          <DifficultyLabel>Easy </DifficultyLabel>
-          <DifficultyLabel>
-            {`${Object.keys(solvedPuzzles.easy).length}  / ${Object.entries(puzzles.easy).length}`}
-          </DifficultyLabel>
-        </Difficulty>
-
-        <Difficulty>
-          <DifficultyImg
-            src={Dumbbell}
-            alt="Dumbbell"
-            onClick={() => navigate("/puzzles/normal")}
-          />
-          <DifficultyLabel>Normal</DifficultyLabel>
-          <DifficultyLabel>
-            {`${Object.keys(solvedPuzzles.normal).length} / ${Object.entries(puzzles.normal).length}`}
-          </DifficultyLabel>
-        </Difficulty>
-
-        <Difficulty>
-          <DifficultyImg
-            src={Duck}
-            alt="Duck"
-            onClick={() => navigate("/puzzles/hard")}
-          />
-          <DifficultyLabel>Hard</DifficultyLabel>
-          <DifficultyLabel>
-            {`${Object.keys(solvedPuzzles.hard).length} / ${Object.entries(puzzles.hard).length}`}
-          </DifficultyLabel>
-        </Difficulty>
-
-        <Difficulty>
-          <Icon src={Plus} onClick={() => navigate("/puzzle/making")} />
-          <DifficultyImg
-            src={Custom}
-            alt="custom"
-            onClick={() => navigate("/puzzles/custom")}
-          />
-          <DifficultyLabel>Custom</DifficultyLabel>
-          <DifficultyLabel>
-            {`${Object.keys(solvedPuzzles.custom).length} / ${Object.entries(puzzles.custom).length}`}
-          </DifficultyLabel>
-        </Difficulty>
+        {["tutorial", "easy", "normal", "hard", "custom"].map((difficulty) => (
+          <Difficulty key={difficulty}>
+            {difficulty === "custom" && (
+              <Icon src={Plus} onClick={() => navigate("/puzzle/making")} />
+            )}
+            <DifficultyImg
+              src={difficultyImg[difficulty]}
+              alt={`${difficulty}Img`}
+              onClick={() => navigate(`/puzzles/${difficulty}`)}
+              id={`${difficulty}Img`}
+            />
+            <DifficultyLabel>{difficulty}</DifficultyLabel>
+            <DifficultyLabel>
+              {`${Object.keys(solvedPuzzles[difficulty]).length} / ${Object.entries(puzzles[difficulty]).length}`}
+            </DifficultyLabel>
+          </Difficulty>
+        ))}
       </Difficulties>
     </Stage>
   );

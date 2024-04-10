@@ -3,7 +3,6 @@ import { OrbitControls, OrthographicCamera } from "@react-three/drei";
 import { ResizeObserver } from "@juggle/resize-observer";
 import { useState, useEffect } from "react";
 import { useNavigate, useParams } from "react-router-dom";
-import axios from "axios";
 import styled from "styled-components";
 
 import GameStageHeader from "../shared/Header/GameStageHeader";
@@ -20,6 +19,7 @@ import formatTime from "../../utils/formatTime";
 import Back from "../../assets/icon/back.png";
 import Next from "../../assets/icon/next.png";
 import Detail from "../../assets/icon/detail.png";
+import useFetchPuzzles from "../../apis/useFetchPuzzles";
 
 const Stage = styled.div`
   position: relative;
@@ -170,7 +170,7 @@ const PlayTime = styled.div`
 function GameSelectPage() {
   const navigate = useNavigate();
   const { difficulty } = useParams();
-  const { puzzles, setPuzzles } = usePuzzlesStore();
+  const { puzzles } = usePuzzlesStore();
   const { setIsComplete } = useAnswerStore();
   const { puzzlesIndex, setPuzzlesIndex } = usePuzzlesIndexStore();
   const { solvedPuzzles } = useSolvedPuzzlesStore();
@@ -180,38 +180,13 @@ function GameSelectPage() {
   const [ranking, setRanking] = useState([]);
   const [rankIndex, setRankIndex] = useState(-1);
 
+  useFetchPuzzles();
+
   useEffect(() => {
-    async function fetchCustomPuzzles() {
-      try {
-        const response = await axios.get(
-          `${import.meta.env.VITE_FETCH_PUZZLE_API}`,
-        );
-
-        const {
-          customPuzzle,
-          tutorialPuzzle,
-          easyPuzzle,
-          normalPuzzle,
-          hardPuzzle,
-        } = response.data;
-
-        puzzles.custom = customPuzzle.custom;
-        puzzles.tutorial = tutorialPuzzle.tutorial;
-        puzzles.easy = easyPuzzle.easy;
-        puzzles.normal = normalPuzzle.normal;
-        puzzles.hard = hardPuzzle.hard;
-
-        setPuzzles(puzzles);
-        setAllPuzzles(Object.entries(puzzles[difficulty]));
-      } catch (error) {
-        console.error(error);
-      }
-    }
-
-    fetchCustomPuzzles();
+    setAllPuzzles(Object.entries(puzzles[difficulty]));
     setCurrentIndex(puzzlesIndex[difficulty]);
     setIsComplete(false);
-  }, []);
+  }, [puzzles]);
 
   const handleIndexIncrease = () => {
     if (allPuzzles.length > currentIndex) {
@@ -262,12 +237,14 @@ function GameSelectPage() {
                   )}
                 {isSolved ? (
                   <Canvas
+                    frameloop="demand"
                     resize={{ polyfill: ResizeObserver }}
                     style={{
                       background: currentPuzzle.subColor,
                       borderRadius: 20,
                     }}
                   >
+                    <ambientLight intensity={1} />
                     <directionalLight intensity={1} position={[-5, 5, -10]} />
                     <directionalLight intensity={3} position={[-10, 5, 10]} />
                     <directionalLight intensity={5} position={[10, 10, 10]} />
@@ -303,12 +280,14 @@ function GameSelectPage() {
                   </Canvas>
                 ) : (
                   <Canvas
+                    frameloop="demand"
                     resize={{ polyfill: ResizeObserver }}
                     style={{
                       background: currentPuzzle.subColor,
                       borderRadius: 20,
                     }}
                   >
+                    <ambientLight intensity={1} />
                     <directionalLight intensity={1} position={[-5, 5, -10]} />
                     <directionalLight intensity={3} position={[-10, 5, 10]} />
                     <directionalLight intensity={5} position={[10, 10, 10]} />
