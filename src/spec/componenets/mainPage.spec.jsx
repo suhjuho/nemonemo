@@ -16,11 +16,11 @@ describe("render Main Page", () => {
   it("puzzle categories should be rendered", async () => {
     expect(await screen.findByText("NEMO NEMO")).toBeInTheDocument();
 
-    expect(await screen.findByText("Tutorial")).toBeInTheDocument();
-    expect(await screen.findByText("Easy")).toBeInTheDocument();
-    expect(await screen.findByText("Normal")).toBeInTheDocument();
-    expect(await screen.findByText("Hard")).toBeInTheDocument();
-    expect(await screen.findByText("Custom")).toBeInTheDocument();
+    expect(await screen.findByText("tutorial")).toBeInTheDocument();
+    expect(await screen.findByText("easy")).toBeInTheDocument();
+    expect(await screen.findByText("normal")).toBeInTheDocument();
+    expect(await screen.findByText("hard")).toBeInTheDocument();
+    expect(await screen.findByText("custom")).toBeInTheDocument();
   });
 
   it("puzzles store should be fetched from database on rendering", async () => {
