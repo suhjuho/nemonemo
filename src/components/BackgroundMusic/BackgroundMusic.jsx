@@ -1,7 +1,7 @@
 import React, { useEffect, useRef } from "react";
-import bgm from "../../assets/music/backgroundMusic.mp3";
 
 import { useSoundStore } from "../../store/store";
+import bgm from "../../assets/music/backgroundMusic.mp3";
 
 function BackgroundMusic() {
   const audioRef = useRef();

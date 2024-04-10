@@ -1,15 +1,15 @@
 import styled from "styled-components";
-
 import { useNavigate } from "react-router-dom";
 import { useEffect, useState } from "react";
+
+import GameSetting from "../GameSettingModal/GameSettingModal";
+
 import Speaker from "../../assets/icon/icon-speaker.png";
 import MutedSpeaker from "../../assets/icon/icon-mute.png";
 import Setting from "../../assets/icon/icon-setting.png";
 import Out from "../../assets/icon/icon-out.png";
 
 import { useSoundStore } from "../../store/store";
-
-import GameSetting from "../GameSetting/GameSetting";
 import usePuzzleMakingStore from "../../store/making";
 
 const Icon = styled.img`

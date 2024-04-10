@@ -1,35 +1,29 @@
 import { Canvas } from "@react-three/fiber";
 import { OrthographicCamera, OrbitControls } from "@react-three/drei";
 import { ResizeObserver } from "@juggle/resize-observer";
-
 import { useParams } from "react-router-dom";
 import { useEffect, useRef, useState } from "react";
 import styled from "styled-components";
-
 import * as TWEEN from "@tweenjs/tween.js";
 
 import Puzzle from "../Puzzle/Puzzle";
 import BackGround from "./BackGround";
-import GameStageHeader from "../Header/GameStageHeader";
-import GameStageSideBar from "../SideBar/GameStageSideBar";
+import AutoCamera from "../Edge/AutoCamera";
+import GameStageHeader from "../shared/Header/GameStageHeader";
+import GameStageSideBar from "../shared/SideBar/GameStageSideBar";
 import GameStageFooter from "../Footer/GameStageFooter";
 
-import usePuzzlesStore from "../../store/puzzle";
-
-import CUBE_CONSTANT from "../../constants/cube";
-
 import { soundCube, soundEnding } from "../../utils/soundEffect";
+import getMarkingNumbers from "../../utils/getMarkingNumbers";
+import getDefaultPuzzle from "../../utils/getDefaultPuzzle";
+import usePuzzlesStore from "../../store/puzzle";
 import {
   useClickModeStore,
   useOrbitControlStore,
   useAnswerStore,
   useSoundStore,
 } from "../../store/store";
-
-import AutoCamera from "../Edge/AutoCamera";
-
-import getMarkingNumbers from "../../utils/getMarkingNumbers";
-import getDefaultPuzzle from "../../utils/getDefaultPuzzle";
+import CUBE_CONSTANT from "../../constants/cube";
 
 const Stage = styled.div`
   position: relative;

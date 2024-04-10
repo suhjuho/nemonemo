@@ -1,20 +1,20 @@
 import styled from "styled-components";
 import { useParams } from "react-router-dom";
-import LayerIn from "../../assets/icon/layer-in.png";
-import LayerOut from "../../assets/icon/layer-out.png";
-import RightClick from "../../assets/icon/right-click.png";
-import LeftClick from "../../assets/icon/left-click.png";
-import CubeColor from "../../assets/icon/cube-color.png";
-import CubeRemove from "../../assets/icon/cube-remove.png";
-import CubeAdd from "../../assets/icon/cube-add.png";
-import Undo from "../../assets/icon/undo.png";
-import Redo from "../../assets/icon/redo.png";
+import LayerIn from "../../../assets/icon/layer-in.png";
+import LayerOut from "../../../assets/icon/layer-out.png";
+import RightClick from "../../../assets/icon/right-click.png";
+import LeftClick from "../../../assets/icon/left-click.png";
+import CubeColor from "../../../assets/icon/cube-color.png";
+import CubeRemove from "../../../assets/icon/cube-remove.png";
+import CubeAdd from "../../../assets/icon/cube-add.png";
+import Undo from "../../../assets/icon/undo.png";
+import Redo from "../../../assets/icon/redo.png";
 
 import {
   useClickModeStore,
   useAnswerStore,
   useTutorialStepStore,
-} from "../../store/store";
+} from "../../../store/store";
 import StyledIcon from "../StyledIcon/StyledIcon";
 
 const SideBar = styled.section`

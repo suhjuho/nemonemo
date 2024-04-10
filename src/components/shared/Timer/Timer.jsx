@@ -1,6 +1,6 @@
 import { useState, useEffect } from "react";
-import { useAnswerStore, useGameTimeStore } from "../../store/store";
-import formatTime from "../../utils/formatTime";
+import { useAnswerStore, useGameTimeStore } from "../../../store/store";
+import formatTime from "../../../utils/formatTime";
 
 function Timer({ state }) {
   const [time, setTime] = useState(0);

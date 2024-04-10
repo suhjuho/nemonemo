@@ -79,7 +79,7 @@ const Modal = styled.div`
   }
 `;
 
-function GameSetting({ handleIsSetting }) {
+function GameSettingModal({ handleIsSetting }) {
   const { sound, changeSoundState } = useSoundStore();
 
   return (
@@ -142,4 +142,4 @@ function GameSetting({ handleIsSetting }) {
   );
 }
 
-export default GameSetting;
+export default GameSettingModal;

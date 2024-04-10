@@ -1,8 +1,8 @@
 import { Text } from "@react-three/drei";
 import React from "react";
-import CUBE_CONSTANT from "../../constants/cube";
 
 import { useLayerStore } from "../../store/store";
+import CUBE_CONSTANT from "../../constants/cube";
 
 function CubeNumbers({ markingNumbers, positivePosition }) {
   const { layerDirection } = useLayerStore();

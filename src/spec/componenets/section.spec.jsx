@@ -4,13 +4,13 @@ import { MemoryRouter, Routes, Route } from "react-router-dom";
 import * as ReactRouter from "react-router-dom";
 import usePuzzlesStore from "../../store/puzzle";
 
-import GameStageHeader from "../../components/Header/GameStageHeader";
+import GameStageHeader from "../../components/shared/Header/GameStageHeader";
 import GameStageFooter from "../../components/Footer/GameStageFooter";
 import TutorialStageFooter from "../../components/Footer/TutorialStageFooter";
 import CustomPuzzleHeader from "../../components/CustomPuzzle/CustomPuzzleHeader";
 import CustomPuzzleFooter from "../../components/CustomPuzzle/CustomPuzzleFooter";
-import GameStageSideBar from "../../components/SideBar/GameStageSideBar";
-import TutorialStageSideBar from "../../components/SideBar/TutorialStageSideBar";
+import GameStageSideBar from "../../components/shared/SideBar/GameStageSideBar";
+import TutorialStageSideBar from "../../components/shared/SideBar/TutorialStageSideBar";
 
 const initialState = usePuzzlesStore.getState();
 

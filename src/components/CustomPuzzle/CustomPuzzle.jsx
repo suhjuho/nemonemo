@@ -1,16 +1,23 @@
 import { Canvas } from "@react-three/fiber";
 import { OrthographicCamera, OrbitControls } from "@react-three/drei";
 import * as THREE from "three";
-
 import { useEffect, useRef, useState } from "react";
 import styled from "styled-components";
 
+import AutoCamera from "../Edge/AutoCamera";
 import CustomBackground from "./CustomBackground";
-import GameStageSideBar from "../SideBar/GameStageSideBar";
+import GameStageSideBar from "../shared/SideBar/GameStageSideBar";
+import getDefaultPuzzle from "../../utils/getDefaultPuzzle";
+import CustomPuzzleHeader from "./CustomPuzzleHeader";
+import CustomPuzzleFooter from "./CustomPuzzleFooter";
+import CustomPuzzleColorPicker from "./CustomPuzzleColorPicker";
+import CustomPuzzleTable from "./CustomPuzzleTable";
+import CustomCube from "./CustomCube";
+import Scaffold from "../Edge/Scaffold";
+import DefaultScaffold from "../Edge/DefaultScaffold";
+import AxisArrow from "../CubePointer/AxisArrow";
+import { AxisX, AxisY, AxisZ } from "../CubePointer/AxisMarker";
 
-import CUBE_CONSTANT from "../../constants/cube";
-
-import { soundCube } from "../../utils/soundEffect";
 import {
   useCameraPositionStore,
   useClickModeStore,
@@ -18,21 +25,10 @@ import {
   useOrbitControlStore,
   useSoundStore,
 } from "../../store/store";
-
-import AutoCamera from "../Edge/AutoCamera";
-
-import getDefaultPuzzle from "../../utils/getDefaultPuzzle";
-import CustomPuzzleHeader from "./CustomPuzzleHeader";
 import usePuzzleMakingStore from "../../store/making";
-import CustomCube from "./CustomCube";
-import Scaffold from "../Edge/Scaffold";
-import DefaultScaffold from "../Edge/DefaultScaffold";
-import CustomPuzzleFooter from "./CustomPuzzleFooter";
 import revertCoordinate from "../../utils/revertCoordinate";
-import CustomPuzzleColorPicker from "./CustomPuzzleColorPicker";
-import CustomPuzzleTable from "./CustomPuzzleTable";
-import AxisArrow from "../CubePointer/AxisArrow";
-import { AxisX, AxisY, AxisZ } from "../CubePointer/AxisMarker";
+import { soundCube } from "../../utils/soundEffect";
+import CUBE_CONSTANT from "../../constants/cube";
 
 const Stage = styled.div`
   position: relative;

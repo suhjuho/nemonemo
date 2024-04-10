@@ -1,14 +1,13 @@
 import * as THREE from "three";
+
 import {
   useClickModeStore,
   useOrbitControlStore,
   useRightClickStore,
   useSoundStore,
 } from "../../store/store";
-
-import BACKGROUND_CONSTANT from "../../constants/background";
-
 import { soundClick } from "../../utils/soundEffect";
+import BACKGROUND_CONSTANT from "../../constants/background";
 
 const planeGeometry = new THREE.PlaneGeometry(
   ...BACKGROUND_CONSTANT.GEOMETRY_ARGS,

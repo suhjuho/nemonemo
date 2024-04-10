@@ -1,14 +1,12 @@
 import { Canvas } from "@react-three/fiber";
 import { OrbitControls, OrthographicCamera } from "@react-three/drei";
 import { ResizeObserver } from "@juggle/resize-observer";
-
 import { useState, useEffect } from "react";
-
-import styled from "styled-components";
-
 import { useNavigate, useParams } from "react-router-dom";
 import axios from "axios";
-import GameStageHeader from "../Header/GameStageHeader";
+import styled from "styled-components";
+
+import GameStageHeader from "../shared/Header/GameStageHeader";
 
 import { useAnswerStore } from "../../store/store";
 import usePuzzlesStore from "../../store/puzzle";
@@ -17,11 +15,11 @@ import useSolvedPuzzlesStore from "../../store/solvedPuzzles";
 
 import getDefaultPuzzle from "../../utils/getDefaultPuzzle";
 import convertCoordinate from "../../utils/convertCoordinate";
+import formatTime from "../../utils/formatTime";
 
 import Back from "../../assets/icon/back.png";
 import Next from "../../assets/icon/next.png";
 import Detail from "../../assets/icon/detail.png";
-import formatTime from "../../utils/formatTime";
 
 const Stage = styled.div`
   position: relative;

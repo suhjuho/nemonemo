@@ -1,6 +1,6 @@
 import { useFrame, useThree } from "@react-three/fiber";
-
 import { useState } from "react";
+
 import { useCameraPositionStore, useLayerStore } from "../../store/store";
 
 function AutoCamera({ puzzle }) {

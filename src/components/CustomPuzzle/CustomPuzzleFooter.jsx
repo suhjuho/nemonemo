@@ -1,11 +1,11 @@
 import styled from "styled-components";
 import { useEffect } from "react";
-
-import axios from "axios";
 import { useNavigate } from "react-router-dom";
+import axios from "axios";
+
 import usePuzzleMakingStore from "../../store/making";
-import getMarkingNumbers from "../../utils/getMarkingNumbers";
 import { useMarkingNumbersStore } from "../../store/store";
+import getMarkingNumbers from "../../utils/getMarkingNumbers";
 
 const Footer = styled.footer`
   position: fixed;

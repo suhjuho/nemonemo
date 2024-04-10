@@ -1,24 +1,18 @@
 import { useEffect } from "react";
-
-import styled from "styled-components";
-
 import { useNavigate } from "react-router-dom";
 import axios from "axios";
-import GameStageHeader from "../Header/GameStageHeader";
+import styled from "styled-components";
+
+import GameStageHeader from "../shared/Header/GameStageHeader";
 
 import usePuzzlesStore from "../../store/puzzle";
 import useSolvedPuzzlesStore from "../../store/solvedPuzzles";
 
-import Fox from "../../assets/puzzle/fox.png";
-import Shark from "../../assets/puzzle/shark.png";
 import Duck from "../../assets/puzzle/duck.png";
-import Sunflower from "../../assets/puzzle/sunflower.png";
-import Matchstick from "../../assets/puzzle/matchstick.png";
-import Cookie from "../../assets/puzzle/cookie.png";
 import Custom from "../../assets/puzzle/custom.png";
 import Donut from "../../assets/puzzle/donut.png";
 import Plus from "../../assets/icon/icon-plus.png";
-import Dumbell from "../../assets/puzzle/dumbell.png";
+import Dumbbell from "../../assets/puzzle/dumbbell.png";
 import Apple from "../../assets/puzzle/apple.png";
 
 const Icon = styled.img`
@@ -159,8 +153,8 @@ function Main() {
 
         <Difficulty>
           <DifficultyImg
-            src={Dumbell}
-            alt="Dumbell"
+            src={Dumbbell}
+            alt="Dumbbell"
             onClick={() => navigate("/puzzles/normal")}
           />
           <DifficultyLabel>Normal</DifficultyLabel>

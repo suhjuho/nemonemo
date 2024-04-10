@@ -6,9 +6,12 @@ import React, {
   useCallback,
 } from "react";
 import { useSpring, animated, config } from "@react-spring/three";
-
 import { useParams } from "react-router-dom";
 import axios from "axios";
+
+import CubeEdge from "./CubeEdge";
+import CubeNumbers from "./CubeNumbers";
+
 import usePuzzlesStore from "../../store/puzzle";
 import {
   useAnswerStore,
@@ -21,16 +24,11 @@ import {
   useSoundStore,
   useGameTimeStore,
 } from "../../store/store";
-
 import useSolvedPuzzlesStore from "../../store/solvedPuzzles";
 import checkAnswer from "../../utils/checkAnswer";
-import CUBE_CONSTANT from "../../constants/cube";
-
-import CubeEdge from "./CubeEdge";
-import CubeNumbers from "./CubeNumbers";
-
 import { soundClick } from "../../utils/soundEffect";
 import revertCoordinate from "../../utils/revertCoordinate";
+import CUBE_CONSTANT from "../../constants/cube";
 
 function rank(difficulty, stageNumber, time) {
   async function saveScore() {

@@ -2,15 +2,15 @@ import styled from "styled-components";
 
 import { useNavigate } from "react-router-dom";
 import { useState } from "react";
-import Speaker from "../../assets/icon/icon-speaker.png";
-import MutedSpeaker from "../../assets/icon/icon-mute.png";
-import Setting from "../../assets/icon/icon-setting.png";
-import Out from "../../assets/icon/icon-out.png";
+import Speaker from "../../../assets/icon/icon-speaker.png";
+import MutedSpeaker from "../../../assets/icon/icon-mute.png";
+import Setting from "../../../assets/icon/icon-setting.png";
+import Out from "../../../assets/icon/icon-out.png";
 
-import { useAnswerStore, useSoundStore } from "../../store/store";
+import { useAnswerStore, useSoundStore } from "../../../store/store";
 
 import Timer from "../Timer/Timer";
-import GameSetting from "../GameSetting/GameSetting";
+import GameSetting from "../../GameSettingModal/GameSettingModal";
 
 const Icon = styled.img`
   width: 60px;

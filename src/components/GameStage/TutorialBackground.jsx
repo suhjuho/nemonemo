@@ -1,6 +1,11 @@
 import * as THREE from "three";
 import { useParams } from "react-router-dom";
 import axios from "axios";
+
+import checkAnswer from "../../utils/checkAnswer";
+import { soundClick } from "../../utils/soundEffect";
+import usePuzzlesStore from "../../store/puzzle";
+import useSolvedPuzzlesStore from "../../store/solvedPuzzles";
 import {
   useClickModeStore,
   useCubeStatesStore,
@@ -10,13 +15,7 @@ import {
   useSoundStore,
   useGameTimeStore,
 } from "../../store/store";
-import usePuzzlesStore from "../../store/puzzle";
-
 import BACKGROUND_CONSTANT from "../../constants/background";
-
-import checkAnswer from "../../utils/checkAnswer";
-import { soundClick } from "../../utils/soundEffect";
-import useSolvedPuzzlesStore from "../../store/solvedPuzzles";
 
 function rank(difficulty, stageNumber, time) {
   async function saveScore() {

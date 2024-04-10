@@ -1,12 +1,11 @@
 import { Route, Routes } from "react-router-dom";
+
 import MainPage from "./MainPage/MainPage";
 import GameStage from "./GameStage/GameStage";
 import GameSelectPage from "./GameSelectPage/GameSelectPage";
 import TutorialGameStage from "./GameStage/TutorialGameStage";
 import CustomPuzzle from "./CustomPuzzle/CustomPuzzle";
-
 import BackgroundMusic from "./BackgroundMusic/BackgroundMusic";
-
 import "./styles.css";
 
 function App() {

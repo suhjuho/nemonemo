@@ -1,3 +1,4 @@
+import { useSpring, animated, config } from "@react-spring/three";
 import React, {
   useState,
   useRef,
@@ -5,7 +6,9 @@ import React, {
   useMemo,
   useCallback,
 } from "react";
-import { useSpring, animated, config } from "@react-spring/three";
+
+import CubeEdge from "../Cube/CubeEdge";
+import CubeNumbers from "../Cube/CubeNumbers";
 
 import {
   useClickModeStore,
@@ -16,14 +19,10 @@ import {
   useSoundStore,
   useMarkingNumbersStore,
 } from "../../store/store";
-import CUBE_CONSTANT from "../../constants/cube";
-
-import CubeEdge from "../Cube/CubeEdge";
-import CubeNumbers from "../Cube/CubeNumbers";
-
+import usePuzzleMakingStore from "../../store/making";
 import { soundClick } from "../../utils/soundEffect";
 import revertCoordinate from "../../utils/revertCoordinate";
-import usePuzzleMakingStore from "../../store/making";
+import CUBE_CONSTANT from "../../constants/cube";
 
 function CustomCube({
   position,
