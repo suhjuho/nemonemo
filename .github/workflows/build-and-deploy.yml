@@ -10,6 +10,11 @@ jobs:
       - name: Checkout source code.
         uses: actions/checkout@v3
 
+      - name: Set Environment Variables
+        run: |
+          echo "VITE_SAVE_PUZZLE_API=${{ secrets.VITE_SAVE_PUZZLE_API }}" >> .env
+          echo "VITE_FETCH_PUZZLE_API=${{ secrets.VITE_FETCH_PUZZLE_API }}" >> .env
+
       - name: Install dependencies
         run: npm install
 
