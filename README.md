@@ -1,66 +1,59 @@
-# 🧩 NEMO NEMO
-
-네모네모는 큐브에 적힌 숫자를 확인하여 특정들을 색칠하고 지워나가 퍼즐을 푸는 3d 게임입니다.
-
-## 📒 Contents
-
-- [🧩 Deploy](#️-Deploy)
-- [🔧 Tech Stacks](#-tech-stacks)
-- [🙋🏻‍♂️ Introduction](#️-introduction)
-- [💪 Motivation](#-motivation)
-- [🧐 How to play?](#-How-to-play)
-- [🕹️ Features](#-features)
-- [⛰️ Challenges](#️-challenges)
-  1. [Rendering Optimization](#1-rendering-optimization)
-  2. [Custom Puzzle](#2-custom-puzzle)
-  3. [UI/UX](#3-ui/ux)
-- [⏰ Project Timeline](#-project-timeline)
-- [✉️ comments](#-comments)
-- [📚 What I learned](#-what-i-learned)
-
-## Deploy
+<h1>NEMO NEMO</h1>
+<p>네모네모는 큐브에 적힌 숫자를 확인하여 특정들을 색칠하고 지워나가 퍼즐을 푸는 3d 게임입니다</p>
+<a href="https://nemonemo.org">
+  <img width="100" alt="image" src="https://github.com/suhjuho/nemonemo/assets/133403759/ce974169-c7c1-49d4-9eb8-d5d3d446bdd2">  
+</a>
 
 [게임하러가기](https://nemonemo.org)
 
-## tech-stacks
+## demo
 
-프론트엔드
-
-- React
-- Zustand
-- Three.js, React Three fiber(R3F)
-
-백엔드
-
-- mongodb
-- aws lambda
-
-etc
-
-- git
-- styled-components
-- vitest, jsdom for unit test
+# 🗂️ Contents
+- [🧩 Introduction](#introduction)
+- [🕹️  Features](#features)
+- [🕹️  How to play?](#how-to-play)
+- [🔧  Tech Stacks](#tech-stacks)
+- [🗻  Challenge](#️challenge)
+  - [Rendering Optimization](#rendering-optimization)
+  - [Custom Puzzle](#custom-puzzle)
+  - [UI/UX](#UI/UX)
+- [🗓️ Project Timeline](#project-timeline)
+- [✉️ comments](#comments)
+- [📚 What I learned](#what-i-learned)
 
 ## Introduction
 
+<div align="start">
+  <img width="600" alt="image" src="https://github.com/suhjuho/nemonemo/assets/133403759/ef512684-d94d-40e4-a7d9-c6122ed5b289">   
+</div>
+
 - 2D 기반의 퍼즐 게임 네모네모로직(aka 노노그램, picross) 게임을 3D로 구현한 웹 게임입니다.
-- 싱글모드로 퍼즐을 푸는데 걸린 시간이 기록에 남습니다.
+- 게임의 목표는 각 큐브에 적힌 숫자들을 힌트로 정답인 큐브들을 찾고 나머지 큐브들을 제거하여 퍼즐 속에 숨겨진 조각을 찾아야합니다.
+
+## Features
+
 - 난이도 별로 퍼즐을 풀 수 있습니다.
+- 큐브를 클릭하여 색을 마킹할 수 있고, 지울 수도 있습니다.
+- 배경을 드래그하여 퍼즐을 회전할 수 있습니다.
+- 퍼즐 안쪽의 큐브를 클릭하기 위해 바깥 면을 이동할 수 있습니다.
 - 사용자가 직접 퍼즐을 제작할 수 있습니다.
-
-## Motivation
-
-- 퍼즐 게임에 대한 흥미
+- 퍼즐을 푸는데 걸린 시간이 기록에 남습니다.
 
 ## How to play
+- 마우스로 큐브를 클릭하고 키보드 단축키를 이용하여 옵션을 변경할 수 있습니다.
 
 #### 숫자 힌트
 
-- 기존의 2D게임의 방식과 약간의 차이가 있습니다.
-- 숫자 힌트를 이용하여 해당하는 큐브를 색을 칠해 마킹해놓습니다.
+- 숫자 힌트를 가지고 정답이라 생각하는 큐브를 클릭하면 큐브에 색을 칠해 마킹해놓을 수 있습니다.
 - 큐브의 각 면에는 최대 2개의 숫자가 적혀있습니다.
   - 가운데 숫자: 해당 방향으로 칠해야 할 총 큐브의 개수를 의미합니다.
   - 우측 상단: 연속되는 큐브사이의 빈틈의 개수입니다. 우측 상단에 숫자가 없다면 모두 연속되는 큐브입니다.
+- 숫자가 적힌 면을 기준으로 수직으로 향하는 방향이 기준입니다.
+
+<div style={{display: "flex"}}>
+  <img height="260"  alt="image" src="https://github.com/suhjuho/nemonemo/assets/133403759/9ceb901f-fdf7-4a94-8b65-c7f7009e9b27"> 
+  <img height="260"  alt="image" src="https://github.com/suhjuho/nemonemo/assets/133403759/0a3ad103-efca-4c2b-a88b-5a7e28d74281"> 
+</div>
 
 #### 클릭 모드는 총 2가지가 있습니다.
 
@@ -69,27 +62,52 @@ etc
   큐브를 클릭 시 큐브를 지웁니다,
   투명한 큐브를 클릭하면 제거되었던 큐브가 생성됩니다.
 
-#### 배경 클릭시
-
-- 배경을 클릭한 상태에서 드래그를 하면 퍼즐을 회전시킬 수 있습니다.
-- 배경을 우클릭하거나 단축키 c를 누르면 클릭 모드가 변경됩니다.
+<div style={{display: "flex"}}>
+  <img height="300" alt="image" src="https://github.com/suhjuho/nemonemo/assets/133403759/6a067362-56b5-41b7-9a57-d0f08badf83f"> 
+  <img height="300" alt="image" src="https://github.com/suhjuho/nemonemo/assets/133403759/b4e1cd14-dc86-4ff4-adb0-a30a2f517325"> 
+</div>
 
 #### 레이어 이동
 
 - 안쪽에 위치하여 클릭하기 어려운 큐브의 경우 레이어 이동을 통해 클릭할 수 있습니다.
 - 단축키 Q, W로 안쪽레이어로 이동하거나 밖으로 나올 수 있습니다.
-- 레이어를 이동하면 지나친 레이어의 큐브들은 보이지 않습니다. (단, 보이지 않다고 제거된것은 아닙니다!)
+- 레이어를 이동하면 지나친 레이어의 큐브들은 보이지 않습니다. (단, 보이지 않다고 제거된 것은 아닙니다!)
 - 레이어를 이동하면 퍼즐 뒷쪽에 빨간색 격자무늬로 레이어 이동을 표시해줍니다.
 - 퍼즐을 바라보는 위치에따라 이동할 레이어의 기준이 변경됩니다.(옆면 중 플레이어와 가장 가까운 면이 기준)
+
+<div style={{display: "flex"}}>
+  <img height="300" alt="image" src="https://github.com/suhjuho/nemonemo/assets/133403759/1d2b3359-1310-492d-a28b-56bfa448b504"> 
+</div>
+
+#### 퍼즐 회전
+
+- 배경을 클릭한 상태에서 드래그를 하면 퍼즐을 회전시킬 수 있습니다.
+- 배경을 우클릭하거나 단축키 c를 누르면 클릭 모드가 변경됩니다.
 
 #### 되돌리기, 돌아가기
 
 - z 단축키를 이용하면 큐브 변경 상태를 뒤로 돌릴 수 있습니다.
 - x 단축키를 이용하면 큐브 변경 상태를 앞으로 돌릴 수 있습니다.
 
-## challenges
+## tech-stacks
 
-1. rendering optimization
+프론트엔드
+- React
+- Zustand
+- Three.js, React Three fiber(R3F)
+
+백엔드
+- mongodb
+- aws lambda
+
+etc
+- git
+- styled-components
+- vitest, jsdom for unit test
+
+## challenge
+
+#### rendering optimization
    : 렌더링 최적화입니다.
    카메라의 위치에 따라 상태값을 변경해주어야합니다.
    첫번째는 퍼즐의 뒤쪽에 있는 격자무늬 배경을 조건부 렌더링하기 위해서 입니다.
@@ -100,10 +118,10 @@ etc
    이를 해결하기 위해 useThree 훅을 이용하였습니다. 이 방법으로 직접 카메라에 접근하여 위치를 가져오고 useFrame으로 매 프레임마다 호출하여 배경 면과 이동할 레이어를 선택해주었습니다.
    결과적으로 큐브의 수가 많아질 수록 대체한 방식에서 카메라의 이동이 더 부드럽고 빠른 렌더링을 보여주었습니다.
 
-2. 사용자 창작 퍼즐 및 유효성 검사
+#### custom puzzle
    : 새로운 퍼즐을 생성할 때 필요한 정보로 퍼즐의 사이즈(가로, 높이, 세로), 정답 큐브들의 좌표 위치, 색상 등이 있습니다. 매번 새로 퍼즐을 생성할 때마다 해당 값들을 배열, 객체 타입으로 직접 타이핑하여 DB에 추가해주었습니다. 하지만 퍼즐의 크기가 커질수록 고려해야할 데이터 양이 많아져 퍼즐을 생성하는데 어려움이 있었습니다. 이를 해결하기 위해 퍼즐을 만드는데 필수적인 요소만을 사용자에게 직접 받아 퍼즐을 제작해주는 로직을 구현하고 실제로 퍼즐을 제작할 수있는 UI를 개발하였습니다. 퍼즐의 좌표값을 일일이 계산할 필요가 없어졌고, 미리 완성된 퍼즐의 모습까지 확인할 수 있게 되었습니다. 사용자들이 본인만의 창작 퍼즐을 만드는 것 뿐만 아니라, 프로젝트를 진행한 저도 이전보다 훨씬 쉽게 퍼즐을 제작할 수 있었습니다.
 
-3. UI/UX
+#### UI/UX
    : 게임의 규칙을 모르는 플레이어도 많고 3D에서 게임 조작 방식도 처음에는 익히기 어렵다는 피드백이 많아 게임의 룰을 모르는 플레이들을 위한 튜토리얼을 만들어 주었습니다. 단순히 게임의 규칙과 플레이 방법을 텍스트로 적어주는 것이 아니라 튜토리얼용 퍼즐을 직접 풀어가면서 단계적으로 설명 창을 띄어주어 쉽고 빠르게 게임을 플레이 할 수 있도록 도와주었습니다.
 
 ## project timeline
@@ -125,7 +143,7 @@ etc
 
 ## comments
 
-- 새로운 분야인 3d를 개발하면서 렌더링 최적화에 신경을 많이 썼습니다.
+- 새로운 분야인 3d를 개발하면서 렌더링 최적화를 진행했습니다.
 
 - 게임을 개발하면서 기존의 존재하는 퍼즐 게임이지만 2D에서 3D로 바꾸는 과정에서 게임의 로직을
   수정하는 과정이 시간이 오래 걸렸습니다. 큐브에 마킹해줘야할 숫자도 기존의 방식과 변경되었습니다.
