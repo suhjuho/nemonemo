@@ -2,6 +2,7 @@ import styled from "styled-components";
 import { useNavigate } from "react-router-dom";
 
 import Out from "../../assets/icon/icon-out.png";
+import { useLanguageStore } from "../../store/store";
 
 const Footer = styled.footer`
   position: fixed;
@@ -33,6 +34,7 @@ const Footer = styled.footer`
 
 function GameStageFooter({ difficulty, currentIndex, puzzleLength }) {
   const navigate = useNavigate();
+  const { language } = useLanguageStore();
 
   return (
     <Footer>
@@ -48,7 +50,7 @@ function GameStageFooter({ difficulty, currentIndex, puzzleLength }) {
             navigate(`/puzzles/${difficulty}/${Number(currentIndex) + 1}`)
           }
         >
-          Next
+          {language === "English" ? "Next" : "다음"}
         </div>
       )}
     </Footer>

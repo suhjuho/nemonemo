@@ -7,7 +7,11 @@ import MutedSpeaker from "../../../assets/icon/icon-mute.png";
 import Setting from "../../../assets/icon/icon-setting.png";
 import Out from "../../../assets/icon/icon-out.png";
 
-import { useAnswerStore, useSoundStore } from "../../../store/store";
+import {
+  useAnswerStore,
+  useLanguageStore,
+  useSoundStore,
+} from "../../../store/store";
 
 import Timer from "../Timer/Timer";
 import GameSetting from "../../GameSettingModal/GameSettingModal";
@@ -67,6 +71,7 @@ const Header = styled.header`
     position: relative;
     display: flex;
     justify-content: end;
+    visibility: hidden;
   }
 
   .header-middle {
@@ -92,11 +97,20 @@ const Header = styled.header`
   }
 `;
 
+const languages = {
+  tutorial: "튜토리얼",
+  easy: "쉬움",
+  normal: "보통",
+  hard: "어려움",
+  custom: "커스텀",
+};
+
 function GameStageHeader({ type, difficulty, puzzleTitle, puzzleSize }) {
   const navigate = useNavigate();
   const { sound, changeSoundState } = useSoundStore();
   const { isComplete } = useAnswerStore();
   const [isSetting, setIsSetting] = useState(false);
+  const { language } = useLanguageStore();
 
   const handleSound = () => {
     sound.isMuted = !sound.isMuted;
@@ -125,9 +139,15 @@ function GameStageHeader({ type, difficulty, puzzleTitle, puzzleSize }) {
         </div>
         <div className="header-middle">
           {(type === "main" || type === "setting") && (
-            <div className="content">NEMO NEMO</div>
+            <div className="content">
+              {language === "English" ? "NEMO NEMO" : "네모 네모"}
+            </div>
           )}
-          {type === "select" && <div className="content">{difficulty}</div>}
+          {type === "select" && (
+            <div className="content">
+              {language === "English" ? difficulty : languages[difficulty]}
+            </div>
+          )}
           {type === "game" && (
             <div
               className="game-status"

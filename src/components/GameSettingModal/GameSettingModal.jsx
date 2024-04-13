@@ -1,5 +1,5 @@
 import styled from "styled-components";
-import { useSoundStore } from "../../store/store";
+import { useLanguageStore, useSoundStore } from "../../store/store";
 
 const Modal = styled.div`
   position: absolute;
@@ -10,7 +10,7 @@ const Modal = styled.div`
   display: flex;
   justify-content: center;
   align-items: center;
-  z-index: 30;
+  z-index: 50;
 
   .settings {
     position: relative;
@@ -81,6 +81,15 @@ const Modal = styled.div`
 
 function GameSettingModal({ handleIsSetting }) {
   const { sound, changeSoundState } = useSoundStore();
+  const { language, changeLanguage } = useLanguageStore();
+
+  const handleLanguage = () => {
+    if (language === "English") {
+      changeLanguage("한국어");
+    } else {
+      changeLanguage("English");
+    }
+  };
 
   return (
     <Modal>
@@ -121,7 +130,9 @@ function GameSettingModal({ handleIsSetting }) {
         </div>
         <div className="setting">
           <div className="setting-language">Language</div>
-          <div className="select-language">English</div>
+          <div className="select-language" onClick={handleLanguage}>
+            {language}
+          </div>
         </div>
 
         <button

@@ -78,6 +78,11 @@ const tutorialStep = (set) => ({
   nextTutorialStep: (step) => set({ step }),
 });
 
+const languageStore = (set) => ({
+  language: "English", // "한국어"
+  changeLanguage: (language) => set({ language }),
+});
+
 const useMarkingNumbersStore = create(markingNumbersStore);
 const useAnswerStore = create(answerStore);
 const useCubeStatesStore = create(cubeStatesStore);
@@ -90,6 +95,7 @@ const useLayerStore = create(layerStore);
 const useSoundStore = create(soundStore);
 const useGameTimeStore = create(gameTimeStore);
 const useTutorialStepStore = create(tutorialStep);
+const useLanguageStore = create(languageStore);
 
 export {
   useMarkingNumbersStore,
@@ -104,4 +110,5 @@ export {
   useSoundStore,
   useGameTimeStore,
   useTutorialStepStore,
+  useLanguageStore,
 };
