@@ -1,5 +1,6 @@
 import { Canvas } from "@react-three/fiber";
 import { OrthographicCamera, OrbitControls } from "@react-three/drei";
+import { ResizeObserver } from "@juggle/resize-observer";
 import * as THREE from "three";
 import { useEffect, useRef, useState } from "react";
 import styled from "styled-components";
@@ -167,7 +168,7 @@ function CustomPuzzle() {
 
       <CustomPuzzleFooter customCubesState={customCubesState} />
 
-      <Canvas>
+      <Canvas resize={{ polyfill: ResizeObserver }}>
         <ambientLight intensity={1} />
         <pointLight position={[0, 15, 20]} />
         <directionalLight intensity={3} position={[-10, -8, -6]} />
