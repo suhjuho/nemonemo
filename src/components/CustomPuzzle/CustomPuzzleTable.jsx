@@ -1,5 +1,6 @@
 import styled from "styled-components";
 
+import { useState } from "react";
 import usePuzzleMakingStore from "../../store/making";
 import { useMarkingNumbersStore } from "../../store/store";
 import getMarkingNumbers from "../../utils/getMarkingNumbers";
@@ -12,7 +13,7 @@ const SideBar = styled.section`
   flex-direction: column;
   justify-content: center;
   align-items: start;
-  z-index: 5;
+  z-index: 25;
 
   .layer-direction {
     font-size: 32px;
@@ -27,6 +28,32 @@ const Layer = styled.div`
 
 const CubeSides = styled.div`
   display: flex;
+`;
+
+const LayerSelection = styled.div`
+  font-size: 48px;
+  font-weight: 900;
+  margin: 2px 0px;
+  padding: 0px 10px;
+  text-align: center;
+  background-color: rgba(255, 255, 255, 0.1);
+  background-color: ${(props) =>
+    props.isSelected ? `rgb(255, 255, 255)` : `rgba(255, 255, 255, 0.1)`};
+  border: 3px solid white;
+  border-radius: 20px;
+  box-shadow: 2px 4px 8px;
+  box-sizing: border-box;
+  overflow: hidden;
+  white-space: nowrap;
+  min-width: 100px;
+
+  &:hover {
+    transform: translateY(-1px);
+  }
+
+  &:active {
+    color: #007302;
+  }
 `;
 
 const CubeSide = styled.div`
@@ -44,6 +71,11 @@ function CustomPuzzleTable({ size }) {
   const [sizeX, sizeY, sizeZ] = size;
   const { puzzleMaking, setPuzzleMaking } = usePuzzleMakingStore();
   const { setMarkingNumbers } = useMarkingNumbersStore();
+  const [isSelected, setIsSelected] = useState({
+    YZ: true,
+    XZ: false,
+    XY: false,
+  });
 
   const positionsLayerX = [];
   const positionsLayerY = [];
@@ -135,59 +167,87 @@ function CustomPuzzleTable({ size }) {
 
   return (
     <SideBar>
-      <div className="layer-direction">가로 방향(YZ평면)</div>
-      <Layer>
-        {positionsLayerX.map((row) => (
-          <CubeSides key={row}>
-            {row.map((position) => (
-              <CubeSide
-                key={`${position[0]}${position[1]}`}
-                onClick={() => {
-                  handleMarkingNumberX(position[0], position[1]);
-                }}
-              >
-                {`[${position[0]}, ${position[1]}]`}
-              </CubeSide>
-            ))}
-          </CubeSides>
-        ))}
-      </Layer>
+      <LayerSelection
+        isSelected={isSelected.YZ}
+        onClick={() => {
+          setIsSelected({ YZ: !isSelected.YZ, XZ: false, XY: false });
+        }}
+      >
+        YZ평면
+      </LayerSelection>
 
-      <div className="layer-direction">높이 방향(XZ평면) </div>
-      <Layer>
-        {positionsLayerY.map((row) => (
-          <CubeSides key={row}>
-            {row.map((position) => (
-              <CubeSide
-                key={`${position[0]}${position[1]}`}
-                onClick={() => {
-                  handleMarkingNumberY(position[0], position[1]);
-                }}
-              >
-                {`[${position[0]}, ${position[1]}]`}
-              </CubeSide>
-            ))}
-          </CubeSides>
-        ))}
-      </Layer>
+      {isSelected.YZ && (
+        <Layer>
+          {positionsLayerX.map((row) => (
+            <CubeSides key={row}>
+              {row.map((position) => (
+                <CubeSide
+                  key={`${position[0]}${position[1]}`}
+                  onClick={() => {
+                    handleMarkingNumberX(position[0], position[1]);
+                  }}
+                >
+                  {`[${position[0]}, ${position[1]}]`}
+                </CubeSide>
+              ))}
+            </CubeSides>
+          ))}
+        </Layer>
+      )}
 
-      <div className="layer-direction">세로 방향(XY평면) </div>
-      <Layer>
-        {positionsLayerZ.map((row) => (
-          <CubeSides key={row}>
-            {row.map((position) => (
-              <CubeSide
-                key={`${position[0]}${position[1]}`}
-                onClick={() => {
-                  handleMarkingNumberZ(position[0], position[1]);
-                }}
-              >
-                {`[${position[0]}, ${position[1]}]`}
-              </CubeSide>
-            ))}
-          </CubeSides>
-        ))}
-      </Layer>
+      <LayerSelection
+        isSelected={isSelected.XZ}
+        onClick={() => {
+          setIsSelected({ YZ: false, XZ: !isSelected.XZ, XY: false });
+        }}
+      >
+        XZ평면
+      </LayerSelection>
+      {isSelected.XZ && (
+        <Layer>
+          {positionsLayerY.map((row) => (
+            <CubeSides key={row}>
+              {row.map((position) => (
+                <CubeSide
+                  key={`${position[0]}${position[1]}`}
+                  onClick={() => {
+                    handleMarkingNumberY(position[0], position[1]);
+                  }}
+                >
+                  {`[${position[0]}, ${position[1]}]`}
+                </CubeSide>
+              ))}
+            </CubeSides>
+          ))}
+        </Layer>
+      )}
+
+      <LayerSelection
+        isSelected={isSelected.XY}
+        onClick={() => {
+          setIsSelected({ YZ: false, XZ: false, XY: !isSelected.XY });
+        }}
+      >
+        XY평면
+      </LayerSelection>
+      {isSelected.XY && (
+        <Layer>
+          {positionsLayerZ.map((row) => (
+            <CubeSides key={row}>
+              {row.map((position) => (
+                <CubeSide
+                  key={`${position[0]}${position[1]}`}
+                  onClick={() => {
+                    handleMarkingNumberZ(position[0], position[1]);
+                  }}
+                >
+                  {`[${position[0]}, ${position[1]}]`}
+                </CubeSide>
+              ))}
+            </CubeSides>
+          ))}
+        </Layer>
+      )}
     </SideBar>
   );
 }

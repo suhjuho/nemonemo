@@ -7,7 +7,7 @@ import styled from "styled-components";
 
 import GameStageHeader from "../shared/Header/GameStageHeader";
 
-import { useAnswerStore } from "../../store/store";
+import { useAnswerStore, useLanguageStore } from "../../store/store";
 import usePuzzlesStore from "../../store/puzzle";
 import usePuzzlesIndexStore from "../../store/selectPuzzlesIndex";
 import useSolvedPuzzlesStore from "../../store/solvedPuzzles";
@@ -20,6 +20,7 @@ import Back from "../../assets/icon/back.png";
 import Next from "../../assets/icon/next.png";
 import Detail from "../../assets/icon/detail.png";
 import useFetchPuzzles from "../../apis/useFetchPuzzles";
+import breakpoints from "../../styles/media";
 
 const Stage = styled.div`
   position: relative;
@@ -119,7 +120,7 @@ const DetailIcon = styled.img`
   box-shadow: 0px 0px 8px;
 
   transition: transform 0.3s ease-in-out;
-  z-index: 50;
+  z-index: 40;
 
   &:hover {
     transform: translateY(-1px);
@@ -174,11 +175,13 @@ function GameSelectPage() {
   const { setIsComplete } = useAnswerStore();
   const { puzzlesIndex, setPuzzlesIndex } = usePuzzlesIndexStore();
   const { solvedPuzzles } = useSolvedPuzzlesStore();
+  const { language } = useLanguageStore();
   const [allPuzzles, setAllPuzzles] = useState([]);
   const [currentIndex, setCurrentIndex] = useState(1);
   const [isRankShown, setIsRankShown] = useState(false);
   const [ranking, setRanking] = useState([]);
   const [rankIndex, setRankIndex] = useState(-1);
+  const [displayList, setDisplayList] = useState([-2, -1, 0, 1, 2]);
 
   useFetchPuzzles();
 
@@ -187,6 +190,25 @@ function GameSelectPage() {
     setCurrentIndex(puzzlesIndex[difficulty]);
     setIsComplete(false);
   }, [puzzles]);
+
+  useEffect(() => {
+    function handleResize() {
+      if (window.innerWidth < parseInt(breakpoints.lg, 10)) {
+        setDisplayList([0]);
+      } else if (window.innerWidth < parseInt(breakpoints["2xl"], 10)) {
+        setDisplayList([-1, 0, 1]);
+      } else {
+        setDisplayList([-2, -1, 0, 1, 2]);
+      }
+    }
+
+    window.addEventListener("resize", handleResize);
+    handleResize();
+
+    return () => {
+      window.removeEventListener("resize", handleResize);
+    };
+  }, []);
 
   const handleIndexIncrease = () => {
     if (allPuzzles.length > currentIndex) {
@@ -204,8 +226,12 @@ function GameSelectPage() {
     <Stage>
       <GameStageHeader type="select" difficulty={difficulty} />
       <Puzzles>
-        <Icon src={Back} onClick={handleIndexDecrease} />
-        {[-2, -1, 0, 1, 2].map((idx) => {
+        <Icon
+          src={Back}
+          onClick={handleIndexDecrease}
+          style={{ visibility: `${currentIndex > 1 ? "visible" : "hidden"}` }}
+        />
+        {displayList.map((idx) => {
           const currentPuzzle = puzzles[difficulty][currentIndex + idx];
           const isSolved = solvedPuzzles[difficulty][currentIndex + idx];
 
@@ -325,7 +351,13 @@ function GameSelectPage() {
             <Puzzle key={currentIndex + idx} />
           );
         })}
-        <Icon src={Next} onClick={handleIndexIncrease} />
+        <Icon
+          src={Next}
+          onClick={handleIndexIncrease}
+          style={{
+            visibility: `${allPuzzles.length > currentIndex ? "visible" : "hidden"}`,
+          }}
+        />
       </Puzzles>
       <PlayButton>
         <button
@@ -337,7 +369,7 @@ function GameSelectPage() {
             navigate(`/puzzles/${difficulty}/${currentIndex}`);
           }}
         >
-          Play
+          {language === "English" ? "Play" : "시작"}
         </button>
       </PlayButton>
     </Stage>

@@ -185,9 +185,9 @@ function CustomPuzzle() {
           near={1}
           far={1000}
           zoom={
-            Math.floor(250 / Math.max(...puzzleMaking.size)) > 80
+            Math.floor(200 / Math.max(...puzzleMaking.size)) > 80
               ? 80
-              : Math.floor(250 / Math.max(...puzzleMaking.size))
+              : Math.floor(200 / Math.max(...puzzleMaking.size))
           }
         />
 

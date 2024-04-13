@@ -93,6 +93,9 @@ const Header = styled.header`
     border-radius: 20px;
     box-shadow: 2px 4px 8px;
     box-sizing: border-box;
+    overflow: hidden;
+    white-space: nowrap;
+    min-width: 100px;
   }
 
   .number-input {
@@ -122,26 +125,49 @@ const Header = styled.header`
 
   .size-input-button-up {
     position: absolute;
-    top: calc(50% - 10px);
+    top: 15%;
     right: 0;
-    font-size: 20px;
+    font-size: 14px;
     font-weight: 900;
     border: 1px solid white;
-    background-color: #e8e8e8;
+    background-color: #ffffff;
     border-radius: 20px;
     text-align: center;
   }
 
   .size-input-button-down {
     position: absolute;
-    top: calc(50% - 10px);
-    left: 0;
-    font-size: 20px;
+    bottom: 15%;
+    right: 0;
+    font-size: 14px;
     font-weight: 900;
     border: 1px solid white;
-    background-color: #e8e8e8;
+    background-color: #ffffff;
     border-radius: 20px;
     text-align: center;
+  }
+
+  .size-input-button-up:hover,
+  .size-input-button-down:hover {
+    background-color: #d5d5d5;
+  }
+
+  .size-input-button-up:active,
+  .size-input-button-down:active {
+    color: #114012;
+    background-color: #8e8e8e;
+  }
+`;
+
+const SizeInput = styled.div`
+  display: flex;
+  flex-direction: row;
+  gap: 5px;
+  justify-content: space-between;
+
+  @media screen and (max-width: 1024px) {
+    flex-direction: column;
+    align-items: center;
   }
 `;
 
@@ -183,87 +209,96 @@ function CustomPuzzleHeader() {
           <Icon src={Out} onClick={() => navigate("/")} />
         </div>
         <div className="header-middle">
-          <div className="content">가로</div>
-          <div className="number-input">
-            <input
-              className="size-input"
-              type="number"
-              min="1"
-              max="10"
-              value={puzzleMaking.size[0]}
-              onChange={(event) => {
-                puzzleMaking.size[0] = Number(event.target.value);
+          <SizeInput>
+            <div className="content">가로</div>
+            <div className="number-input">
+              <input
+                readOnly
+                className="size-input"
+                type="number"
+                min="1"
+                max="10"
+                value={puzzleMaking.size[0]}
+                onChange={(event) => {
+                  puzzleMaking.size[0] = Number(event.target.value);
 
-                setPuzzleMaking(puzzleMaking);
-              }}
-            />
-            <button
-              className="size-input-button-up"
-              onClick={() => handleSizeUp(0)}
-            >
-              +
-            </button>
-            <button
-              className="size-input-button-down"
-              onClick={() => handleSizeDown(0)}
-            >
-              -
-            </button>
-          </div>
-          <div className="content">높이</div>
-          <div className="number-input">
-            <input
-              className="size-input"
-              type="number"
-              min="1"
-              max="10"
-              value={puzzleMaking.size[1]}
-              onChange={(event) => {
-                puzzleMaking.size[1] = Number(event.target.value);
+                  setPuzzleMaking(puzzleMaking);
+                }}
+              />
+              <button
+                className="size-input-button-up"
+                onClick={() => handleSizeUp(0)}
+              >
+                ▲
+              </button>
+              <button
+                className="size-input-button-down"
+                onClick={() => handleSizeDown(0)}
+              >
+                ▼
+              </button>
+            </div>
+          </SizeInput>
+          <SizeInput>
+            <div className="content">높이</div>
+            <div className="number-input">
+              <input
+                readOnly
+                className="size-input"
+                type="number"
+                min="1"
+                max="10"
+                value={puzzleMaking.size[1]}
+                onChange={(event) => {
+                  puzzleMaking.size[1] = Number(event.target.value);
 
-                setPuzzleMaking(puzzleMaking);
-              }}
-            />
-            <button
-              className="size-input-button-up"
-              onClick={() => handleSizeUp(1)}
-            >
-              +
-            </button>
-            <button
-              className="size-input-button-down"
-              onClick={() => handleSizeDown(1)}
-            >
-              -
-            </button>
-          </div>
-          <div className="content">세로</div>
-          <div className="number-input">
-            <input
-              className="size-input"
-              type="number"
-              min="1"
-              max="10"
-              value={puzzleMaking.size[2]}
-              onChange={(event) => {
-                puzzleMaking.size[2] = Number(event.target.value);
+                  setPuzzleMaking(puzzleMaking);
+                }}
+              />
+              <button
+                className="size-input-button-up"
+                onClick={() => handleSizeUp(1)}
+              >
+                ▲
+              </button>
+              <button
+                className="size-input-button-down"
+                onClick={() => handleSizeDown(1)}
+              >
+                ▼
+              </button>
+            </div>
+          </SizeInput>
+          <SizeInput>
+            <div className="content">세로</div>
+            <div className="number-input">
+              <input
+                readOnly
+                className="size-input"
+                type="number"
+                min="1"
+                max="10"
+                value={puzzleMaking.size[2]}
+                onChange={(event) => {
+                  puzzleMaking.size[2] = Number(event.target.value);
 
-                setPuzzleMaking(puzzleMaking);
-              }}
-            />
-            <button
-              className="size-input-button-up"
-              onClick={() => handleSizeUp(2)}
-            >
-              +
-            </button>
-            <button
-              className="size-input-button-down"
-              onClick={() => handleSizeDown(2)}
-            >
-              -
-            </button>
-          </div>
+                  setPuzzleMaking(puzzleMaking);
+                }}
+              />
+              <button
+                className="size-input-button-up"
+                onClick={() => handleSizeUp(2)}
+              >
+                ▲
+              </button>
+              <button
+                className="size-input-button-down"
+                onClick={() => handleSizeDown(2)}
+              >
+                ▼
+              </button>
+            </div>
+          </SizeInput>
         </div>
         <div className="header-right-icons">
           {sound.isMuted ? (
