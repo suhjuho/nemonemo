@@ -11,6 +11,7 @@ export default defineConfig({
     coverage: {
       provider: "v8",
       reporter: ["text"],
+      exclude: [".eslintrc.cjs"],
     },
     setupFiles: "./src/setupTests.js",
     testMatch: ["./src/spec/*.spec.jsx"],
