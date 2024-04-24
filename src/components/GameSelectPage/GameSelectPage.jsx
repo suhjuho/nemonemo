@@ -42,13 +42,18 @@ const Icon = styled.img`
   &:active {
     color: #007302;
   }
+
+  @media screen and (max-width: ${breakpoints.md}) {
+    width: 30px;
+    margin: 0px 5px;
+    border-radius: 5px;
+  }
 `;
 
 const Puzzles = styled.div`
   display: flex;
   justify-content: space-between;
   align-items: center;
-  gap: 30px;
   height: 100vh;
 `;
 
@@ -58,6 +63,10 @@ const Puzzle = styled.div`
   align-items: center;
   justify-content: center;
   width: 300px;
+
+  @media screen and (max-width: ${breakpoints.md}) {
+    width: 200px;
+  }
 `;
 
 const PuzzleLabel = styled.div`
@@ -78,6 +87,11 @@ const PuzzlePreview = styled.div`
     width: 300px;
     height: 300px;
   `}
+
+  @media screen and (max-width: ${breakpoints.md}) {
+    width: 250px;
+    height: 250px;
+  }
 `;
 
 const PlayButton = styled.div`

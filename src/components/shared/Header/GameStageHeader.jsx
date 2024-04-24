@@ -13,6 +13,7 @@ import {
   useSoundStore,
 } from "../../../store/store";
 
+import breakpoints from "../../../styles/media";
 import Timer from "../Timer/Timer";
 import GameSetting from "../../GameSettingModal/GameSettingModal";
 
@@ -29,6 +30,17 @@ const Icon = styled.img`
 
   &:active {
     color: #007302;
+  }
+
+  @media screen and (max-width: ${breakpoints.md}) {
+    width: 30px;
+    border-radius: 5px;
+    margin: 0px 5px;
+  }
+
+  @media screen and (max-height: ${breakpoints.md}) {
+    width: 30px;
+    border-radius: 5px;
   }
 `;
 
@@ -75,7 +87,7 @@ const Header = styled.header`
   }
 
   .header-middle {
-    width: 60%;
+    width: 50%;
   }
 
   .game-status {
@@ -94,6 +106,11 @@ const Header = styled.header`
     border: 3px solid white;
     border-radius: 20px;
     box-shadow: 2px 4px 8px;
+
+    @media screen and (max-width: ${breakpoints.md}) {
+      font-size: 24px;
+      border-radius: 15px;
+    }
   }
 `;
 

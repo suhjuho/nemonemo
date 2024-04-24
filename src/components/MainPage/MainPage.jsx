@@ -59,6 +59,7 @@ const Difficulty = styled.div`
   align-items: center;
   justify-content: center;
   max-width: 300px;
+  min-width: 15%;
 `;
 
 const DifficultyImg = styled.img`
@@ -79,11 +80,15 @@ const DifficultyImg = styled.img`
 const DifficultyLabel = styled.div`
   width: 100%;
   text-align: center;
-  font-size: 20px;
+  font-size: 16px;
   font-weight: 900;
 
+  @media screen and (min-width: ${breakpoints.sm}) {
+    font-size: 20px;
+  }
+
   @media screen and (min-width: ${breakpoints.md}) {
-    font-size: 42px;
+    font-size: 32px;
   }
 
   @media screen and (min-width: ${breakpoints.lg}) {
