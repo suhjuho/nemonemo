@@ -26,11 +26,18 @@ function Puzzle({ puzzle, markingNumbers, defaultPuzzle }) {
   const { size, answers, colors } = puzzle;
   const { difficulty, stageNumber } = useParams();
 
-  const { answer, setAnswer, isComplete, setIsComplete } = useAnswerStore();
-  const { cubeStates, setCubeStates, setCubeStatesHistory, setHistoryIndex } =
-    useCubeStatesStore();
+  const { setAnswer, isComplete, setIsComplete } = useAnswerStore();
+  const {
+    cubeStates,
+    cubeStatesHistory,
+    historyIndex,
+    setCubeStates,
+    setCubeStatesHistory,
+    setHistoryIndex,
+  } = useCubeStatesStore();
   const { cameraPosition } = useCameraPositionStore();
-  const { setCurrentLayer, setLayers } = useLayerStore();
+  const { layerDirection, layers, currentLayer, setCurrentLayer, setLayers } =
+    useLayerStore();
 
   useEffect(() => {
     const newAnswer = {};
@@ -48,17 +55,17 @@ function Puzzle({ puzzle, markingNumbers, defaultPuzzle }) {
       };
     });
 
-    const layers = { x: [], z: [] };
+    const puzzleLayers = { x: [], z: [] };
 
     for (let z = -1 * puzzle.size[2] + 1; z <= puzzle.size[2] - 1; z += 2) {
-      layers.z.push(z);
+      puzzleLayers.z.push(z);
     }
 
     for (let x = -1 * puzzle.size[0] + 1; x <= puzzle.size[0] - 1; x += 2) {
-      layers.x.push(x);
+      puzzleLayers.x.push(x);
     }
 
-    setLayers(layers);
+    setLayers(puzzleLayers);
     setCurrentLayer(puzzle.size[2]);
 
     setAnswer(newAnswer);
@@ -67,6 +74,63 @@ function Puzzle({ puzzle, markingNumbers, defaultPuzzle }) {
     setCubeStatesHistory([JSON.parse(JSON.stringify(newCubeStates))]);
     setHistoryIndex(0);
   }, [difficulty, stageNumber, defaultPuzzle]);
+
+  useEffect(() => {
+    function handleCubeHistory(event) {
+      const isUndo = CUBE_CONSTANT.UNDO_KEYS[event.key];
+      const isRedo = CUBE_CONSTANT.REDO_KEYS[event.key];
+
+      if (isUndo && historyIndex > 0) {
+        setHistoryIndex(historyIndex - 1);
+      }
+
+      if (isRedo && historyIndex < cubeStatesHistory.length - 1) {
+        setHistoryIndex(historyIndex + 1);
+      }
+    }
+
+    window.addEventListener("keydown", handleCubeHistory);
+    return () => window.removeEventListener("keydown", handleCubeHistory);
+  }, [cubeStates, cubeStatesHistory, historyIndex]);
+
+  useEffect(() => {
+    function handleLayerChange(event) {
+      const isInside = CUBE_CONSTANT.INSIDE_CUBE_KEYS[event.key];
+      const isOutside = CUBE_CONSTANT.OUTSIDE_CUBE_KEYS[event.key];
+
+      const layer =
+        layerDirection === "FRONT" || layerDirection === "BACK"
+          ? layers.z
+          : layers.x;
+
+      if (isInside) {
+        if (CUBE_CONSTANT.INSIDE_DIRECTIONS[layerDirection]) {
+          if (currentLayer > 1) {
+            setCurrentLayer(currentLayer - 1);
+          }
+        } else if (CUBE_CONSTANT.OUTSIDE_DIRECTIONS[layerDirection]) {
+          if (currentLayer < layer.length) {
+            setCurrentLayer(currentLayer + 1);
+          }
+        }
+      }
+
+      if (isOutside) {
+        if (CUBE_CONSTANT.INSIDE_DIRECTIONS[layerDirection]) {
+          if (currentLayer < layer.length) {
+            setCurrentLayer(currentLayer + 1);
+          }
+        } else if (CUBE_CONSTANT.OUTSIDE_DIRECTIONS[layerDirection]) {
+          if (currentLayer > 1) {
+            setCurrentLayer(currentLayer - 1);
+          }
+        }
+      }
+    }
+
+    window.addEventListener("keydown", handleLayerChange);
+    return () => window.removeEventListener("keydown", handleLayerChange);
+  }, [currentLayer, layerDirection, layers]);
 
   return (
     <>
