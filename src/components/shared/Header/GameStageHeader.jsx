@@ -54,6 +54,10 @@ const Header = styled.header`
   width: 100%;
   z-index: 10;
 
+  @media screen and (max-height: ${breakpoints.md}) {
+    top: 5px;
+  }
+
   .timer {
     font-size: 48px;
     font-weight: 900;
@@ -108,6 +112,11 @@ const Header = styled.header`
     box-shadow: 2px 4px 8px;
 
     @media screen and (max-width: ${breakpoints.md}) {
+      font-size: 24px;
+      border-radius: 15px;
+    }
+
+    @media screen and (max-height: ${breakpoints.md}) {
       font-size: 24px;
       border-radius: 15px;
     }
