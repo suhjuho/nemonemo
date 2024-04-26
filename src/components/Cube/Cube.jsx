@@ -33,12 +33,9 @@ import CUBE_CONSTANT from "../../constants/cube";
 function rank(difficulty, stageNumber, time) {
   async function saveScore() {
     try {
-      const response = await axios.post(
-        `${import.meta.env.VITE_SAVE_PUZZLE_API}`,
-        { score: { difficulty, stageNumber, time } },
-      );
-
-      console.log(response);
+      await axios.post(`${import.meta.env.VITE_SAVE_PUZZLE_API}`, {
+        score: { difficulty, stageNumber, time },
+      });
     } catch (error) {
       console.error(error);
     }
@@ -162,78 +159,40 @@ function Cube({
   }, [isClicked, isRemoved, clickMode]);
 
   useEffect(() => {
-    function handleLayerChange(event) {
-      const isInside = CUBE_CONSTANT.INSIDE_CUBE_KEYS[event.key];
-      const isOutside = CUBE_CONSTANT.OUTSIDE_CUBE_KEYS[event.key];
+    const [targetPosition, layer] =
+      layerDirection === "FRONT" || layerDirection === "BACK"
+        ? [position[2], layers.z]
+        : [position[0], layers.x];
 
-      const [targetPosition, layer] =
-        layerDirection === "FRONT" || layerDirection === "BACK"
-          ? [position[2], layers.z]
-          : [position[0], layers.x];
-
-      if (isInside) {
-        if (CUBE_CONSTANT.INSIDE_DIRECTIONS[layerDirection]) {
-          if (currentLayer > 1 && targetPosition === layer[currentLayer - 1]) {
-            setIsHidden(true);
-            setCurrentLayer(currentLayer - 1);
-          }
-        } else if (CUBE_CONSTANT.OUTSIDE_DIRECTIONS[layerDirection]) {
-          if (
-            currentLayer < layer.length &&
-            targetPosition === layer[currentLayer - 1]
-          ) {
-            setIsHidden(true);
-            setCurrentLayer(currentLayer + 1);
-          }
-        }
+    if (layerDirection === "FRONT" || layerDirection === "RIGHT") {
+      if (targetPosition <= layer[currentLayer - 1]) {
+        setIsHidden(false);
       }
 
-      if (isOutside) {
-        if (CUBE_CONSTANT.INSIDE_DIRECTIONS[layerDirection]) {
-          if (targetPosition === layer[currentLayer]) {
-            setIsHidden(false);
-            setCurrentLayer(currentLayer + 1);
-          }
-        } else if (CUBE_CONSTANT.OUTSIDE_DIRECTIONS[layerDirection]) {
-          if (targetPosition === layer[currentLayer - 2]) {
-            setIsHidden(false);
-            setCurrentLayer(currentLayer - 1);
-          }
-        }
+      if (targetPosition > layer[currentLayer - 1]) {
+        setIsHidden(true);
       }
     }
 
-    window.addEventListener("keydown", handleLayerChange);
-    return () => window.removeEventListener("keydown", handleLayerChange);
-  }, [currentLayer, layerDirection, layers, position]);
+    if (layerDirection === "BACK" || layerDirection === "LEFT") {
+      if (targetPosition < layer[currentLayer - 1]) {
+        setIsHidden(true);
+      }
+
+      if (targetPosition >= layer[currentLayer - 1]) {
+        setIsHidden(false);
+      }
+    }
+  }, [currentLayer]);
 
   useEffect(() => {
-    function handleCubeHistory(event) {
-      const isUndo = CUBE_CONSTANT.UNDO_KEYS[event.key];
-      const isRedo = CUBE_CONSTANT.REDO_KEYS[event.key];
-
-      if (isUndo && historyIndex > 0) {
-        const newCubeStates = cubeStatesHistory[historyIndex - 1];
-
-        setHistoryIndex(historyIndex - 1);
-        setIsClicked(newCubeStates[position.join("")].isClicked);
-        setIsRemoved(newCubeStates[position.join("")].isRemoved);
-        setIsHover(false);
-      }
-
-      if (isRedo && historyIndex < cubeStatesHistory.length - 1) {
-        const newCubeStates = cubeStatesHistory[historyIndex + 1];
-
-        setHistoryIndex(historyIndex + 1);
-        setIsClicked(newCubeStates[position.join("")].isClicked);
-        setIsRemoved(newCubeStates[position.join("")].isRemoved);
-        setIsHover(false);
-      }
+    const newCubeStates = cubeStatesHistory[historyIndex];
+    if (newCubeStates[position.join("")]) {
+      setIsClicked(newCubeStates[position.join("")].isClicked);
+      setIsRemoved(newCubeStates[position.join("")].isRemoved);
+      setIsHover(false);
     }
-
-    window.addEventListener("keydown", handleCubeHistory);
-    return () => window.removeEventListener("keydown", handleCubeHistory);
-  }, [cubeStates, cubeStatesHistory, historyIndex]);
+  }, [historyIndex]);
 
   const handleRightClick = useCallback((event) => {
     event.stopPropagation();
