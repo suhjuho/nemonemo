@@ -83,6 +83,11 @@ const languageStore = (set) => ({
   changeLanguage: (language) => set({ language }),
 });
 
+const deviceStore = (set) => ({
+  isMobile: false,
+  setIsMobile: (isMobile) => set({ isMobile }),
+});
+
 const useMarkingNumbersStore = create(markingNumbersStore);
 const useAnswerStore = create(answerStore);
 const useCubeStatesStore = create(cubeStatesStore);
@@ -96,6 +101,7 @@ const useSoundStore = create(soundStore);
 const useGameTimeStore = create(gameTimeStore);
 const useTutorialStepStore = create(tutorialStep);
 const useLanguageStore = create(languageStore);
+const useDeviceStore = create(deviceStore);
 
 export {
   useMarkingNumbersStore,
@@ -111,4 +117,5 @@ export {
   useGameTimeStore,
   useTutorialStepStore,
   useLanguageStore,
+  useDeviceStore,
 };
