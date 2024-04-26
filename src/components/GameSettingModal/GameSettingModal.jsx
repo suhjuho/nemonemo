@@ -1,16 +1,26 @@
 import styled from "styled-components";
 import { useLanguageStore, useSoundStore } from "../../store/store";
+import breakpoints from "../../styles/media";
 
 const Modal = styled.div`
   position: absolute;
   top: 0;
   left: 0;
-  height: 100vh;
-  width: 100vw;
   display: flex;
   justify-content: center;
   align-items: center;
+  height: 100vh;
+  width: 100vw;
+  font-size: 36px;
   z-index: 50;
+
+  @media screen and (max-height: ${breakpoints.md}) {
+    font-size: 18px;
+  }
+
+  @media screen and (max-width: ${breakpoints.md}) {
+    font-size: 18px;
+  }
 
   .settings {
     position: relative;
@@ -40,7 +50,6 @@ const Modal = styled.div`
     border-radius: 20px;
     text-align: center;
     line-height: 5vh;
-    font-size: 36px;
     margin: 10px 0px;
   }
 
@@ -51,7 +60,6 @@ const Modal = styled.div`
     border-radius: 20px;
     text-align: center;
     line-height: 5vh;
-    font-size: 36px;
     margin: 10px 0px;
   }
 
@@ -63,7 +71,6 @@ const Modal = styled.div`
     border-radius: 20px;
     text-align: center;
     line-height: 5vh;
-    font-size: 36px;
     margin: 10px 0px;
   }
 
@@ -74,7 +81,6 @@ const Modal = styled.div`
     border-radius: 20px;
     text-align: center;
     line-height: 5vh;
-    font-size: 36px;
     margin: 10px 0px;
   }
 `;

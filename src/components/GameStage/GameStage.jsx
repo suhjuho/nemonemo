@@ -15,7 +15,11 @@ import GameStageFooter from "../Footer/GameStageFooter";
 import getMarkingNumbers from "../../utils/getMarkingNumbers";
 import getDefaultPuzzle from "../../utils/getDefaultPuzzle";
 import usePuzzlesStore from "../../store/puzzle";
-import { useOrbitControlStore, useAnswerStore } from "../../store/store";
+import {
+  useOrbitControlStore,
+  useAnswerStore,
+  useDeviceStore,
+} from "../../store/store";
 
 import useSetEventClickMode from "../../utils/useSetEventClickMode";
 import useSetEventKeySound from "../../utils/useSetEventKeySound";
@@ -44,6 +48,7 @@ function GameStage() {
   const { puzzles } = usePuzzlesStore();
   const { isOrbitEnable } = useOrbitControlStore();
   const { isComplete, setIsComplete } = useAnswerStore();
+  const { isMobile, setIsMobile } = useDeviceStore();
   const controls = useRef();
   const camera = useRef();
 
@@ -65,6 +70,18 @@ function GameStage() {
   //     document.documentElement.style.left = "0";
   //   }
   // }, []);
+
+  useEffect(() => {
+    const screenLocation = /Mobi/i.test(window.navigator.userAgent);
+
+    if (screenLocation) {
+      setIsMobile(true);
+    }
+
+    return () => {
+      setIsMobile(false);
+    };
+  }, []);
 
   useEffect(() => {
     const numbers = getMarkingNumbers(answers, showingNumbers, size);
@@ -110,7 +127,11 @@ function GameStage() {
           fov={100}
           near={1}
           far={1000}
-          zoom={Math.floor(250 / Math.max(...puzzle.size))}
+          zoom={
+            isMobile
+              ? Math.floor(120 / Math.max(...puzzle.size))
+              : Math.floor(250 / Math.max(...puzzle.size))
+          }
         />
 
         <Puzzle

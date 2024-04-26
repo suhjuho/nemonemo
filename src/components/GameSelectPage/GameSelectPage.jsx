@@ -65,7 +65,11 @@ const Puzzle = styled.div`
   width: 300px;
 
   @media screen and (max-width: ${breakpoints.md}) {
-    width: 200px;
+    width: 250px;
+  }
+
+  @media screen and (max-height: ${breakpoints.md}) {
+    width: 150px;
   }
 `;
 
@@ -91,6 +95,11 @@ const PuzzlePreview = styled.div`
   @media screen and (max-width: ${breakpoints.md}) {
     width: 250px;
     height: 250px;
+  }
+
+  @media screen and (max-height: ${breakpoints.md}) {
+    width: 150px;
+    height: 150px;
   }
 `;
 
@@ -119,6 +128,13 @@ const PlayButton = styled.div`
 
     &:active {
       color: #000073;
+    }
+
+    @media screen and (max-height: ${breakpoints.md}) {
+      width: 150px;
+      height: 40px;
+      line-height: 40px;
+      font-size: 18px;
     }
   }
 `;
@@ -203,7 +219,7 @@ function GameSelectPage() {
     setAllPuzzles(Object.entries(puzzles[difficulty]));
     setCurrentIndex(puzzlesIndex[difficulty]);
     setIsComplete(false);
-  }, [puzzles]);
+  }, [puzzles[difficulty]]);
 
   useEffect(() => {
     function handleResize() {
