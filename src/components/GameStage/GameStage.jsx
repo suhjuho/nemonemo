@@ -24,21 +24,10 @@ import {
 import useSetEventClickMode from "../../utils/useSetEventClickMode";
 import useSetEventKeySound from "../../utils/useSetEventKeySound";
 import usePuzzleEnding from "../../utils/usePuzzleEnding";
-import breakpoints from "../../styles/media";
 
 const Stage = styled.div`
   position: relative;
   height: 100vh;
-
-  @media screen and (max-width: ${breakpoints.md}) {
-    transform: rotate(90deg);
-    transform-origin: left top;
-    width: 100vh;
-    height: 100vw;
-    position: fixed;
-    top: 0;
-    left: 0;
-  }
 `;
 
 function GameStage() {
@@ -54,22 +43,6 @@ function GameStage() {
 
   const puzzle = puzzles[difficulty][stageNumber];
   const { size, answers, showingNumbers } = puzzle;
-
-  // const [isMobile, setIsMobile] = useState(false);
-
-  // useEffect(() => {
-  //   const screenLoation = /Mobi/i.test(window.navigator.userAgent);
-  //   setIsMobile(screenLoation);
-
-  //   if (screenLoation) {
-  //     document.documentElement.style.transform = "rotate(90deg)";
-  //     document.documentElement.style.width = "100vh";
-  //     document.documentElement.style.height = "100vw";
-  //     document.documentElement.style.position = "fixed";
-  //     document.documentElement.style.top = "0";
-  //     document.documentElement.style.left = "0";
-  //   }
-  // }, []);
 
   useEffect(() => {
     const screenLocation = /Mobi/i.test(window.navigator.userAgent);
