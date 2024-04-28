@@ -187,7 +187,8 @@ function Cube({
 
   useEffect(() => {
     const newCubeStates = cubeStatesHistory[historyIndex];
-    if (newCubeStates[position.join("")]) {
+
+    if (newCubeStates && newCubeStates[position.join("")]) {
       setIsClicked(newCubeStates[position.join("")].isClicked);
       setIsRemoved(newCubeStates[position.join("")].isRemoved);
       setIsHover(false);
