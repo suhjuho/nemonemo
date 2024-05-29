@@ -1,7 +1,12 @@
 module.exports = {
   root: true,
   env: { browser: true, es2020: true },
-  extends: ["airbnb", "plugin:react/recommended", "prettier"],
+  extends: [
+    "airbnb",
+    "plugin:@typescript-eslint/recommended",
+    "plugin:react/recommended",
+    "prettier",
+  ],
   ignorePatterns: ["dist", ".eslintrc.cjs"],
   parserOptions: {
     ecmaFeatures: {
@@ -11,7 +16,7 @@ module.exports = {
     sourceType: "module",
   },
   settings: { react: { version: "18.2" } },
-  plugins: ["react", "prettier", "react-hooks"],
+  plugins: ["react", "@typescript-eslint", "prettier", "react-hooks"],
   rules: {
     semi: "warn",
     "no-unused-vars": "warn",
@@ -30,5 +35,8 @@ module.exports = {
     "jsx-a11y/click-events-have-key-events": "off",
     "jsx-a11y/no-noninteractive-element-interactions": "off",
     "no-inner-declarations": "off",
+    "react/no-array-index-key": "off",
+    "@typescript-eslint/no-empty-interface": "off",
+    "no-empty-interface": "off",
   },
 };
