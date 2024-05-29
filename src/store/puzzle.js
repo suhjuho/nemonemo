@@ -1,16 +1,20 @@
 import { create } from "zustand";
+import { persist } from "zustand/middleware";
 
-const puzzlesStore = (set) => ({
-  puzzles: {
-    tutorial: {},
-    easy: {},
-    normal: {},
-    hard: {},
-    custom: {},
-  },
-  setPuzzles: (puzzles) => set({ puzzles }),
-});
-
-const usePuzzlesStore = create(puzzlesStore);
+const usePuzzlesStore = create(
+  persist(
+    (set) => ({
+      puzzles: {
+        tutorial: {},
+        easy: {},
+        normal: {},
+        hard: {},
+        custom: {},
+      },
+      setPuzzles: (puzzles) => set({ puzzles }),
+    }),
+    { name: "puzzles" },
+  ),
+);
 
 export default usePuzzlesStore;
