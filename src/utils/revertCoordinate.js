@@ -1,10 +1,11 @@
 function revertCoordinate(position, size) {
   const [sizeX, sizeY, sizeZ] = size;
+  const revertCoordinateFn = (pos, puzzleSize) => (pos + puzzleSize - 1) / 2;
 
   return [
-    (position[0] + sizeX - 1) / 2,
-    (position[1] + sizeY - 1) / 2,
-    (position[2] + sizeZ - 1) / 2,
+    revertCoordinateFn(position[0], sizeX),
+    revertCoordinateFn(position[1], sizeY),
+    revertCoordinateFn(position[2], sizeZ),
   ];
 }
 

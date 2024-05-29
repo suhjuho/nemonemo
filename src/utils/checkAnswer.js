@@ -4,11 +4,13 @@ function checkAnswer(answer, cubeStates) {
   let result = true;
 
   positions.forEach((position) => {
-    if (answer[position[0]] && position[1].isRemoved) {
+    const [cubePosition, cubeState] = [position[0], position[1]];
+
+    if (answer[cubePosition] && cubeState.isRemoved) {
       result = false;
     }
 
-    if (!answer[position[0]] && !position[1].isRemoved) {
+    if (!answer[cubePosition] && !cubeState.isRemoved) {
       result = false;
     }
   });

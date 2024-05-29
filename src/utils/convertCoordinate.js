@@ -1,10 +1,13 @@
 function convertCoordinate(position, size) {
   const [sizeX, sizeY, sizeZ] = size;
 
+  const convertFn = (puzzleSize, pos) =>
+    2 * Math.abs(Number(pos)) - puzzleSize + 1;
+
   return [
-    -1 * sizeX + 1 + 2 * Math.abs(Number(position[0])),
-    -1 * sizeY + 1 + 2 * Math.abs(Number(position[1])),
-    -1 * sizeZ + 1 + 2 * Math.abs(Number(position[2])),
+    convertFn(sizeX, position[0]),
+    convertFn(sizeY, position[1]),
+    convertFn(sizeZ, position[2]),
   ];
 }
 

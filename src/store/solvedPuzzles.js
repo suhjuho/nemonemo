@@ -14,7 +14,7 @@ const useSolvedPuzzlesStore = create(
       setSolvedPuzzles: (solvedPuzzles) => set({ solvedPuzzles }),
     }),
     {
-      name: "solved-puzzle",
+      name: "solved-puzzles",
     },
   ),
 );
