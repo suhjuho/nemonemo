@@ -32,7 +32,9 @@ const useFetchPuzzles = () => {
       }
     }
 
-    fetchPuzzles();
+    if (!puzzles.tutorial[0]) {
+      fetchPuzzles();
+    }
   }, []);
 };
 
