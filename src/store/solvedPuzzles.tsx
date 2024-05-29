@@ -1,6 +1,14 @@
 import { create } from "zustand";
 import { persist } from "zustand/middleware";
 
+interface SolvedPuzzlesData {
+  custom: Record<string, boolean>;
+  tutorial: Record<string, boolean>;
+  easy: Record<string, boolean>;
+  normal: Record<string, boolean>;
+  hard: Record<string, boolean>;
+}
+
 const useSolvedPuzzlesStore = create(
   persist(
     (set) => ({
@@ -11,7 +19,8 @@ const useSolvedPuzzlesStore = create(
         hard: {},
         custom: {},
       },
-      setSolvedPuzzles: (solvedPuzzles) => set({ solvedPuzzles }),
+      setSolvedPuzzles: (solvedPuzzles: SolvedPuzzlesData) =>
+        set({ solvedPuzzles }),
     }),
     {
       name: "solved-puzzles",
