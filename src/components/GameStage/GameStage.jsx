@@ -14,16 +14,13 @@ import GameStageFooter from "../Footer/GameStageFooter";
 
 import getMarkingNumbers from "../../utils/getMarkingNumbers";
 import getDefaultPuzzle from "../../utils/getDefaultPuzzle";
-import usePuzzlesStore from "../../store/puzzle";
-import {
-  useOrbitControlStore,
-  useAnswerStore,
-  useDeviceStore,
-} from "../../store/store";
+import usePuzzlesStore from "../../store/puzzle.tsx";
+import { useOrbitControlStore, useAnswerStore } from "../../store/store.tsx";
 
 import useSetEventClickMode from "../../utils/useSetEventClickMode";
 import useSetEventKeySound from "../../utils/useSetEventKeySound";
 import usePuzzleEnding from "../../utils/usePuzzleEnding";
+import breakpoints from "../../styles/media";
 
 const Stage = styled.div`
   position: relative;
@@ -37,24 +34,12 @@ function GameStage() {
   const { puzzles } = usePuzzlesStore();
   const { isOrbitEnable } = useOrbitControlStore();
   const { isComplete, setIsComplete } = useAnswerStore();
-  const { isMobile, setIsMobile } = useDeviceStore();
   const controls = useRef();
   const camera = useRef();
+  const mediaQueryList = window.matchMedia(`(max-width: ${breakpoints.md})`);
 
   const puzzle = puzzles[difficulty][stageNumber];
   const { size, answers, showingNumbers } = puzzle;
-
-  useEffect(() => {
-    const screenLocation = /Mobi/i.test(window.navigator.userAgent);
-
-    if (screenLocation) {
-      setIsMobile(true);
-    }
-
-    return () => {
-      setIsMobile(false);
-    };
-  }, []);
 
   useEffect(() => {
     const numbers = getMarkingNumbers(answers, showingNumbers, size);
@@ -101,7 +86,7 @@ function GameStage() {
           near={1}
           far={1000}
           zoom={
-            isMobile
+            mediaQueryList.matches
               ? Math.floor(120 / Math.max(...puzzle.size))
               : Math.floor(250 / Math.max(...puzzle.size))
           }

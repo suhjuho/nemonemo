@@ -15,7 +15,7 @@ import {
   useDeviceStore,
   useCubeStatesStore,
   useLayerStore,
-} from "../../../store/store";
+} from "../../../store/store.tsx";
 import StyledIcon from "../StyledIcon/StyledIcon";
 import CUBE_CONSTANT from "../../../constants/cube";
 

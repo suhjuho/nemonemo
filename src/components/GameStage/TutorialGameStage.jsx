@@ -19,13 +19,14 @@ import {
   useOrbitControlStore,
   useAnswerStore,
   useTutorialStepStore,
-} from "../../store/store";
-import usePuzzlesStore from "../../store/puzzle";
+} from "../../store/store.tsx";
+import usePuzzlesStore from "../../store/puzzle.tsx";
 import getMarkingNumbers from "../../utils/getMarkingNumbers";
 import getDefaultPuzzle from "../../utils/getDefaultPuzzle";
 import useSetEventKeySound from "../../utils/useSetEventKeySound";
 import useSetEventClickMode from "../../utils/useSetEventClickMode";
 import usePuzzleEnding from "../../utils/usePuzzleEnding";
+import breakpoints from "../../styles/media";
 
 const Stage = styled.div`
   position: relative;
@@ -43,6 +44,7 @@ function TutorialGameStage() {
   const difficulty = "tutorial";
   const controls = useRef();
   const camera = useRef();
+  const mediaQueryList = window.matchMedia(`(max-width: ${breakpoints.md})`);
 
   const puzzle = puzzles[difficulty][stageNumber];
   const { size, answers, showingNumbers } = puzzle;
@@ -163,7 +165,11 @@ function TutorialGameStage() {
           fov={100}
           near={1}
           far={1000}
-          zoom={Math.floor(250 / Math.max(...puzzle.size))}
+          zoom={
+            mediaQueryList.matches
+              ? Math.floor(120 / Math.max(...puzzle.size))
+              : Math.floor(250 / Math.max(...puzzle.size))
+          }
         />
 
         <Puzzle

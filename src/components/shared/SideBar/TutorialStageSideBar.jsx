@@ -14,7 +14,7 @@ import {
   useClickModeStore,
   useAnswerStore,
   useTutorialStepStore,
-} from "../../../store/store";
+} from "../../../store/store.tsx";
 import StyledIcon from "../StyledIcon/StyledIcon";
 
 const SideBar = styled.section`
@@ -37,7 +37,7 @@ const SideBar = styled.section`
 function TutorialStageSideBar() {
   const { clickMode } = useClickModeStore();
   const { isComplete } = useAnswerStore();
-  const { difficulty, stageNumber } = useParams();
+  const { stageNumber } = useParams();
   const { tutorialStep } = useTutorialStepStore();
 
   return (

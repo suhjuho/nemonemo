@@ -11,7 +11,7 @@ import {
   useAnswerStore,
   useLanguageStore,
   useSoundStore,
-} from "../../../store/store";
+} from "../../../store/store.tsx";
 
 import breakpoints from "../../../styles/media";
 import Timer from "../Timer/Timer";
@@ -66,6 +66,11 @@ const Header = styled.header`
     border: 3px solid white;
     border-radius: 20px;
     box-shadow: 2px 4px 8px;
+
+    @media screen and (max-width: ${breakpoints.md}) {
+      font-size: 20px;
+      font-weight: 700;
+    }
   }
 
   .puzzleSize {
@@ -76,6 +81,11 @@ const Header = styled.header`
     border: 3px solid white;
     border-radius: 20px;
     box-shadow: 2px 4px 8px;
+
+    @media screen and (max-width: ${breakpoints.md}) {
+      font-size: 20px;
+      font-weight: 700;
+    }
   }
 
   .header-left-icons {
@@ -110,14 +120,16 @@ const Header = styled.header`
     border: 3px solid white;
     border-radius: 20px;
     box-shadow: 2px 4px 8px;
+    white-space: nowrap;
 
     @media screen and (max-width: ${breakpoints.md}) {
-      font-size: 24px;
+      font-size: 20px;
       border-radius: 15px;
+      font-weight: 700;
     }
 
     @media screen and (max-height: ${breakpoints.md}) {
-      font-size: 24px;
+      font-size: 20px;
       border-radius: 15px;
     }
   }
