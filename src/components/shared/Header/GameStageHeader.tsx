@@ -143,7 +143,20 @@ const languages = {
   custom: "커스텀",
 };
 
-function GameStageHeader({ type, difficulty, puzzleTitle, puzzleSize }) {
+type HeaderType = "main" | "game" | "setting" | "select";
+type Difficulty = "tutorial" | "easy" | "normal" | "hard" | "custom";
+
+function GameStageHeader({
+  type,
+  difficulty,
+  puzzleTitle,
+  puzzleSize,
+}: {
+  type: HeaderType;
+  difficulty: Difficulty;
+  puzzleTitle: string;
+  puzzleSize: [number, number, number];
+}) {
   const navigate = useNavigate();
   const { sound, changeSoundState } = useSoundStore();
   const { isComplete } = useAnswerStore();

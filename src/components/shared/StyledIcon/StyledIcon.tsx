@@ -6,7 +6,7 @@ const Icons = styled.div`
   align-items: center;
 `;
 
-const Icon = styled.img`
+const Icon = styled.img<{ highlight?: string }>`
   width: 24px;
   margin: 5px 10px;
   padding: 2px;
@@ -63,7 +63,7 @@ const IconCommand = styled.div`
   }
 `;
 
-const IconDescription = styled.div`
+const IconDescription = styled.div<{ highlight?: string }>`
   font-size: 16px;
   font-weight: 700;
 
@@ -84,7 +84,21 @@ const IconDescription = styled.div`
   }
 `;
 
-function StyledIcon({ src, command, description, highlight, handleClick }) {
+interface StyledIconProps {
+  src: string;
+  command?: string;
+  description?: string;
+  highlight?: string;
+  handleClick?: () => void;
+}
+
+function StyledIcon({
+  src,
+  command,
+  description,
+  highlight,
+  handleClick,
+}: StyledIconProps) {
   return (
     <Icons>
       <div style={{ position: "relative" }}>

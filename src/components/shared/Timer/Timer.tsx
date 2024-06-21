@@ -2,13 +2,13 @@ import { useState, useEffect } from "react";
 import { useAnswerStore, useGameTimeStore } from "../../../store/store.tsx";
 import formatTime from "../../../utils/formatTime.ts";
 
-function Timer({ state }) {
+function Timer() {
   const [time, setTime] = useState(0);
   const { changeGameTimeState } = useGameTimeStore();
   const { isComplete } = useAnswerStore();
 
   useEffect(() => {
-    let timerId;
+    let timerId: number | undefined;
 
     if (!isComplete) {
       timerId = setInterval(() => {
@@ -20,7 +20,7 @@ function Timer({ state }) {
     }
 
     return () => clearInterval(timerId);
-  }, [time, state, isComplete]);
+  }, [time, isComplete]);
 
   return <div>{formatTime(time)}</div>;
 }

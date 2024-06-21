@@ -53,7 +53,7 @@ function GameStageSideBar() {
     }
   };
 
-  const handleHistory = (key) => {
+  const handleHistory = (key: string): void => {
     if (key === "Z" && historyIndex > 0) {
       setHistoryIndex(historyIndex - 1);
     }
@@ -63,7 +63,7 @@ function GameStageSideBar() {
     }
   };
 
-  const handleLayer = (key) => {
+  const handleLayer = (key: string): void => {
     const layer =
       layerDirection === "FRONT" || layerDirection === "BACK"
         ? layers.z
