@@ -1,4 +1,6 @@
-function getDefaultPuzzle(size: [number, number, number]) {
+import { Coordinate } from "../../types/cube.ts";
+
+function getDefaultPuzzle(size: Coordinate) {
   const [sizeX, sizeY, sizeZ] = size;
   const defaultPuzzle = [];
 

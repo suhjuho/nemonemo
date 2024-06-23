@@ -1,8 +1,4 @@
-type CubeState = {
-  isMarked: boolean;
-  isRemoved: boolean;
-  isHidden: boolean;
-};
+import { CubeState } from "../../types/cube.ts";
 
 function checkAnswer(
   answer: Record<string, boolean>,

@@ -1,14 +1,4 @@
-type ShowingNumbers = {
-  layerX?: Record<string, boolean>;
-  layerY?: Record<string, boolean>;
-  layerZ?: Record<string, boolean>;
-};
-
-type MarkingNumbers = {
-  layerX: Record<string, { total: number; piece: number }>;
-  layerY: Record<string, { total: number; piece: number }>;
-  layerZ: Record<string, { total: number; piece: number }>;
-};
+import { MarkingNumbers, ShowingNumbers } from "../../types/cube.ts";
 
 function getMarkingNumbers(
   answers: Record<string, boolean>,

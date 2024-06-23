@@ -1,4 +1,4 @@
-type Coordinate = [number, number, number];
+import { Coordinate } from "../../types/cube.ts";
 
 function revertCoordinate(position: Coordinate, size: Coordinate): Coordinate {
   const [sizeX, sizeY, sizeZ] = size;

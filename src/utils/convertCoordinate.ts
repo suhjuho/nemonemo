@@ -1,4 +1,6 @@
-function convertCoordinate(position: string, size: [number, number, number]) {
+import { Coordinate } from "../../types/cube.ts";
+
+function convertCoordinate(position: string, size: Coordinate): Coordinate {
   const [sizeX, sizeY, sizeZ] = size;
 
   const convertFn = (puzzleSize: number, pos: string) =>
