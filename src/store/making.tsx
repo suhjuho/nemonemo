@@ -1,26 +1,5 @@
 import { create } from "zustand";
-
-interface Puzzle {
-  title: string;
-  size: [number, number, number];
-  answers: Record<string, boolean>;
-  colors: Record<string, string>;
-  showingNumbers: {
-    layerX: Record<string, boolean>;
-    layerY: Record<string, boolean>;
-    layerZ: Record<string, boolean>;
-  };
-  mainColor: string;
-  subColor: string;
-  ranking: number[];
-}
-
-interface CustomPuzzleState {
-  puzzleMaking: Puzzle;
-  hasAnswers: boolean;
-  hasColors: boolean;
-  hasNumbers: boolean;
-}
+import { Puzzle, CustomPuzzleState } from "../../types/puzzle.ts";
 
 const usePuzzleMakingStore = create<CustomPuzzleState>()((set) => ({
   puzzleMaking: {

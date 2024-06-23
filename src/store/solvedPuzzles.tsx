@@ -1,13 +1,6 @@
 import { create } from "zustand";
 import { persist } from "zustand/middleware";
-
-interface SolvedPuzzlesData {
-  custom: Record<string, boolean>;
-  tutorial: Record<string, boolean>;
-  easy: Record<string, boolean>;
-  normal: Record<string, boolean>;
-  hard: Record<string, boolean>;
-}
+import { SolvedPuzzlesData } from "../../types/puzzle.ts";
 
 const useSolvedPuzzlesStore = create(
   persist(
