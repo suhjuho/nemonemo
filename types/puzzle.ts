@@ -58,3 +58,10 @@ export type LayerState = {
   setCurrentLayer: (currentLayer: number) => void;
   setLayers: (layers: { x: number[]; z: number[] }) => void;
 };
+
+export type DifficultyLevel =
+  | "tutorial"
+  | "easy"
+  | "normal"
+  | "hard"
+  | "custom";
