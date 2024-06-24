@@ -1,3 +1,5 @@
+export type HeaderType = "main" | "game" | "setting" | "select";
+
 export type ClickModeState = {
   clickMode: string;
   setClickMode: (clickMode: string) => void;
