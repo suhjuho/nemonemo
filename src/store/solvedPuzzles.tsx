@@ -2,7 +2,12 @@ import { create } from "zustand";
 import { persist } from "zustand/middleware";
 import { SolvedPuzzlesData } from "../../types/puzzle.ts";
 
-const useSolvedPuzzlesStore = create(
+interface State {
+  solvedPuzzles: SolvedPuzzlesData;
+  setSolvedPuzzles: (solvedPuzzles: SolvedPuzzlesData) => void;
+}
+
+const useSolvedPuzzlesStore = create<State>()(
   persist(
     (set) => ({
       solvedPuzzles: {
