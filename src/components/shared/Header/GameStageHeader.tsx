@@ -12,6 +12,8 @@ import {
   useLanguageStore,
   useSoundStore,
 } from "../../../store/store.tsx";
+import { HeaderType } from "../../../../types/setting.ts";
+import { DifficultyLevel } from "../../../../types/puzzle.ts";
 
 import breakpoints from "../../../styles/media.tsx";
 import Timer from "../Timer/Timer.tsx";
@@ -135,16 +137,13 @@ const Header = styled.header`
   }
 `;
 
-const languages = {
+const languages: Record<DifficultyLevel, string> = {
   tutorial: "튜토리얼",
   easy: "쉬움",
   normal: "보통",
   hard: "어려움",
   custom: "커스텀",
 };
-
-type HeaderType = "main" | "game" | "setting" | "select";
-type Difficulty = "tutorial" | "easy" | "normal" | "hard" | "custom";
 
 function GameStageHeader({
   type,
@@ -153,8 +152,8 @@ function GameStageHeader({
   puzzleSize,
 }: {
   type: HeaderType;
-  difficulty: Difficulty;
-  puzzleTitle: string;
+  difficulty: DifficultyLevel;
+  puzzleTitle?: string;
   puzzleSize: [number, number, number];
 }) {
   const navigate = useNavigate();

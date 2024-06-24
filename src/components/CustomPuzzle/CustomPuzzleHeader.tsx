@@ -175,7 +175,7 @@ function CustomPuzzleHeader() {
   const navigate = useNavigate();
   const { sound, changeSoundState } = useSoundStore();
   const { puzzleMaking, setPuzzleMaking } = usePuzzleMakingStore();
-  const [isSetting, setIsSetting] = useState(false);
+  const [isSetting, setIsSetting] = useState<boolean>(false);
 
   const handleSound = () => {
     sound.isMuted = !sound.isMuted;

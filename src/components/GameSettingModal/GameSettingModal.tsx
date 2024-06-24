@@ -1,4 +1,5 @@
 import styled from "styled-components";
+import { Dispatch, SetStateAction } from "react";
 import { useLanguageStore, useSoundStore } from "../../store/store.tsx";
 import breakpoints from "../../styles/media.tsx";
 
@@ -85,7 +86,11 @@ const Modal = styled.div`
   }
 `;
 
-function GameSettingModal({ handleIsSetting }) {
+interface Props {
+  handleIsSetting: Dispatch<SetStateAction<boolean>>;
+}
+
+function GameSettingModal({ handleIsSetting }: Props) {
   const { sound, changeSoundState } = useSoundStore();
   const { language, changeLanguage } = useLanguageStore();
 
@@ -112,7 +117,7 @@ function GameSettingModal({ handleIsSetting }) {
             step={0.1}
             value={sound.bgmSound}
             onChange={(event) => {
-              sound.bgmSound = event.target.value;
+              sound.bgmSound = Number(event.target.value);
               changeSoundState(sound);
             }}
           />
@@ -129,7 +134,7 @@ function GameSettingModal({ handleIsSetting }) {
             step={0.1}
             value={sound.effectSound}
             onChange={(event) => {
-              sound.effectSound = event.target.value;
+              sound.effectSound = Number(event.target.value);
               changeSoundState(sound);
             }}
           />
@@ -150,7 +155,7 @@ function GameSettingModal({ handleIsSetting }) {
             color: "#ffffff",
             backgroundColor: "#000000",
           }}
-          onClick={() => handleIsSetting()}
+          onClick={() => handleIsSetting(false)}
         >
           X
         </button>

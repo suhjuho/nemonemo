@@ -16,6 +16,7 @@ import useFetchPuzzles from "../../apis/useFetchPuzzles.tsx";
 
 import breakpoints from "../../styles/media.tsx";
 import { useLanguageStore } from "../../store/store.tsx";
+import { DifficultyLevel } from "../../../types/puzzle.ts";
 
 const Icon = styled.img`
   position: absolute;
@@ -108,26 +109,27 @@ function Main() {
 
   useFetchPuzzles();
 
-  const difficultyImg = {
+  const difficultyImg: Record<DifficultyLevel, string> = {
     tutorial: Donut,
     easy: Apple,
     normal: Dumbbell,
     hard: Duck,
     custom: Custom,
   };
+  const levels: [DifficultyLevel, string][] = [
+    ["tutorial", "튜토리얼"],
+    ["easy", "쉬움"],
+    ["normal", "보통"],
+    ["hard", "어려움"],
+    ["custom", "커스텀"],
+  ];
 
   return (
     <Stage>
-      <GameStageHeader type="main" />
+      <GameStageHeader type="main" difficulty="custom" puzzleSize={[0, 0, 0]} />
 
       <Difficulties>
-        {[
-          ["tutorial", "튜토리얼"],
-          ["easy", "쉬움"],
-          ["normal", "보통"],
-          ["hard", "어려움"],
-          ["custom", "커스텀"],
-        ].map((difficulties) => {
+        {levels.map((difficulties) => {
           const difficulty = difficulties[0];
           return (
             <Difficulty key={difficulty}>
