@@ -1,3 +1,4 @@
+import * as THREE from "three";
 import { Canvas } from "@react-three/fiber";
 import { OrbitControls, OrthographicCamera } from "@react-three/drei";
 import { ResizeObserver } from "@juggle/resize-observer";
@@ -21,6 +22,7 @@ import Next from "../../assets/icon/next.png";
 import Detail from "../../assets/icon/detail.png";
 import useFetchPuzzles from "../../apis/useFetchPuzzles.tsx";
 import breakpoints from "../../styles/media.tsx";
+import { DifficultyLevel } from "../../../types/puzzle.ts";
 
 const Stage = styled.div`
   position: relative;
@@ -78,7 +80,7 @@ const PuzzleLabel = styled.div`
   font-weight: 700;
 `;
 
-const PuzzlePreview = styled.div`
+const PuzzlePreview = styled.div<{ idx: number }>`
   position: relative;
   width: 200px;
   height: 200px;
@@ -161,7 +163,7 @@ const DetailIcon = styled.img`
   }
 `;
 
-const RankingModal = styled.div`
+const RankingModal = styled.div<{ idx: number }>`
   position: absolute;
   z-index: 50;
   display: flex;
@@ -187,7 +189,7 @@ const RankingModal = styled.div`
   `}
 `;
 
-const PlayTime = styled.div`
+const PlayTime = styled.div<{ idx: number }>`
   font-size: 16px;
   margin-bottom: 4px;
 
@@ -198,28 +200,50 @@ const PlayTime = styled.div`
   `}
 `;
 
+interface PuzzleData {
+  title: string;
+  size: [number, number, number];
+  answers: Record<string, boolean>;
+  colors: Record<string, string>;
+  showingNumbers: {
+    layerX: Record<string, boolean>;
+    layerY: Record<string, boolean>;
+    layerZ: Record<string, boolean>;
+  };
+  mainColor: string;
+  subColor: string;
+  ranking: number[];
+}
+
 function GameSelectPage() {
   const navigate = useNavigate();
-  const { difficulty } = useParams();
+  const { difficulty } = useParams<{
+    difficulty: DifficultyLevel | undefined;
+  }>();
   const { puzzles } = usePuzzlesStore();
   const { setIsComplete } = useAnswerStore();
   const { puzzlesIndex, setPuzzlesIndex } = usePuzzlesIndexStore();
   const { solvedPuzzles } = useSolvedPuzzlesStore();
   const { language } = useLanguageStore();
-  const [allPuzzles, setAllPuzzles] = useState([]);
+  const [allPuzzles, setAllPuzzles] = useState<[string, PuzzleData][]>([]);
   const [currentIndex, setCurrentIndex] = useState(1);
   const [isRankShown, setIsRankShown] = useState(false);
-  const [ranking, setRanking] = useState([]);
+  const [ranking, setRanking] = useState<number[]>([]);
   const [rankIndex, setRankIndex] = useState(-1);
-  const [displayList, setDisplayList] = useState([-2, -1, 0, 1, 2]);
+  const [displayList, setDisplayList] = useState<number[]>([-2, -1, 0, 1, 2]);
 
   useFetchPuzzles();
 
   useEffect(() => {
-    setAllPuzzles(Object.entries(puzzles[difficulty]));
-    setCurrentIndex(puzzlesIndex[difficulty]);
-    setIsComplete(false);
-  }, [puzzles[difficulty]]);
+    if (difficulty && puzzles[difficulty]) {
+      const puzzleEntries: [string, PuzzleData][] = Object.entries(
+        puzzles[difficulty],
+      ) as [string, PuzzleData][];
+      setAllPuzzles(puzzleEntries);
+      setCurrentIndex(puzzlesIndex[difficulty]);
+      setIsComplete(false);
+    }
+  }, [puzzles, difficulty, puzzlesIndex]);
 
   useEffect(() => {
     function handleResize() {
@@ -254,133 +278,144 @@ function GameSelectPage() {
 
   return (
     <Stage>
-      <GameStageHeader type="select" difficulty={difficulty} />
+      <GameStageHeader
+        type="select"
+        difficulty={difficulty || "custom"}
+        puzzleSize={[0, 0, 0]}
+      />
       <Puzzles>
         <Icon
           src={Back}
           onClick={handleIndexDecrease}
           style={{ visibility: `${currentIndex > 1 ? "visible" : "hidden"}` }}
         />
-        {displayList.map((idx) => {
-          const currentPuzzle = puzzles[difficulty][currentIndex + idx];
-          const isSolved = solvedPuzzles[difficulty][currentIndex + idx];
+        {difficulty &&
+          displayList.map((idx) => {
+            const currentPuzzle = puzzles[difficulty][currentIndex + idx];
+            const isSolved = solvedPuzzles[difficulty][currentIndex + idx];
 
-          return currentPuzzle ? (
-            <Puzzle key={currentPuzzle.title + currentPuzzle.size}>
-              <PuzzlePreview idx={idx}>
-                {difficulty !== "tutorial" && isSolved && (
-                  <DetailIcon
-                    src={Detail}
-                    onClick={() => {
-                      setRankIndex(currentIndex + idx);
-                      setIsRankShown((prev) => !prev);
-                      setRanking(currentPuzzle.ranking);
-                    }}
-                  />
-                )}
-                {isSolved &&
-                  isRankShown &&
-                  rankIndex === currentIndex + idx && (
-                    <RankingModal idx={idx}>
-                      <span>풀이 시간</span>
-                      {ranking.map((time, i) => (
-                        <PlayTime
-                          key={time + i}
-                          idx={idx}
-                        >{`${i + 1}등 ${formatTime(ranking[i]).slice(3)}초`}</PlayTime>
-                      ))}
-                    </RankingModal>
+            return currentPuzzle ? (
+              <Puzzle key={currentPuzzle.title + currentPuzzle.size}>
+                <PuzzlePreview idx={idx}>
+                  {difficulty !== "tutorial" && isSolved && (
+                    <DetailIcon
+                      src={Detail}
+                      onClick={() => {
+                        setRankIndex(currentIndex + idx);
+                        setIsRankShown((prev) => !prev);
+                        setRanking(currentPuzzle.ranking);
+                      }}
+                    />
                   )}
-                {isSolved ? (
-                  <Canvas
-                    frameloop="demand"
-                    resize={{ polyfill: ResizeObserver }}
-                    style={{
-                      background: currentPuzzle.subColor,
-                      borderRadius: 20,
-                    }}
-                  >
-                    <ambientLight intensity={1} />
-                    <directionalLight intensity={1} position={[-5, 5, -10]} />
-                    <directionalLight intensity={3} position={[-10, 5, 10]} />
-                    <directionalLight intensity={5} position={[10, 10, 10]} />
-                    <OrthographicCamera
-                      makeDefault
-                      position={[-5, 5, 5]}
-                      fov={100}
-                      near={1}
-                      far={1000}
-                      zoom={Math.floor(50 / Math.max(...currentPuzzle.size))}
-                    />
-                    <OrbitControls
-                      enableZoom={false}
-                      enablePan={false}
-                      enableDamping={false}
-                    />
-                    <group>
-                      {Object.keys(currentPuzzle.answers).map((position) => (
-                        <mesh
-                          key={position}
-                          position={convertCoordinate(
-                            position,
-                            currentPuzzle.size,
-                          )}
-                        >
-                          <boxGeometry args={[2, 2, 2]} />
-                          <meshStandardMaterial
-                            color={currentPuzzle.colors[position]}
-                          />
-                        </mesh>
-                      ))}
-                    </group>
-                  </Canvas>
-                ) : (
-                  <Canvas
-                    frameloop="demand"
-                    resize={{ polyfill: ResizeObserver }}
-                    style={{
-                      background: currentPuzzle.subColor,
-                      borderRadius: 20,
-                    }}
-                  >
-                    <ambientLight intensity={1} />
-                    <directionalLight intensity={1} position={[-5, 5, -10]} />
-                    <directionalLight intensity={3} position={[-10, 5, 10]} />
-                    <directionalLight intensity={5} position={[10, 10, 10]} />
-                    <OrthographicCamera
-                      makeDefault
-                      position={[-8, 8, 8]}
-                      fov={100}
-                      near={1}
-                      far={1000}
-                      zoom={Math.floor(50 / Math.max(...currentPuzzle.size))}
-                    />
-                    <OrbitControls
-                      enableZoom={false}
-                      enablePan={false}
-                      enableDamping={false}
-                    />
-                    <group>
-                      {getDefaultPuzzle(currentPuzzle.size).map((position) => (
-                        <mesh key={position} position={position}>
-                          <boxGeometry args={[2, 2, 2]} />
-                          <meshStandardMaterial
-                            color={currentPuzzle.mainColor}
-                          />
-                        </mesh>
-                      ))}
-                    </group>
-                  </Canvas>
-                )}
-              </PuzzlePreview>
-              <PuzzleLabel>
-                {isSolved ? currentPuzzle.title : currentPuzzle.size.join("x")}
-              </PuzzleLabel>
-            </Puzzle>
-          ) : (
-            <Puzzle key={currentIndex + idx} />
-          );
-        })}
+                  {isSolved &&
+                    isRankShown &&
+                    rankIndex === currentIndex + idx && (
+                      <RankingModal idx={idx}>
+                        <span>풀이 시간</span>
+                        {ranking.map((time, i) => (
+                          <PlayTime
+                            key={time + i}
+                            idx={idx}
+                          >{`${i + 1}등 ${formatTime(ranking[i]).slice(3)}초`}</PlayTime>
+                        ))}
+                      </RankingModal>
+                    )}
+                  {isSolved ? (
+                    <Canvas
+                      frameloop="demand"
+                      resize={{ polyfill: ResizeObserver }}
+                      style={{
+                        background: currentPuzzle.subColor,
+                        borderRadius: 20,
+                      }}
+                    >
+                      <ambientLight intensity={1} />
+                      <directionalLight intensity={1} position={[-5, 5, -10]} />
+                      <directionalLight intensity={3} position={[-10, 5, 10]} />
+                      <directionalLight intensity={5} position={[10, 10, 10]} />
+                      <OrthographicCamera
+                        makeDefault
+                        position={[-5, 5, 5]}
+                        near={1}
+                        far={1000}
+                        zoom={Math.floor(50 / Math.max(...currentPuzzle.size))}
+                      />
+                      <OrbitControls
+                        enableZoom={false}
+                        enablePan={false}
+                        enableDamping={false}
+                      />
+                      <group>
+                        {Object.keys(currentPuzzle.answers).map((position) => (
+                          <mesh
+                            key={position}
+                            position={convertCoordinate(
+                              position,
+                              currentPuzzle.size,
+                            )}
+                          >
+                            <boxGeometry args={[2, 2, 2]} />
+                            <meshStandardMaterial
+                              color={currentPuzzle.colors[position]}
+                            />
+                          </mesh>
+                        ))}
+                      </group>
+                    </Canvas>
+                  ) : (
+                    <Canvas
+                      frameloop="demand"
+                      resize={{ polyfill: ResizeObserver }}
+                      style={{
+                        background: currentPuzzle.subColor,
+                        borderRadius: 20,
+                      }}
+                    >
+                      <ambientLight intensity={1} />
+                      <directionalLight intensity={1} position={[-5, 5, -10]} />
+                      <directionalLight intensity={3} position={[-10, 5, 10]} />
+                      <directionalLight intensity={5} position={[10, 10, 10]} />
+                      <OrthographicCamera
+                        makeDefault
+                        position={[-8, 8, 8]}
+                        near={1}
+                        far={1000}
+                        zoom={Math.floor(50 / Math.max(...currentPuzzle.size))}
+                      />
+                      <OrbitControls
+                        enableZoom={false}
+                        enablePan={false}
+                        enableDamping={false}
+                      />
+                      <group>
+                        {getDefaultPuzzle(currentPuzzle.size).map(
+                          (position) => {
+                            const vector = new THREE.Vector3(...position);
+
+                            return (
+                              <mesh key={position.join("")} position={vector}>
+                                <boxGeometry args={[2, 2, 2]} />
+                                <meshStandardMaterial
+                                  color={currentPuzzle.mainColor}
+                                />
+                              </mesh>
+                            );
+                          },
+                        )}
+                      </group>
+                    </Canvas>
+                  )}
+                </PuzzlePreview>
+                <PuzzleLabel>
+                  {isSolved
+                    ? currentPuzzle.title
+                    : currentPuzzle.size.join("x")}
+                </PuzzleLabel>
+              </Puzzle>
+            ) : (
+              <Puzzle key={currentIndex + idx} />
+            );
+          })}
         <Icon
           src={Next}
           onClick={handleIndexIncrease}
@@ -393,10 +428,11 @@ function GameSelectPage() {
         <button
           className="play-button"
           onClick={() => {
-            puzzlesIndex[difficulty] = currentIndex;
-            setPuzzlesIndex(puzzlesIndex);
-
-            navigate(`/puzzles/${difficulty}/${currentIndex}`);
+            if (difficulty) {
+              puzzlesIndex[difficulty] = currentIndex;
+              setPuzzlesIndex(puzzlesIndex);
+              navigate(`/puzzles/${difficulty}/${currentIndex}`);
+            }
           }}
         >
           {language === "English" ? "Play" : "시작"}

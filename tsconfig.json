@@ -26,6 +26,7 @@
     "src/utils/*",
     "src/components/shared/*",
     "src/components/MainPage",
+    "src/components/GameSelectPage",
     "types/*"
   ],
   "references": [{ "path": "./tsconfig.node.json" }]

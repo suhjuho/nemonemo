@@ -1,10 +1,6 @@
 import { create } from "zustand";
 import { persist } from "zustand/middleware";
-
-type Puzzle = {
-  title: string;
-  size: [number, number, number];
-};
+import { Puzzle } from "../../types/puzzle.ts";
 
 type TotalPuzzle = {
   tutorial: Record<string, Puzzle>;
