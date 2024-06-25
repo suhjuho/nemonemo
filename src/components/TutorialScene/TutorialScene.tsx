@@ -21,7 +21,7 @@ const ModalBackground = styled.div`
 `;
 
 function TutorialScene() {
-  const { stageNumber } = useParams();
+  const { stageNumber } = useParams<{ stageNumber: string }>();
   const { tutorialStep, nextTutorialStep } = useTutorialStepStore();
   const { cubeStates } = useCubeStatesStore();
   const { currentLayer } = useLayerStore();
@@ -29,8 +29,10 @@ function TutorialScene() {
   const mediaQueryList = window.matchMedia(`(max-width: ${breakpoints.md})`);
 
   useEffect(() => {
-    tutorialStep[stageNumber] = 1;
-    nextTutorialStep(tutorialStep);
+    if (stageNumber) {
+      tutorialStep[stageNumber] = 1;
+      nextTutorialStep(tutorialStep);
+    }
   }, []);
 
   useEffect(() => {

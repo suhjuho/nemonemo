@@ -3,7 +3,28 @@ import { useParams } from "react-router-dom";
 import { useTutorialStepStore } from "../../store/store.tsx";
 import breakpoints from "../../styles/media.tsx";
 
-const Modal = styled.div`
+interface ModalPropsType {
+  top?: string;
+  left?: string;
+  width?: string;
+  height?: string;
+  hasButton?: boolean;
+}
+
+interface ContentPropsType {
+  fontSize?: string;
+}
+
+interface TutorialModalProps {
+  currentStep: number;
+  content: string;
+  isEnd?: boolean;
+  ModalProps: ModalPropsType;
+  ContentProps?: ContentPropsType;
+  hasButton?: boolean;
+}
+
+const Modal = styled.div<ModalPropsType>`
   position: absolute;
   z-index: 50;
   display: flex;
@@ -28,7 +49,7 @@ const Modal = styled.div`
   }
 `;
 
-const Content = styled.div`
+const Content = styled.div<ContentPropsType>`
   font-size: ${(props) => props.fontSize || "32px"};
   font-weight: 700;
   white-space: pre-line;
@@ -45,7 +66,7 @@ const Buttons = styled.div`
   width: 100%;
 `;
 
-const Button = styled.button`
+const Button = styled.button<{ buttoncolor?: string }>`
   border-radius: 10px;
   width: 80px;
   height: 50px;
@@ -67,31 +88,31 @@ function TutorialModal({
   ModalProps,
   ContentProps,
   hasButton,
-}) {
+}: TutorialModalProps) {
   const { tutorialStep, nextTutorialStep } = useTutorialStepStore();
-  const { stageNumber } = useParams();
-  const ButtonColors = {
+  const { stageNumber } = useParams<{ stageNumber: string }>();
+  const ButtonColors: Record<string, string> = {
     1: "rgba(228, 180, 180, 0.5)",
     2: "rgba(181, 228, 180, 0.5);",
     3: "rgba(89, 88, 86, 0.5);",
     4: "rgba(206, 161, 49, 0.5);",
   };
-  const handleClick = (event) => {
+  const handleClick = (event: React.MouseEvent<HTMLButtonElement>) => {
     event.stopPropagation();
 
-    if (isEnd) {
-      tutorialStep[stageNumber] = 0;
-    } else {
-      tutorialStep[stageNumber] += 1;
+    if (stageNumber) {
+      tutorialStep[stageNumber] = isEnd ? 0 : tutorialStep[stageNumber] + 1;
     }
 
     nextTutorialStep(tutorialStep);
   };
 
-  const handleSkip = (event) => {
+  const handleSkip = (event: React.MouseEvent<HTMLButtonElement>) => {
     event.stopPropagation();
 
-    tutorialStep[stageNumber] = 0;
+    if (stageNumber) {
+      tutorialStep[stageNumber] = 0;
+    }
 
     nextTutorialStep(tutorialStep);
   };
@@ -104,12 +125,15 @@ function TutorialModal({
           {currentStep === 1 && (
             <Button
               onClick={handleSkip}
-              buttoncolor={ButtonColors[stageNumber]}
+              buttoncolor={stageNumber ? ButtonColors[stageNumber] : ""}
             >
               스킵
             </Button>
           )}
-          <Button onClick={handleClick} buttoncolor={ButtonColors[stageNumber]}>
+          <Button
+            onClick={handleClick}
+            buttoncolor={stageNumber ? ButtonColors[stageNumber] : ""}
+          >
             다음
           </Button>
         </Buttons>
