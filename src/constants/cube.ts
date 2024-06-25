@@ -6,9 +6,13 @@ type CornerCoordinate = {
   LEFT: Coordinate;
   RIGHT: Coordinate;
 };
+type VerticalLayer = {
+  center: Coordinate;
+  corner: CornerCoordinate;
+};
 type Layer = {
   center: Coordinate;
-  corner: Coordinate | CornerCoordinate;
+  corner: Coordinate;
 };
 type Rotations = {
   FRONT: Rotation;
@@ -32,8 +36,8 @@ type Keys = {
 
 interface CubeConstant {
   LAYERS: {
-    UP_LAYER: Layer;
-    DOWN_LAYER: Layer;
+    UP_LAYER: VerticalLayer;
+    DOWN_LAYER: VerticalLayer;
     RIGHT_LAYER: Layer;
     LEFT_LAYER: Layer;
     FRONT_LAYER: Layer;
@@ -67,7 +71,7 @@ interface CubeConstant {
   OUTSIDE_DIRECTIONS: Keys;
 }
 
-const UP_LAYER: Layer = {
+const UP_LAYER: VerticalLayer = {
   center: [0, 1.01, 0],
   corner: {
     FRONT: [0.5, 1.01, -0.5],
@@ -76,7 +80,7 @@ const UP_LAYER: Layer = {
     RIGHT: [-0.5, 1.01, -0.5],
   },
 };
-const DOWN_LAYER: Layer = {
+const DOWN_LAYER: VerticalLayer = {
   center: [0, -1.01, 0],
   corner: {
     FRONT: [0.5, -1.01, 0.5],
