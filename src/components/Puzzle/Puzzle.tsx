@@ -18,11 +18,25 @@ import CUBE_CONSTANT from "../../constants/cube.ts";
 import Scaffold from "../Edge/Scaffold.tsx";
 import DefaultScaffold from "../Edge/DefaultScaffold.tsx";
 import revertCoordinate from "../../utils/revertCoordinate.ts";
+import { Puzzle as PuzzleData } from "../../../types/puzzle.ts";
+import {
+  MarkingNumbers,
+  DefaultPuzzle,
+  CubeState,
+} from "../../../types/cube.ts";
 
 const cubeGeometry = new THREE.BoxGeometry(2, 2, 2);
 const cubeLineGeometry = new THREE.CylinderGeometry(0.03, 0.03, 2, 8);
 
-function Puzzle({ puzzle, markingNumbers, defaultPuzzle }) {
+function Puzzle({
+  puzzle,
+  markingNumbers,
+  defaultPuzzle,
+}: {
+  puzzle: PuzzleData;
+  markingNumbers: MarkingNumbers;
+  defaultPuzzle: DefaultPuzzle;
+}) {
   const { size, answers, colors } = puzzle;
   const { difficulty, stageNumber } = useParams();
 
@@ -40,8 +54,8 @@ function Puzzle({ puzzle, markingNumbers, defaultPuzzle }) {
     useLayerStore();
 
   useEffect(() => {
-    const newAnswer = {};
-    const newCubeStates = {};
+    const newAnswer: Record<string, boolean> = {};
+    const newCubeStates: Record<string, CubeState> = {};
 
     Object.entries(answers).forEach((position) => {
       newAnswer[convertCoordinate(position[0], size).join("")] = true;
@@ -55,7 +69,7 @@ function Puzzle({ puzzle, markingNumbers, defaultPuzzle }) {
       };
     });
 
-    const puzzleLayers = { x: [], z: [] };
+    const puzzleLayers: { x: number[]; z: number[] } = { x: [], z: [] };
 
     for (let z = -1 * puzzle.size[2] + 1; z <= puzzle.size[2] - 1; z += 2) {
       puzzleLayers.z.push(z);
@@ -76,7 +90,7 @@ function Puzzle({ puzzle, markingNumbers, defaultPuzzle }) {
   }, [difficulty, stageNumber, defaultPuzzle]);
 
   useEffect(() => {
-    function handleCubeHistory(event) {
+    function handleCubeHistory(event: KeyboardEvent): void {
       const isUndo = CUBE_CONSTANT.UNDO_KEYS[event.key];
       const isRedo = CUBE_CONSTANT.REDO_KEYS[event.key];
 
@@ -94,7 +108,7 @@ function Puzzle({ puzzle, markingNumbers, defaultPuzzle }) {
   }, [cubeStates, cubeStatesHistory, historyIndex]);
 
   useEffect(() => {
-    function handleLayerChange(event) {
+    function handleLayerChange(event: KeyboardEvent): void {
       const isInside = CUBE_CONSTANT.INSIDE_CUBE_KEYS[event.key];
       const isOutside = CUBE_CONSTANT.OUTSIDE_CUBE_KEYS[event.key];
 
@@ -137,7 +151,7 @@ function Puzzle({ puzzle, markingNumbers, defaultPuzzle }) {
       <group>
         {defaultPuzzle.map((position) => (
           <Cube
-            key={position}
+            key={position.join("")}
             cubeGeometry={cubeGeometry}
             cubeLineGeometry={cubeLineGeometry}
             position={position}
