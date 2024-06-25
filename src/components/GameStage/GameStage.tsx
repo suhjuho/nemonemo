@@ -1,5 +1,7 @@
 import { Canvas } from "@react-three/fiber";
 import { OrthographicCamera, OrbitControls } from "@react-three/drei";
+import { OrthographicCamera as OrthographicCameraType } from "three";
+import { OrbitControls as OrbitControlsType } from "three-stdlib";
 import { ResizeObserver } from "@juggle/resize-observer";
 import { useParams } from "react-router-dom";
 import { useEffect, useRef, useState } from "react";
@@ -21,6 +23,10 @@ import useSetEventClickMode from "../../utils/useSetEventClickMode.tsx";
 import useSetEventKeySound from "../../utils/useSetEventKeySound.tsx";
 import usePuzzleEnding from "../../utils/usePuzzleEnding.tsx";
 import breakpoints from "../../styles/media.tsx";
+import {
+  DifficultyLevel,
+  Puzzle as PuzzleType,
+} from "../../../types/puzzle.ts";
 
 const Stage = styled.div`
   position: relative;
@@ -28,41 +34,48 @@ const Stage = styled.div`
 `;
 
 function GameStage() {
-  const { difficulty, stageNumber } = useParams();
-  const [defaultPuzzle, setDefaultPuzzle] = useState([]);
+  const { difficulty, stageNumber } = useParams<{
+    difficulty?: DifficultyLevel;
+    stageNumber?: string;
+  }>();
+  const [defaultPuzzle, setDefaultPuzzle] = useState<number[][]>([]);
   const [markingNumbers, setMarkingNumbers] = useState({});
   const { puzzles } = usePuzzlesStore();
   const { isOrbitEnable } = useOrbitControlStore();
   const { isComplete, setIsComplete } = useAnswerStore();
-  const controls = useRef();
-  const camera = useRef();
+  const controls = useRef<OrbitControlsType>(null!);
+  const camera = useRef<OrthographicCameraType>(null!);
   const mediaQueryList = window.matchMedia(`(max-width: ${breakpoints.md})`);
-
-  const puzzle = puzzles[difficulty][stageNumber];
-  const { size, answers, showingNumbers } = puzzle;
+  const [puzzle, setPuzzle] = useState<PuzzleType>({} as PuzzleType);
 
   useEffect(() => {
-    const numbers = getMarkingNumbers(answers, showingNumbers, size);
+    if (difficulty && stageNumber) {
+      setPuzzle(puzzles[difficulty][stageNumber]);
+      const { size, answers, showingNumbers } = puzzle as PuzzleType;
+      const numbers = getMarkingNumbers(answers, showingNumbers, size);
 
-    setDefaultPuzzle(getDefaultPuzzle(size));
-    setMarkingNumbers(numbers);
-    setIsComplete(false);
+      setDefaultPuzzle(getDefaultPuzzle(size));
+      setMarkingNumbers(numbers);
+      setIsComplete(false);
+    }
   }, [difficulty, stageNumber]);
 
-  useSetEventClickMode();
-  useSetEventKeySound();
-  usePuzzleEnding(camera);
+  useEffect(() => {
+    useSetEventClickMode();
+    useSetEventKeySound();
+    usePuzzleEnding(camera);
+  }, []);
 
   return (
     <Stage>
       <GameStageHeader
-        difficulty={difficulty}
+        difficulty={difficulty || "custom"}
         type="game"
-        puzzleTitle={puzzle.title}
-        puzzleSize={puzzle.size}
+        puzzleTitle={puzzle ? puzzle.title : ""}
+        puzzleSize={puzzle ? puzzle.size : [0, 0, 0]}
       />
       <GameStageSideBar />
-      {isComplete && (
+      {isComplete && difficulty && (
         <GameStageFooter
           difficulty={difficulty}
           puzzleLength={Object.keys(puzzles[difficulty]).length}
@@ -82,7 +95,6 @@ function GameStage() {
           ref={camera}
           makeDefault
           position={[-12, 12, 12]}
-          fov={100}
           near={1}
           far={1000}
           zoom={

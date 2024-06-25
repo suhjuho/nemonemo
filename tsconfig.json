@@ -27,6 +27,7 @@
     "src/components/shared/*",
     "src/components/MainPage",
     "src/components/GameSelectPage",
+    "src/components/GameStage",
     "types/*"
   ],
   "references": [{ "path": "./tsconfig.node.json" }]

@@ -1,21 +1,11 @@
-import { useEffect } from "react";
+import { MutableRefObject, useEffect } from "react";
 import * as TWEEN from "@tweenjs/tween.js";
+import { OrthographicCamera as OrthographicCameraType } from "three";
 
 import { useAnswerStore, useSoundStore } from "../store/store.tsx";
 import { soundEnding } from "./soundEffect.ts";
 
-interface Camera {
-  current: {
-    position: {
-      x: number;
-      y: number;
-      z: number;
-      set: (x: number, y: number, z: number) => void;
-    };
-  };
-}
-
-const usePuzzleEnding = (camera: Camera) => {
+const usePuzzleEnding = (camera: MutableRefObject<OrthographicCameraType>) => {
   const { isComplete } = useAnswerStore();
   const { sound } = useSoundStore();
 
