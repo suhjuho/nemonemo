@@ -46,25 +46,25 @@ function GameStage() {
   const controls = useRef<OrbitControlsType>(null!);
   const camera = useRef<OrthographicCameraType>(null!);
   const mediaQueryList = window.matchMedia(`(max-width: ${breakpoints.md})`);
-  const [puzzle, setPuzzle] = useState<PuzzleType>({} as PuzzleType);
+  let puzzle: PuzzleType = null!;
+
+  if (difficulty && stageNumber) {
+    puzzle = puzzles[difficulty][stageNumber];
+  }
+
+  const { size, answers, showingNumbers } = puzzle as PuzzleType;
 
   useEffect(() => {
-    if (difficulty && stageNumber) {
-      setPuzzle(puzzles[difficulty][stageNumber]);
-      const { size, answers, showingNumbers } = puzzle as PuzzleType;
-      const numbers = getMarkingNumbers(answers, showingNumbers, size);
+    const numbers = getMarkingNumbers(answers, showingNumbers, size);
 
-      setDefaultPuzzle(getDefaultPuzzle(size));
-      setMarkingNumbers(numbers);
-      setIsComplete(false);
-    }
+    setDefaultPuzzle(getDefaultPuzzle(size));
+    setMarkingNumbers(numbers);
+    setIsComplete(false);
   }, [difficulty, stageNumber]);
 
-  useEffect(() => {
-    useSetEventClickMode();
-    useSetEventKeySound();
-    usePuzzleEnding(camera);
-  }, []);
+  useSetEventClickMode();
+  useSetEventKeySound();
+  usePuzzleEnding(camera);
 
   return (
     <Stage>

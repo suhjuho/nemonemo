@@ -2,6 +2,7 @@ import * as THREE from "three";
 import { useParams } from "react-router-dom";
 import axios from "axios";
 
+import { ThreeEvent } from "@react-three/fiber";
 import checkAnswer from "../../utils/checkAnswer.ts";
 import { soundClick } from "../../utils/soundEffect.ts";
 import usePuzzlesStore from "../../store/puzzle.tsx";
@@ -16,16 +17,14 @@ import {
   useGameTimeStore,
 } from "../../store/store.tsx";
 import BACKGROUND_CONSTANT from "../../constants/background.ts";
+import { DifficultyLevel } from "../../../types/puzzle.ts";
 
-function rank(difficulty, stageNumber, time) {
+function rank(difficulty: DifficultyLevel, stageNumber: string, time: number) {
   async function saveScore() {
     try {
-      const response = await axios.post(
-        `${import.meta.env.VITE_SAVE_PUZZLE_API}`,
-        { score: { difficulty, stageNumber, time } },
-      );
-
-      console.log(response);
+      await axios.post(`${import.meta.env.VITE_SAVE_PUZZLE_API}`, {
+        score: { difficulty, stageNumber, time },
+      });
     } catch (error) {
       console.error(error);
     }
@@ -34,7 +33,7 @@ function rank(difficulty, stageNumber, time) {
   saveScore();
 }
 
-function TutorialBackGround({ color }) {
+function TutorialBackGround({ color }: { color: string }) {
   const planeGeometry = new THREE.PlaneGeometry(
     ...BACKGROUND_CONSTANT.GEOMETRY_ARGS,
   );
@@ -54,12 +53,12 @@ function TutorialBackGround({ color }) {
     setHistoryIndex,
   } = useCubeStatesStore();
   const { puzzles, setPuzzles } = usePuzzlesStore();
-  const { stageNumber } = useParams();
   const { solvedPuzzles, setSolvedPuzzles } = useSolvedPuzzlesStore();
+  const { stageNumber } = useParams<{ stageNumber: string }>();
   const { gameTime } = useGameTimeStore();
   const difficulty = "tutorial";
 
-  function handleContextMenu(event) {
+  function handleContextMenu(event: ThreeEvent<MouseEvent>): void {
     event.stopPropagation();
 
     if (clickMode === "color") {
@@ -69,7 +68,7 @@ function TutorialBackGround({ color }) {
     }
   }
 
-  const handleDragEnd = (event) => {
+  const handleDragEnd = (event: ThreeEvent<PointerEvent>): void => {
     event.stopPropagation();
     setOrbitEnableState(true);
 
@@ -91,7 +90,7 @@ function TutorialBackGround({ color }) {
       setHistoryIndex(cubeStatesHistory.length - 1);
     }
 
-    if (checkAnswer(answer, cubeStates)) {
+    if (checkAnswer(answer, cubeStates) && difficulty && stageNumber) {
       rank(difficulty, stageNumber, gameTime);
 
       solvedPuzzles[difficulty][stageNumber] = true;
@@ -110,8 +109,8 @@ function TutorialBackGround({ color }) {
           key={`${direction.rotation.join("")}`}
           onContextMenu={handleContextMenu}
           onPointerUp={handleDragEnd}
-          rotation={direction.rotation}
-          position={direction.position}
+          rotation={new THREE.Euler(...direction.rotation)}
+          position={new THREE.Vector3(...direction.position)}
           geometry={planeGeometry}
           material={backgroundMaterial}
         />

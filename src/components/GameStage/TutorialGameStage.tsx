@@ -1,5 +1,7 @@
 import { Canvas } from "@react-three/fiber";
 import { OrthographicCamera, OrbitControls } from "@react-three/drei";
+import { OrthographicCamera as OrthographicCameraType } from "three";
+import { OrbitControls as OrbitControlsType } from "three-stdlib";
 import { ResizeObserver } from "@juggle/resize-observer";
 import { useParams } from "react-router-dom";
 import { useEffect, useRef, useState } from "react";
@@ -27,6 +29,7 @@ import useSetEventKeySound from "../../utils/useSetEventKeySound.tsx";
 import useSetEventClickMode from "../../utils/useSetEventClickMode.tsx";
 import usePuzzleEnding from "../../utils/usePuzzleEnding.tsx";
 import breakpoints from "../../styles/media.tsx";
+import { Puzzle as PuzzleType } from "../../../types/puzzle.ts";
 
 const Stage = styled.div`
   position: relative;
@@ -34,27 +37,31 @@ const Stage = styled.div`
 `;
 
 function TutorialGameStage() {
-  const { stageNumber } = useParams();
-  const { tutorialStep } = useTutorialStepStore();
+  const difficulty = "tutorial";
+  const { stageNumber } = useParams<{ stageNumber: string }>();
+  const [defaultPuzzle, setDefaultPuzzle] = useState<number[][]>([]);
+  const [markingNumbers, setMarkingNumbers] = useState({});
   const { puzzles } = usePuzzlesStore();
   const { isOrbitEnable } = useOrbitControlStore();
   const { isComplete, setIsComplete } = useAnswerStore();
-  const [defaultPuzzle, setDefaultPuzzle] = useState([]);
-  const [markingNumbers, setMarkingNumbers] = useState({});
-  const difficulty = "tutorial";
-  const controls = useRef();
-  const camera = useRef();
+  const { tutorialStep } = useTutorialStepStore();
+  const controls = useRef<OrbitControlsType>(null!);
+  const camera = useRef<OrthographicCameraType>(null!);
   const mediaQueryList = window.matchMedia(`(max-width: ${breakpoints.md})`);
+  let puzzle: PuzzleType = null!;
 
-  const puzzle = puzzles[difficulty][stageNumber];
-  const { size, answers, showingNumbers } = puzzle;
+  if (difficulty && stageNumber) {
+    puzzle = puzzles[difficulty][stageNumber];
+  }
+
+  const { size, answers, showingNumbers } = puzzle as PuzzleType;
 
   useEffect(() => {
     const numbers = getMarkingNumbers(answers, showingNumbers, size);
 
     setDefaultPuzzle(getDefaultPuzzle(size));
-    setIsComplete(false);
     setMarkingNumbers(numbers);
+    setIsComplete(false);
   }, [difficulty, stageNumber]);
 
   useSetEventClickMode();
@@ -162,7 +169,6 @@ function TutorialGameStage() {
           ref={camera}
           makeDefault
           position={[12, 12, 12]}
-          fov={100}
           near={1}
           far={1000}
           zoom={
