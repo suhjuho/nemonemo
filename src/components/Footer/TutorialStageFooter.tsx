@@ -3,6 +3,7 @@ import { useNavigate } from "react-router-dom";
 
 import Out from "../../assets/icon/icon-out.png";
 import { useLanguageStore } from "../../store/store.tsx";
+import { DifficultyLevel } from "../../../types/puzzle.ts";
 
 const Footer = styled.footer`
   position: fixed;
@@ -21,7 +22,7 @@ const Footer = styled.footer`
   }
 `;
 
-const NextButton = styled.div`
+const NextButton = styled.div<{ highlight: string }>`
   font-size: 60px;
   font-weight: 900;
   padding: 0px 10px;
@@ -38,7 +39,17 @@ const NextButton = styled.div`
   `}
 `;
 
-function TutorialStageFooter({ difficulty, currentIndex, puzzleLength }) {
+interface TutorialGameStageFooterProps {
+  difficulty: DifficultyLevel;
+  currentIndex: number;
+  puzzleLength: number;
+}
+
+function TutorialStageFooter({
+  difficulty,
+  currentIndex,
+  puzzleLength,
+}: TutorialGameStageFooterProps) {
   const navigate = useNavigate();
   const { language } = useLanguageStore();
 

@@ -80,7 +80,7 @@ function GameStage() {
         <GameStageFooter
           difficulty={difficulty}
           puzzleLength={Object.keys(puzzles[difficulty]).length}
-          currentIndex={stageNumber}
+          currentIndex={Number(stageNumber)}
         />
       )}
 
