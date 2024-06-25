@@ -27,6 +27,7 @@ import {
   DifficultyLevel,
   Puzzle as PuzzleType,
 } from "../../../types/puzzle.ts";
+import { DefaultPuzzle, MarkingNumbers } from "../../../types/cube.ts";
 
 const Stage = styled.div`
   position: relative;
@@ -38,8 +39,8 @@ function GameStage() {
     difficulty?: DifficultyLevel;
     stageNumber?: string;
   }>();
-  const [defaultPuzzle, setDefaultPuzzle] = useState<number[][]>([]);
-  const [markingNumbers, setMarkingNumbers] = useState({});
+  const [defaultPuzzle, setDefaultPuzzle] = useState<DefaultPuzzle>(null!);
+  const [markingNumbers, setMarkingNumbers] = useState<MarkingNumbers>(null!);
   const { puzzles } = usePuzzlesStore();
   const { isOrbitEnable } = useOrbitControlStore();
   const { isComplete, setIsComplete } = useAnswerStore();

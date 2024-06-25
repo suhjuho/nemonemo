@@ -1,8 +1,8 @@
-import { Coordinate } from "../../types/cube.ts";
+import { Coordinate, DefaultPuzzle } from "../../types/cube.ts";
 
-function getDefaultPuzzle(size: Coordinate) {
+function getDefaultPuzzle(size: Coordinate): DefaultPuzzle {
   const [sizeX, sizeY, sizeZ] = size;
-  const defaultPuzzle = [];
+  const defaultPuzzle: DefaultPuzzle = [];
 
   const getStartPosition = (puzzleSize: number): number => 1 - puzzleSize;
   const getEndPosition = (puzzleSize: number): number => puzzleSize - 1;

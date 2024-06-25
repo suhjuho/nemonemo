@@ -22,6 +22,8 @@ export type MarkingNumbersState = {
   setMarkingNumbers: (markingNumbers: MarkingNumbers) => void;
 };
 
+export type DefaultPuzzle = Coordinate[];
+
 export type CubeState = {
   isClicked: boolean;
   isRemoved: boolean;
