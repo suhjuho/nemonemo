@@ -1,10 +1,10 @@
 import * as THREE from "three";
 import { useParams } from "react-router-dom";
-import axios from "axios";
 
 import { ThreeEvent } from "@react-three/fiber";
 import checkAnswer from "../../utils/checkAnswer.ts";
 import { soundClick } from "../../utils/soundEffect.ts";
+import saveRank from "../../utils/saveRank.ts";
 import usePuzzlesStore from "../../store/puzzle.tsx";
 import useSolvedPuzzlesStore from "../../store/solvedPuzzles.tsx";
 import {
@@ -17,21 +17,6 @@ import {
   useGameTimeStore,
 } from "../../store/store.tsx";
 import BACKGROUND_CONSTANT from "../../constants/background.ts";
-import { DifficultyLevel } from "../../../types/puzzle.ts";
-
-function rank(difficulty: DifficultyLevel, stageNumber: string, time: number) {
-  async function saveScore() {
-    try {
-      await axios.post(`${import.meta.env.VITE_SAVE_PUZZLE_API}`, {
-        score: { difficulty, stageNumber, time },
-      });
-    } catch (error) {
-      console.error(error);
-    }
-  }
-
-  saveScore();
-}
 
 function TutorialBackGround({ color }: { color: string }) {
   const planeGeometry = new THREE.PlaneGeometry(
@@ -91,7 +76,7 @@ function TutorialBackGround({ color }: { color: string }) {
     }
 
     if (checkAnswer(answer, cubeStates) && difficulty && stageNumber) {
-      rank(difficulty, stageNumber, gameTime);
+      saveRank(difficulty, stageNumber, gameTime);
 
       solvedPuzzles[difficulty][stageNumber] = true;
       setSolvedPuzzles(solvedPuzzles);

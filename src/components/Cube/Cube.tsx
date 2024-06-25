@@ -1,14 +1,9 @@
-import React, {
-  useState,
-  useRef,
-  useEffect,
-  useMemo,
-  useCallback,
-} from "react";
+import { useState, useRef, useEffect, useMemo, useCallback } from "react";
 import { useSpring, animated, config } from "@react-spring/three";
 import { useParams } from "react-router-dom";
-import axios from "axios";
 
+import { BoxGeometry, CylinderGeometry, Mesh } from "three";
+import { ThreeEvent } from "@react-three/fiber";
 import CubeEdge from "./CubeEdge.tsx";
 import CubeNumbers from "./CubeNumbers.tsx";
 
@@ -29,20 +24,9 @@ import checkAnswer from "../../utils/checkAnswer.ts";
 import { soundClick } from "../../utils/soundEffect.ts";
 import revertCoordinate from "../../utils/revertCoordinate.ts";
 import CUBE_CONSTANT from "../../constants/cube.ts";
-
-function rank(difficulty, stageNumber, time) {
-  async function saveScore() {
-    try {
-      await axios.post(`${import.meta.env.VITE_SAVE_PUZZLE_API}`, {
-        score: { difficulty, stageNumber, time },
-      });
-    } catch (error) {
-      console.error(error);
-    }
-  }
-
-  saveScore();
-}
+import saveRank from "../../utils/saveRank.ts";
+import { Coordinate, MarkingNumbers } from "../../../types/cube.ts";
+import { DifficultyLevel } from "../../../types/puzzle.ts";
 
 function Cube({
   position,
@@ -52,15 +36,26 @@ function Cube({
   positivePosition,
   colors,
   size,
+}: {
+  position: Coordinate;
+  cubeGeometry: BoxGeometry;
+  cubeLineGeometry: CylinderGeometry;
+  markingNumbers: MarkingNumbers;
+  positivePosition: Coordinate;
+  colors: Record<string, string>;
+  size: [number, number, number];
 }) {
-  const cube = useRef();
+  const cube = useRef<Mesh>(null!);
   const [isClicked, setIsClicked] = useState(false);
   const [isRemoved, setIsRemoved] = useState(false);
   const [isHidden, setIsHidden] = useState(false);
   const [isHover, setIsHover] = useState(false);
   const [isVisible, setIsVisible] = useState(true);
 
-  const { difficulty = "tutorial", stageNumber } = useParams();
+  const { difficulty = "tutorial", stageNumber } = useParams<{
+    difficulty: DifficultyLevel;
+    stageNumber: string;
+  }>();
   const { gameTime } = useGameTimeStore();
   const { solvedPuzzles, setSolvedPuzzles } = useSolvedPuzzlesStore();
   const { puzzles, setPuzzles } = usePuzzlesStore();
@@ -99,29 +94,28 @@ function Cube({
     setCubeStates(cubeStates);
   }
 
-  function checkCubeState() {
-    let result;
+  function checkCubeState(): keyof typeof CUBE_CONSTANT.MATERIAL_ARGS {
     if (!isClicked && !isRemoved) {
-      result = "blank";
+      return "blank";
     }
 
     if (isClicked && !isRemoved) {
-      result = "marked";
+      return "marked";
     }
 
     if (!isClicked && isRemoved && clickMode === "color") {
-      result = "invisible";
+      return "invisible";
     }
 
     if (!isClicked && isRemoved && clickMode === "cube") {
-      result = "haze";
+      return "haze";
     }
 
     if (isHidden) {
-      result = "invisible";
+      return "invisible";
     }
 
-    return result;
+    return "blank";
   }
 
   const cubeState = useMemo(
@@ -194,57 +188,68 @@ function Cube({
     }
   }, [historyIndex]);
 
-  const handleRightClick = useCallback((event) => {
-    event.stopPropagation();
-    setOrbitEnableState(false);
-    setIsRightClick(true);
-    setDragPosition(position);
+  const handleRightClick = useCallback(
+    (event: ThreeEvent<MouseEvent>) => {
+      event.stopPropagation();
+      setOrbitEnableState(false);
+      setIsRightClick(true);
+      setDragPosition(position);
 
-    setIsClicked(false);
-    setIsRemoved(true);
-  });
+      setIsClicked(false);
+      setIsRemoved(true);
+    },
+    [position],
+  );
 
-  const handleDrag = useCallback((event) => {
-    event.stopPropagation();
+  const handleDrag = useCallback(
+    (event: ThreeEvent<MouseEvent>) => {
+      event.stopPropagation();
 
-    if (isOrbitEnable) {
-      return;
-    }
+      if (isOrbitEnable) {
+        return;
+      }
 
-    if (clickMode === "color") {
-      if (!isRightClick) {
-        setIsClicked(!isClicked);
-      } else if (
-        (dragPosition[0] === position[0] && dragPosition[1] === position[1]) ||
-        (dragPosition[1] === position[1] && dragPosition[2] === position[2]) ||
-        (dragPosition[2] === position[2] && dragPosition[0] === position[0])
-      ) {
+      if (clickMode === "color") {
+        if (!isRightClick) {
+          setIsClicked(!isClicked);
+        } else if (
+          (dragPosition[0] === position[0] &&
+            dragPosition[1] === position[1]) ||
+          (dragPosition[1] === position[1] &&
+            dragPosition[2] === position[2]) ||
+          (dragPosition[2] === position[2] && dragPosition[0] === position[0])
+        ) {
+          setIsClicked(false);
+          setIsRemoved(!isRemoved);
+        }
+      }
+
+      if (clickMode === "cube") {
         setIsClicked(false);
         setIsRemoved(!isRemoved);
       }
-    }
+    },
+    [position],
+  );
 
-    if (clickMode === "cube") {
-      setIsClicked(false);
-      setIsRemoved(!isRemoved);
-    }
-  });
+  const handleDragStart = useCallback(
+    (event: ThreeEvent<MouseEvent>) => {
+      event.stopPropagation();
+      setOrbitEnableState(false);
 
-  const handleDragStart = useCallback((event) => {
-    event.stopPropagation();
-    setOrbitEnableState(false);
+      if (clickMode === "color") {
+        setIsClicked(!isClicked);
+      }
 
-    if (clickMode === "color") {
-      setIsClicked(!isClicked);
-    }
+      if (clickMode === "cube") {
+        setIsClicked(false);
+        setIsRemoved(!isRemoved);
+      }
+    },
+    [position],
+  );
 
-    if (clickMode === "cube") {
-      setIsClicked(false);
-      setIsRemoved(!isRemoved);
-    }
-  });
-
-  const handleDragEnd = (event) => {
+  const handleDragEnd = (event: ThreeEvent<MouseEvent>) => {
     event.stopPropagation();
     setOrbitEnableState(true);
     setIsRightClick(false);
@@ -265,8 +270,8 @@ function Cube({
     setCubeStatesHistory(cubeStatesHistory);
     setHistoryIndex(cubeStatesHistory.length - 1);
 
-    if (checkAnswer(answer, cubeStates)) {
-      rank(difficulty, stageNumber, gameTime);
+    if (checkAnswer(answer, cubeStates) && stageNumber) {
+      saveRank(difficulty, stageNumber, gameTime);
 
       solvedPuzzles[difficulty][stageNumber] = true;
       setSolvedPuzzles(solvedPuzzles);
@@ -292,7 +297,7 @@ function Cube({
             }}
             onPointerLeave={() => setIsHover(false)}
             geometry={cubeGeometry}
-            scale={scale}
+            scale={scale.to((x, y, z) => [x, y, z])}
           >
             <animated.meshStandardMaterial
               transparent
