@@ -198,11 +198,11 @@ function Cube({
       setIsClicked(false);
       setIsRemoved(true);
     },
-    [position],
+    [setOrbitEnableState, setIsRightClick, setDragPosition, position],
   );
 
   const handleDrag = useCallback(
-    (event: ThreeEvent<MouseEvent>) => {
+    (event: ThreeEvent<PointerEvent>) => {
       event.stopPropagation();
 
       if (isOrbitEnable) {
@@ -229,11 +229,19 @@ function Cube({
         setIsRemoved(!isRemoved);
       }
     },
-    [position],
+    [
+      isOrbitEnable,
+      clickMode,
+      isRightClick,
+      dragPosition,
+      position,
+      setIsClicked,
+      setIsRemoved,
+    ],
   );
 
   const handleDragStart = useCallback(
-    (event: ThreeEvent<MouseEvent>) => {
+    (event: ThreeEvent<PointerEvent>) => {
       event.stopPropagation();
       setOrbitEnableState(false);
 
@@ -246,10 +254,17 @@ function Cube({
         setIsRemoved(!isRemoved);
       }
     },
-    [position],
+    [
+      clickMode,
+      setOrbitEnableState,
+      isClicked,
+      setIsClicked,
+      isRemoved,
+      setIsRemoved,
+    ],
   );
 
-  const handleDragEnd = (event: ThreeEvent<MouseEvent>) => {
+  const handleDragEnd = (event: ThreeEvent<PointerEvent>) => {
     event.stopPropagation();
     setOrbitEnableState(true);
     setIsRightClick(false);
