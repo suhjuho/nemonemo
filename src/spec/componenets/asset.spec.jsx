@@ -2,11 +2,14 @@ import ReactThreeTestRenderer from "@react-three/test-renderer";
 import { beforeEach, describe, expect, it, vi } from "vitest";
 import * as THREE from "three";
 import { useGLTF } from "@react-three/drei";
-import AxisArrow from "../../components/CubePointer/AxisArrow";
-import { AxisX, AxisY, AxisZ } from "../../components/CubePointer/AxisMarker";
-import CubePointer from "../../components/CubePointer/CubePointer";
-import DirectionArrow from "../../components/CubePointer/DirectionArrow";
-import PixelPointer from "../../components/CubePointer/PixelPointer";
+import AxisArrow from "../../components/CubePointer/AxisArrow.tsx";
+import {
+  AxisX,
+  AxisY,
+  AxisZ,
+} from "../../components/CubePointer/AxisMarker.tsx";
+import CubePointer from "../../components/CubePointer/CubePointer.tsx";
+import PixelPointer from "../../components/CubePointer/PixelPointer.tsx";
 
 const bufferGeometry = new THREE.BufferGeometry();
 const meshStandardMaterial = new THREE.MeshStandardMaterial();
@@ -89,13 +92,6 @@ describe("render 3D asset using useGLTF", () => {
 
     expect(useGLTF).toHaveBeenCalledWith("/assets/arrow.glb");
     expect(useGLTF.preload).toHaveBeenCalledWith("/assets/arrow.glb");
-  });
-
-  it("render DirectionArrow Component with arrow_3d.glb", async () => {
-    await ReactThreeTestRenderer.create(<DirectionArrow />);
-
-    expect(useGLTF).toHaveBeenCalledWith("/assets/direction_arrow.glb");
-    expect(useGLTF.preload).toHaveBeenCalledWith("/assets/direction_arrow.glb");
   });
 
   it("render PixelPointer Component with arrow_3d.glb", async () => {
