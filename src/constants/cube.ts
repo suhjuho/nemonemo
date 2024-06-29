@@ -1,3 +1,4 @@
+type LayerPosition = "UP" | "DOWN" | "FORTH" | "BACK" | "RIGHT" | "LEFT";
 type Coordinate = [number, number, number];
 type Rotation = [number, number, number];
 type CornerCoordinate = {
@@ -28,7 +29,7 @@ type HoverMaterialArgs = {
   emissive?: string;
 };
 type Scaffold = {
-  [key: string]: string[];
+  [key: string]: LayerPosition[];
 };
 type Keys = {
   [key: string]: boolean;

@@ -1,6 +1,8 @@
+import { Coordinate } from "./cube.ts";
+
 export type Puzzle = {
   title: string;
-  size: [number, number, number];
+  size: Coordinate;
   answers: Record<string, boolean>;
   colors: Record<string, string>;
   showingNumbers: {
@@ -18,6 +20,10 @@ export interface CustomPuzzleState {
   hasAnswers: boolean;
   hasColors: boolean;
   hasNumbers: boolean;
+  setPuzzleMaking: (puzzleMaking: Puzzle) => void;
+  getAnswers: (hasAnswers: boolean) => void;
+  getColors: (hasColors: boolean) => void;
+  getNumbers: (hasNumbers: boolean) => void;
 }
 
 export interface PuzzlesData {

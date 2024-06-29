@@ -1,3 +1,4 @@
+export type LayerPosition = "UP" | "DOWN" | "FORTH" | "BACK" | "RIGHT" | "LEFT";
 export type Coordinate = [number, number, number];
 
 type MarkingNumber = {
@@ -12,9 +13,9 @@ export type MarkingNumbers = {
 };
 
 export type ShowingNumbers = {
-  layerX?: Record<string, boolean>;
-  layerY?: Record<string, boolean>;
-  layerZ?: Record<string, boolean>;
+  layerX: Record<string, boolean>;
+  layerY: Record<string, boolean>;
+  layerZ: Record<string, boolean>;
 };
 
 export type MarkingNumbersState = {
