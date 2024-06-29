@@ -1,8 +1,16 @@
 import { useMemo } from "react";
 import * as THREE from "three";
 import { Line } from "@react-three/drei";
+import { Coordinate } from "../../../types/cube.ts";
 
-function verifyCornerDots(cornerDots) {
+type CornerDots = Coordinate[];
+interface RectangleGridProps {
+  cornerDots: CornerDots;
+  color: string;
+  thickness: number;
+}
+
+function verifyCornerDots(cornerDots: CornerDots) {
   const xPositions = [
     ...new Set(cornerDots.map((cornerDot) => cornerDot[0])),
   ].sort();
@@ -20,8 +28,8 @@ function verifyCornerDots(cornerDots) {
   return { xPositions, yPositions, zPositions, result: "ok" };
 }
 
-function RectangleGrid({ cornerDots, color, thickness }) {
-  const gridDots = [];
+function RectangleGrid({ cornerDots, color, thickness }: RectangleGridProps) {
+  const gridDots: Record<string, Coordinate>[] = [];
 
   const { xPositions, yPositions, zPositions, result } =
     verifyCornerDots(cornerDots);
@@ -33,15 +41,15 @@ function RectangleGrid({ cornerDots, color, thickness }) {
   // y축 고정
   if (yPositions.length === 1) {
     for (let x = xPositions[0]; x <= xPositions[1]; x += 2) {
-      const start = [x, yPositions[0], zPositions[0]];
-      const end = [x, yPositions[0], zPositions[1]];
+      const start: Coordinate = [x, yPositions[0], zPositions[0]];
+      const end: Coordinate = [x, yPositions[0], zPositions[1]];
 
       gridDots.push({ start, end });
     }
 
     for (let z = zPositions[0]; z <= zPositions[1]; z += 2) {
-      const start = [xPositions[0], yPositions[0], z];
-      const end = [xPositions[1], yPositions[0], z];
+      const start: Coordinate = [xPositions[0], yPositions[0], z];
+      const end: Coordinate = [xPositions[1], yPositions[0], z];
 
       gridDots.push({ start, end });
     }
@@ -50,15 +58,15 @@ function RectangleGrid({ cornerDots, color, thickness }) {
   // x축 고정
   if (xPositions.length === 1) {
     for (let y = yPositions[0]; y <= yPositions[1]; y += 2) {
-      const start = [xPositions[0], y, zPositions[0]];
-      const end = [xPositions[0], y, zPositions[1]];
+      const start: Coordinate = [xPositions[0], y, zPositions[0]];
+      const end: Coordinate = [xPositions[0], y, zPositions[1]];
 
       gridDots.push({ start, end });
     }
 
     for (let z = zPositions[0]; z <= zPositions[1]; z += 2) {
-      const start = [xPositions[0], yPositions[0], z];
-      const end = [xPositions[0], yPositions[1], z];
+      const start: Coordinate = [xPositions[0], yPositions[0], z];
+      const end: Coordinate = [xPositions[0], yPositions[1], z];
 
       gridDots.push({ start, end });
     }
@@ -67,15 +75,15 @@ function RectangleGrid({ cornerDots, color, thickness }) {
   // z 축 고정
   if (zPositions.length === 1) {
     for (let x = xPositions[0]; x <= xPositions[1]; x += 2) {
-      const start = [x, yPositions[0], zPositions[0]];
-      const end = [x, yPositions[1], zPositions[0]];
+      const start: Coordinate = [x, yPositions[0], zPositions[0]];
+      const end: Coordinate = [x, yPositions[1], zPositions[0]];
 
       gridDots.push({ start, end });
     }
 
     for (let y = yPositions[0]; y <= yPositions[1]; y += 2) {
-      const start = [xPositions[0], y, zPositions[0]];
-      const end = [xPositions[1], y, zPositions[0]];
+      const start: Coordinate = [xPositions[0], y, zPositions[0]];
+      const end: Coordinate = [xPositions[1], y, zPositions[0]];
 
       gridDots.push({ start, end });
     }

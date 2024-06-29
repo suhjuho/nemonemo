@@ -2,10 +2,18 @@ import { useLayerStore } from "../../store/store.tsx";
 import RectangleGrid from "./RectangleGrid.tsx";
 
 import GRID_CONSTANT from "../../constants/Grid.ts";
+import { Coordinate, LayerPosition } from "../../../types/cube.ts";
 
-function Scaffold({ layerPosition, size, color, thickness }) {
+interface ScaffoldProps {
+  layerPosition: LayerPosition;
+  size: Coordinate;
+  color: string;
+  thickness: number;
+}
+
+function Scaffold({ layerPosition, size, color, thickness }: ScaffoldProps) {
   const { layerDirection, currentLayer } = useLayerStore();
-  const centerPosition = [0, 0, 0];
+  const centerPosition: Coordinate = [0, 0, 0];
   const [fixedIndex, indexOne, indexTwo] =
     GRID_CONSTANT.POSITION.LAYER[layerPosition];
 
@@ -19,11 +27,11 @@ function Scaffold({ layerPosition, size, color, thickness }) {
     centerPosition[fixedIndex] *= -1;
   }
 
-  const cornerDots = [
-    centerPosition.slice(),
-    centerPosition.slice(),
-    centerPosition.slice(),
-    centerPosition.slice(),
+  const cornerDots: Coordinate[] = [
+    centerPosition.slice() as Coordinate,
+    centerPosition.slice() as Coordinate,
+    centerPosition.slice() as Coordinate,
+    centerPosition.slice() as Coordinate,
   ];
 
   cornerDots[0][indexOne] = -1 * size[indexOne];

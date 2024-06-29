@@ -2,8 +2,9 @@ import { useFrame, useThree } from "@react-three/fiber";
 import { useState } from "react";
 
 import { useCameraPositionStore, useLayerStore } from "../../store/store.tsx";
+import { Puzzle } from "../../../types/puzzle.ts";
 
-function AutoCamera({ puzzle }) {
+function AutoCamera({ puzzle }: { puzzle: Puzzle }) {
   const { camera } = useThree();
   const { setCameraPosition } = useCameraPositionStore();
   const { layerDirection, setLayerDirection, setCurrentLayer } =
@@ -11,7 +12,11 @@ function AutoCamera({ puzzle }) {
 
   const [prevPosition, setPrevPosition] = useState({ x: 0, y: 0, z: 0 });
 
-  function checkCameraPosition(cameraX, cameraY, cameraZ) {
+  function checkCameraPosition(
+    cameraX: number,
+    cameraY: number,
+    cameraZ: number,
+  ) {
     const posX = cameraX >= 0 ? 1 : 0;
     const posY = cameraY >= 0 ? 1 : 0;
     const posZ = cameraZ >= 0 ? 1 : 0;
@@ -19,7 +24,7 @@ function AutoCamera({ puzzle }) {
     setCameraPosition([posX, posY, posZ]);
   }
 
-  function checkLayerDirection(cameraX, cameraZ) {
+  function checkLayerDirection(cameraX: number, cameraZ: number) {
     const X = cameraX;
     const Z = cameraZ;
 
@@ -46,7 +51,7 @@ function AutoCamera({ puzzle }) {
     }
   }
 
-  const saveCamera = (x, y, z) => {
+  const saveCamera = (x: number, y: number, z: number) => {
     checkLayerDirection(x, z);
     checkCameraPosition(x, y, z);
   };

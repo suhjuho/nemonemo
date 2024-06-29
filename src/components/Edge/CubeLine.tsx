@@ -1,7 +1,19 @@
 import { useRef } from "react";
 import * as THREE from "three";
 
-function CubeLine({ start, end, cubeLineGeometry, cubeLineMaterial }) {
+interface CubeLineProps {
+  start: THREE.Vector3;
+  end: THREE.Vector3;
+  cubeLineGeometry: THREE.CylinderGeometry;
+  cubeLineMaterial: THREE.MeshBasicMaterial;
+}
+
+function CubeLine({
+  start,
+  end,
+  cubeLineGeometry,
+  cubeLineMaterial,
+}: CubeLineProps) {
   const line = useRef();
 
   const direction = new THREE.Vector3().subVectors(end, start).normalize();
