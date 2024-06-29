@@ -16,7 +16,15 @@ const SideBar = styled.section`
   }
 `;
 
-function CustomPuzzleColorPicker({ cubeColor, handleCubeColor }) {
+interface CustomPuzzleColorPickerProps {
+  cubeColor: string;
+  handleCubeColor: (cubeColor: string) => void;
+}
+
+function CustomPuzzleColorPicker({
+  cubeColor,
+  handleCubeColor,
+}: CustomPuzzleColorPickerProps) {
   return (
     <SideBar>
       <div>

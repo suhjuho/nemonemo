@@ -1,14 +1,15 @@
-import { Canvas } from "@react-three/fiber";
-import { OrthographicCamera, OrbitControls } from "@react-three/drei";
-import { ResizeObserver } from "@juggle/resize-observer";
-import * as THREE from "three";
 import { useEffect, useRef, useState } from "react";
+import * as THREE from "three";
+import { OrthographicCamera, OrbitControls } from "@react-three/drei";
+import { OrthographicCamera as OrthographicCameraType } from "three";
+import { OrbitControls as OrbitControlsType } from "three-stdlib";
+import { ResizeObserver } from "@juggle/resize-observer";
+import { Canvas } from "@react-three/fiber";
 import styled from "styled-components";
 
 import AutoCamera from "../Edge/AutoCamera.tsx";
 import CustomBackground from "./CustomBackground.tsx";
 import GameStageSideBar from "../shared/SideBar/GameStageSideBar.tsx";
-import getDefaultPuzzle from "../../utils/getDefaultPuzzle.ts";
 import CustomPuzzleHeader from "./CustomPuzzleHeader.tsx";
 import CustomPuzzleFooter from "./CustomPuzzleFooter.tsx";
 import CustomPuzzleColorPicker from "./CustomPuzzleColorPicker.tsx";
@@ -18,18 +19,23 @@ import Scaffold from "../Edge/Scaffold.tsx";
 import DefaultScaffold from "../Edge/DefaultScaffold.tsx";
 import AxisArrow from "../CubePointer/AxisArrow.tsx";
 import { AxisX, AxisY, AxisZ } from "../CubePointer/AxisMarker.tsx";
+import getDefaultPuzzle from "../../utils/getDefaultPuzzle.ts";
 
 import {
   useCameraPositionStore,
-  useClickModeStore,
   useLayerStore,
   useOrbitControlStore,
-  useSoundStore,
 } from "../../store/store.tsx";
 import usePuzzleMakingStore from "../../store/making.tsx";
 import revertCoordinate from "../../utils/revertCoordinate.ts";
-import { soundCube } from "../../utils/soundEffect.ts";
 import CUBE_CONSTANT from "../../constants/cube.ts";
+import {
+  Coordinate,
+  DefaultPuzzle,
+  ShowingNumbers,
+} from "../../../types/cube.ts";
+import useSetEventKeySound from "../../utils/useSetEventKeySound.tsx";
+import useSetEventClickMode from "../../utils/useSetEventClickMode.tsx";
 
 const Stage = styled.div`
   position: relative;
@@ -40,25 +46,22 @@ const cubeGeometry = new THREE.BoxGeometry(2, 2, 2);
 const cubeLineGeometry = new THREE.CylinderGeometry(0.03, 0.03, 2, 8);
 
 function CustomPuzzle() {
-  const { clickMode, setClickMode } = useClickModeStore();
   const { isOrbitEnable } = useOrbitControlStore();
-  const { sound } = useSoundStore();
   const { puzzleMaking, setPuzzleMaking, hasAnswers, hasColors } =
     usePuzzleMakingStore();
   const { setCurrentLayer, setLayers } = useLayerStore();
-  const controls = useRef();
-  const camera = useRef();
-
-  const [defaultPuzzle, setDefaultPuzzle] = useState([]);
+  const controls = useRef<OrbitControlsType>(null!);
+  const camera = useRef<OrthographicCameraType>(null!);
+  const [defaultPuzzle, setDefaultPuzzle] = useState<DefaultPuzzle>(null!);
   const [customCubesState, setCustomCubesState] = useState({});
-  const [cubeColor, setCubeColor] = useState("#ffffff");
+  const [cubeColor, setCubeColor] = useState<string>("#ffffff");
   const { cameraPosition } = useCameraPositionStore();
 
   useEffect(() => {
     const defaultPositions = getDefaultPuzzle(puzzleMaking.size);
     setDefaultPuzzle(defaultPositions);
 
-    const showing = { layerX: {}, layerY: {}, layerZ: {} };
+    const showing: ShowingNumbers = { layerX: {}, layerY: {}, layerZ: {} };
 
     for (let y = 0; y < puzzleMaking.size[1]; y += 1) {
       for (let z = 0; z < puzzleMaking.size[2]; z += 1) {
@@ -81,19 +84,20 @@ function CustomPuzzle() {
     puzzleMaking.showingNumbers = showing;
     setPuzzleMaking(puzzleMaking);
 
-    const cubesStates = [];
+    const cubesStates: Record<string, boolean> = {};
 
     defaultPositions.forEach((defaultPosition) => {
       cubesStates[
-        revertCoordinate(defaultPosition, puzzleMaking.size.map(Number)).join(
-          "",
-        )
+        revertCoordinate(
+          defaultPosition,
+          puzzleMaking.size.map(Number) as Coordinate,
+        ).join("")
       ] = true;
     });
 
     setCustomCubesState(cubesStates);
 
-    const layers = { x: [], z: [] };
+    const layers: { x: number[]; z: number[] } = { x: [], z: [] };
 
     for (
       let z = -1 * puzzleMaking.size[2] + 1;
@@ -115,41 +119,8 @@ function CustomPuzzle() {
     setCurrentLayer(puzzleMaking.size[2]);
   }, [puzzleMaking.size[0], puzzleMaking.size[1], puzzleMaking.size[2]]);
 
-  useEffect(() => {
-    function handleContextMenu(event) {
-      const isModeChange = CUBE_CONSTANT.MODE_CHANGE_KEYS[event.key];
-
-      if (isModeChange) {
-        if (clickMode === "color") {
-          setClickMode("cube");
-        } else {
-          setClickMode("color");
-        }
-      }
-    }
-
-    window.addEventListener("keydown", handleContextMenu);
-    return () => window.removeEventListener("keydown", handleContextMenu);
-  }, [clickMode]);
-
-  useEffect(() => {
-    function handleContextMenu(event) {
-      const isInside = CUBE_CONSTANT.INSIDE_CUBE_KEYS[event.key];
-      const isOutside = CUBE_CONSTANT.OUTSIDE_CUBE_KEYS[event.key];
-      const isUndo = CUBE_CONSTANT.UNDO_KEYS[event.key];
-      const isRedo = CUBE_CONSTANT.REDO_KEYS[event.key];
-      const isModeChange = CUBE_CONSTANT.MODE_CHANGE_KEYS[event.key];
-
-      if (isInside || isOutside || isUndo || isRedo || isModeChange) {
-        if (!sound.isMuted) {
-          soundCube(sound.effectSound);
-        }
-      }
-    }
-
-    window.addEventListener("keydown", handleContextMenu);
-    return () => window.removeEventListener("keydown", handleContextMenu);
-  }, []);
+  useSetEventClickMode();
+  useSetEventKeySound();
 
   return (
     <Stage>
@@ -182,7 +153,6 @@ function CustomPuzzle() {
           ref={camera}
           makeDefault
           position={[-12, 12, 12]}
-          fov={100}
           near={1}
           far={1000}
           zoom={
@@ -250,7 +220,7 @@ function CustomPuzzle() {
           <group>
             {defaultPuzzle.map((position) => (
               <CustomCube
-                key={position}
+                key={position.join("")}
                 cubeGeometry={cubeGeometry}
                 cubeLineGeometry={cubeLineGeometry}
                 position={position}

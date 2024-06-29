@@ -187,7 +187,7 @@ function CustomPuzzleHeader() {
     setPuzzleMaking(puzzleMaking);
   }, []);
 
-  const handleSizeUp = (direction) => {
+  const handleSizeUp = (direction: number) => {
     if (puzzleMaking.size[direction] < 10) {
       puzzleMaking.size[direction] += 1;
     }
@@ -195,7 +195,7 @@ function CustomPuzzleHeader() {
     setPuzzleMaking(puzzleMaking);
   };
 
-  const handleSizeDown = (direction) => {
+  const handleSizeDown = (direction: number) => {
     if (puzzleMaking.size[direction] > 1) {
       puzzleMaking.size[direction] -= 1;
     }

@@ -1,12 +1,8 @@
 import { useSpring, animated, config } from "@react-spring/three";
-import React, {
-  useState,
-  useRef,
-  useEffect,
-  useMemo,
-  useCallback,
-} from "react";
+import { useState, useRef, useEffect, useMemo, useCallback } from "react";
 
+import { BoxGeometry, CylinderGeometry, Mesh } from "three";
+import { ThreeEvent } from "@react-three/fiber";
 import CubeEdge from "../Cube/CubeEdge.tsx";
 import CubeNumbers from "../Cube/CubeNumbers.tsx";
 
@@ -23,6 +19,18 @@ import usePuzzleMakingStore from "../../store/making.tsx";
 import { soundClick } from "../../utils/soundEffect.ts";
 import revertCoordinate from "../../utils/revertCoordinate.ts";
 import CUBE_CONSTANT from "../../constants/cube.ts";
+import { Coordinate } from "../../../types/cube.ts";
+
+interface CustomCubeProps {
+  position: Coordinate;
+  cubeGeometry: BoxGeometry;
+  cubeLineGeometry: CylinderGeometry;
+  customCubesState: Record<string, boolean>;
+  changeCustomCubesState: (customCubesState: Record<string, boolean>) => void;
+  size: [number, number, number];
+  cubeColor: string;
+  positivePosition: Coordinate;
+}
 
 function CustomCube({
   position,
@@ -33,8 +41,8 @@ function CustomCube({
   size,
   cubeColor,
   positivePosition,
-}) {
-  const cube = useRef();
+}: CustomCubeProps) {
+  const cube = useRef<Mesh>(null!);
   const [isClicked, setIsClicked] = useState(false);
   const [isRemoved, setIsRemoved] = useState(false);
   const [isHidden, setIsHidden] = useState(false);
@@ -55,7 +63,8 @@ function CustomCube({
     useLayerStore();
 
   function checkCubeState() {
-    let result;
+    let result: keyof typeof CUBE_CONSTANT.MATERIAL_ARGS = "blank";
+
     if (!isClicked && !isRemoved) {
       result = "blank";
     }
@@ -87,8 +96,9 @@ function CustomCube({
   }, [hasColors]);
 
   useEffect(() => {
-    customCubesState[revertCoordinate(position, size.map(Number)).join("")] =
-      isRemoved;
+    customCubesState[
+      revertCoordinate(position, size.map(Number) as Coordinate).join("")
+    ] = isRemoved;
     changeCustomCubesState(customCubesState);
   }, [isRemoved]);
 
@@ -122,7 +132,7 @@ function CustomCube({
   }, [layerDirection]);
 
   useEffect(() => {
-    function handleLayerChange(event) {
+    function handleLayerChange(event: KeyboardEvent) {
       const isInside = CUBE_CONSTANT.INSIDE_CUBE_KEYS[event.key];
       const isOutside = CUBE_CONSTANT.OUTSIDE_CUBE_KEYS[event.key];
 
@@ -167,90 +177,115 @@ function CustomCube({
     return () => window.removeEventListener("keydown", handleLayerChange);
   }, [currentLayer, layerDirection, layers, position]);
 
-  const handleRightClick = useCallback((event) => {
-    event.stopPropagation();
-    if (!hasAnswers) {
-      setOrbitEnableState(false);
-      setIsRightClick(true);
-      setDragPosition(position);
+  const handleRightClick = useCallback(
+    (event: ThreeEvent<MouseEvent>) => {
+      event.stopPropagation();
+      if (!hasAnswers) {
+        setOrbitEnableState(false);
+        setIsRightClick(true);
+        setDragPosition(position);
 
-      setIsClicked(false);
-      setIsRemoved(true);
-    }
-  });
+        setIsClicked(false);
+        setIsRemoved(true);
+      }
+    },
+    [setOrbitEnableState, setIsRightClick, setDragPosition, position],
+  );
 
-  const handleDrag = useCallback((event) => {
-    event.stopPropagation();
+  const handleDrag = useCallback(
+    (event: ThreeEvent<MouseEvent>) => {
+      event.stopPropagation();
 
-    if (isOrbitEnable) {
-      return;
-    }
+      if (isOrbitEnable) {
+        return;
+      }
 
-    if (hasAnswers) {
-      puzzleMaking.colors[
-        revertCoordinate(position, size.map(Number)).join("")
-      ] = cubeColor;
-      puzzleMaking.mainColor = cubeColor;
+      if (hasAnswers) {
+        puzzleMaking.colors[
+          revertCoordinate(position, size.map(Number) as Coordinate).join("")
+        ] = cubeColor;
+        puzzleMaking.mainColor = cubeColor;
 
-      setAnswerColor(cubeColor);
-      setPuzzleMaking(puzzleMaking);
-    } else {
-      if (clickMode === "color") {
-        if (!isRightClick) {
-          setIsClicked(!isClicked);
-        } else if (
-          (dragPosition[0] === position[0] &&
-            dragPosition[1] === position[1]) ||
-          (dragPosition[1] === position[1] &&
-            dragPosition[2] === position[2]) ||
-          (dragPosition[2] === position[2] && dragPosition[0] === position[0])
-        ) {
+        setAnswerColor(cubeColor);
+        setPuzzleMaking(puzzleMaking);
+      } else {
+        if (clickMode === "color") {
+          if (!isRightClick) {
+            setIsClicked(!isClicked);
+          } else if (
+            (dragPosition[0] === position[0] &&
+              dragPosition[1] === position[1]) ||
+            (dragPosition[1] === position[1] &&
+              dragPosition[2] === position[2]) ||
+            (dragPosition[2] === position[2] && dragPosition[0] === position[0])
+          ) {
+            setIsClicked(false);
+            setIsRemoved(!isRemoved);
+          }
+        }
+
+        if (clickMode === "cube") {
           setIsClicked(false);
           setIsRemoved(!isRemoved);
         }
       }
 
-      if (clickMode === "cube") {
-        setIsClicked(false);
+      if (hasAnswers && hasColors) {
         setIsRemoved(!isRemoved);
       }
-    }
+    },
+    [
+      isOrbitEnable,
+      clickMode,
+      isRightClick,
+      dragPosition,
+      position,
+      setIsClicked,
+      setIsRemoved,
+    ],
+  );
 
-    if (hasAnswers && hasColors) {
-      setIsRemoved(!isRemoved);
-    }
-  });
+  const handleDragStart = useCallback(
+    (event: ThreeEvent<PointerEvent>) => {
+      event.stopPropagation();
+      setOrbitEnableState(false);
 
-  const handleDragStart = useCallback((event) => {
-    event.stopPropagation();
-    setOrbitEnableState(false);
+      if (hasAnswers) {
+        puzzleMaking.colors[
+          revertCoordinate(position, size.map(Number) as Coordinate).join("")
+        ] = cubeColor;
 
-    if (hasAnswers) {
-      puzzleMaking.colors[
-        revertCoordinate(position, size.map(Number)).join("")
-      ] = cubeColor;
+        puzzleMaking.mainColor = cubeColor;
 
-      puzzleMaking.mainColor = cubeColor;
+        setAnswerColor(cubeColor);
+        setPuzzleMaking(puzzleMaking);
+      } else {
+        if (clickMode === "color") {
+          setIsClicked(!isClicked);
+        }
 
-      setAnswerColor(cubeColor);
-      setPuzzleMaking(puzzleMaking);
-    } else {
-      if (clickMode === "color") {
-        setIsClicked(!isClicked);
+        if (clickMode === "cube") {
+          setIsClicked(false);
+          setIsRemoved(!isRemoved);
+        }
       }
 
-      if (clickMode === "cube") {
-        setIsClicked(false);
+      if (hasAnswers && hasColors) {
         setIsRemoved(!isRemoved);
       }
-    }
+    },
+    [
+      cubeColor,
+      clickMode,
+      setOrbitEnableState,
+      isClicked,
+      setIsClicked,
+      isRemoved,
+      setIsRemoved,
+    ],
+  );
 
-    if (hasAnswers && hasColors) {
-      setIsRemoved(!isRemoved);
-    }
-  });
-
-  const handleDragEnd = (event) => {
+  const handleDragEnd = (event: ThreeEvent<PointerEvent>) => {
     event.stopPropagation();
     setOrbitEnableState(true);
     setIsRightClick(false);
@@ -276,7 +311,7 @@ function CustomCube({
             }}
             onPointerLeave={() => setIsHover(false)}
             geometry={cubeGeometry}
-            scale={scale}
+            scale={scale.to((x, y, z) => [x, y, z])}
           >
             <animated.meshStandardMaterial
               transparent

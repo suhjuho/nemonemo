@@ -1,5 +1,6 @@
 import * as THREE from "three";
 
+import { ThreeEvent } from "@react-three/fiber";
 import {
   useClickModeStore,
   useOrbitControlStore,
@@ -13,7 +14,7 @@ const planeGeometry = new THREE.PlaneGeometry(
   ...BACKGROUND_CONSTANT.GEOMETRY_ARGS,
 );
 
-function CustomBackground({ color }) {
+function CustomBackground({ color }: { color: string }) {
   const backgroundMaterial = new THREE.MeshBasicMaterial({
     color,
   });
@@ -23,7 +24,7 @@ function CustomBackground({ color }) {
   const { isRightClick, setIsRightClick } = useRightClickStore();
   const { sound } = useSoundStore();
 
-  function handleContextMenu(event) {
+  function handleContextMenu(event: ThreeEvent<MouseEvent>) {
     event.stopPropagation();
 
     if (clickMode === "color") {
@@ -33,11 +34,11 @@ function CustomBackground({ color }) {
     }
   }
 
-  const handleDragStart = (event) => {
+  const handleDragStart = (event: ThreeEvent<PointerEvent>) => {
     event.stopPropagation();
   };
 
-  const handleDragEnd = (event) => {
+  const handleDragEnd = (event: ThreeEvent<PointerEvent>) => {
     event.stopPropagation();
     setOrbitEnableState(true);
 
@@ -58,8 +59,8 @@ function CustomBackground({ color }) {
           onContextMenu={handleContextMenu}
           onPointerDown={handleDragStart}
           onPointerUp={handleDragEnd}
-          rotation={direction.rotation}
-          position={direction.position}
+          rotation={new THREE.Euler(...direction.rotation)}
+          position={new THREE.Vector3(...direction.position)}
           geometry={planeGeometry}
           material={backgroundMaterial}
         />

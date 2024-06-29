@@ -4,6 +4,7 @@ import { useState } from "react";
 import usePuzzleMakingStore from "../../store/making.tsx";
 import { useMarkingNumbersStore } from "../../store/store.tsx";
 import getMarkingNumbers from "../../utils/getMarkingNumbers.ts";
+import { Coordinate } from "../../../types/cube.ts";
 
 const SideBar = styled.section`
   position: fixed;
@@ -30,7 +31,7 @@ const CubeSides = styled.div`
   display: flex;
 `;
 
-const LayerSelection = styled.div`
+const LayerSelection = styled.div<{ isSelected: boolean }>`
   font-size: 48px;
   font-weight: 900;
   margin: 2px 0px;
@@ -67,7 +68,7 @@ const CubeSide = styled.div`
   font-weight: 900;
 `;
 
-function CustomPuzzleTable({ size }) {
+function CustomPuzzleTable({ size }: { size: Coordinate }) {
   const [sizeX, sizeY, sizeZ] = size;
   const { puzzleMaking, setPuzzleMaking } = usePuzzleMakingStore();
   const { setMarkingNumbers } = useMarkingNumbersStore();
@@ -111,7 +112,7 @@ function CustomPuzzleTable({ size }) {
     positionsLayerZ.push(row);
   }
 
-  const handleMarkingNumberX = (positionY, positionZ) => {
+  const handleMarkingNumberX = (positionY: number, positionZ: number) => {
     if (puzzleMaking.showingNumbers.layerX[`${positionY}${positionZ}`]) {
       delete puzzleMaking.showingNumbers.layerX[`${positionY}${positionZ}`];
     } else {
@@ -129,7 +130,7 @@ function CustomPuzzleTable({ size }) {
     setMarkingNumbers(numbers);
   };
 
-  const handleMarkingNumberY = (positionX, positionZ) => {
+  const handleMarkingNumberY = (positionX: number, positionZ: number) => {
     if (puzzleMaking.showingNumbers.layerY[`${positionX}${positionZ}`]) {
       delete puzzleMaking.showingNumbers.layerY[`${positionX}${positionZ}`];
     } else {
@@ -147,7 +148,7 @@ function CustomPuzzleTable({ size }) {
     setMarkingNumbers(numbers);
   };
 
-  const handleMarkingNumberZ = (positionX, positionY) => {
+  const handleMarkingNumberZ = (positionX: number, positionY: number) => {
     if (puzzleMaking.showingNumbers.layerZ[`${positionX}${positionY}`]) {
       delete puzzleMaking.showingNumbers.layerZ[`${positionX}${positionY}`];
     } else {
@@ -179,7 +180,7 @@ function CustomPuzzleTable({ size }) {
       {isSelected.YZ && (
         <Layer>
           {positionsLayerX.map((row) => (
-            <CubeSides key={row}>
+            <CubeSides key={row[0][0]}>
               {row.map((position) => (
                 <CubeSide
                   key={`${position[0]}${position[1]}`}
@@ -206,7 +207,7 @@ function CustomPuzzleTable({ size }) {
       {isSelected.XZ && (
         <Layer>
           {positionsLayerY.map((row) => (
-            <CubeSides key={row}>
+            <CubeSides key={row[0][0]}>
               {row.map((position) => (
                 <CubeSide
                   key={`${position[0]}${position[1]}`}
@@ -233,7 +234,7 @@ function CustomPuzzleTable({ size }) {
       {isSelected.XY && (
         <Layer>
           {positionsLayerZ.map((row) => (
-            <CubeSides key={row}>
+            <CubeSides key={row[0][0]}>
               {row.map((position) => (
                 <CubeSide
                   key={`${position[0]}${position[1]}`}

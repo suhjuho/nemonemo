@@ -51,7 +51,11 @@ const Footer = styled.footer`
   }
 `;
 
-function CustomPuzzleFooter({ customCubesState }) {
+interface CustomPuzzleFooterProps {
+  customCubesState: Record<string, boolean>;
+}
+
+function CustomPuzzleFooter({ customCubesState }: CustomPuzzleFooterProps) {
   const {
     puzzleMaking,
     hasAnswers,
@@ -73,8 +77,8 @@ function CustomPuzzleFooter({ customCubesState }) {
 
   const handleCustomPuzzleAnswer = () => {
     const customCubesStateList = Object.entries(customCubesState);
-    const answers = {};
-    const colors = {};
+    const answers: Record<string, boolean> = {};
+    const colors: Record<string, string> = {};
 
     customCubesStateList.forEach((position) => {
       if (!position[1]) {
