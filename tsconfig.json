@@ -21,14 +21,7 @@
     "noUnusedParameters": true,
     "noFallthroughCasesInSwitch": true
   },
-  "include": [
-    "src/store/*",
-    "src/utils/*",
-    "src/components/shared/*",
-    "src/components/MainPage",
-    "src/components/GameSelectPage",
-    "src/components/GameStage",
-    "types/*"
-  ],
+  "include": ["src/", "src/**/*.tsx", "types/*"],
+  "exclude": ["node_modules", "dist"],
   "references": [{ "path": "./tsconfig.node.json" }]
 }
