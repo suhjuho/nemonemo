@@ -2,7 +2,7 @@ import { useEffect } from "react";
 
 import { soundCube } from "./soundEffect.ts";
 import { useSoundStore } from "../store/store.tsx";
-import CUBE_CONSTANT from "../constants/cube.ts";
+import { CUBE_CONSTANT } from "../constants/cube.ts";
 
 const useSetEventKeySound = () => {
   const { sound } = useSoundStore();

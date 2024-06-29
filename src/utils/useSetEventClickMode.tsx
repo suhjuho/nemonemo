@@ -1,6 +1,6 @@
 import { useEffect } from "react";
 
-import CUBE_CONSTANT from "../constants/cube.ts";
+import { CUBE_CONSTANT } from "../constants/cube.ts";
 import { useClickModeStore } from "../store/store.tsx";
 
 const useSetEventClickMode = () => {

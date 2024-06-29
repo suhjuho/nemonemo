@@ -1,32 +1,28 @@
 import { useEffect } from "react";
-import * as THREE from "three";
-
 import { useParams } from "react-router-dom";
-import convertCoordinate from "../../utils/convertCoordinate.ts";
 
+import Cube from "../Cube/Cube.tsx";
+import Scaffold from "../Edge/Scaffold.tsx";
+import DefaultScaffold from "../Edge/DefaultScaffold.tsx";
 import {
   useAnswerStore,
   useCubeStatesStore,
   useCameraPositionStore,
   useLayerStore,
 } from "../../store/store.tsx";
-
-import Cube from "../Cube/Cube.tsx";
-
-import CUBE_CONSTANT from "../../constants/cube.ts";
-
-import Scaffold from "../Edge/Scaffold.tsx";
-import DefaultScaffold from "../Edge/DefaultScaffold.tsx";
-import revertCoordinate from "../../utils/revertCoordinate.ts";
+import {
+  CUBE_CONSTANT,
+  CubeGeometry,
+  CubeLineGeometry,
+} from "../../constants/cube.ts";
 import { Puzzle as PuzzleData } from "../../../types/puzzle.ts";
 import {
   MarkingNumbers,
   DefaultPuzzle,
   CubeState,
 } from "../../../types/cube.ts";
-
-const cubeGeometry = new THREE.BoxGeometry(2, 2, 2);
-const cubeLineGeometry = new THREE.CylinderGeometry(0.03, 0.03, 2, 8);
+import revertCoordinate from "../../utils/revertCoordinate.ts";
+import convertCoordinate from "../../utils/convertCoordinate.ts";
 
 function Puzzle({
   puzzle,
@@ -152,8 +148,8 @@ function Puzzle({
         {defaultPuzzle.map((position) => (
           <Cube
             key={position.join("")}
-            cubeGeometry={cubeGeometry}
-            cubeLineGeometry={cubeLineGeometry}
+            cubeGeometry={CubeGeometry}
+            cubeLineGeometry={CubeLineGeometry}
             position={position}
             markingNumbers={markingNumbers}
             positivePosition={revertCoordinate(position, size)}

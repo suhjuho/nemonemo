@@ -17,7 +17,7 @@ import {
   useLayerStore,
 } from "../../../store/store.tsx";
 import StyledIcon from "../StyledIcon/StyledIcon.tsx";
-import CUBE_CONSTANT from "../../../constants/cube.ts";
+import { CUBE_CONSTANT } from "../../../constants/cube.ts";
 
 const SideBar = styled.section`
   position: fixed;

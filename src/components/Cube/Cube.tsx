@@ -23,7 +23,7 @@ import useSolvedPuzzlesStore from "../../store/solvedPuzzles.tsx";
 import checkAnswer from "../../utils/checkAnswer.ts";
 import { soundClick } from "../../utils/soundEffect.ts";
 import revertCoordinate from "../../utils/revertCoordinate.ts";
-import CUBE_CONSTANT from "../../constants/cube.ts";
+import { CUBE_CONSTANT } from "../../constants/cube.ts";
 import saveRank from "../../utils/saveRank.ts";
 import { Coordinate, MarkingNumbers } from "../../../types/cube.ts";
 import { DifficultyLevel } from "../../../types/puzzle.ts";

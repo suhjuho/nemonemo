@@ -1,3 +1,5 @@
+import * as THREE from "three";
+
 type LayerPosition = "UP" | "DOWN" | "FORTH" | "BACK" | "RIGHT" | "LEFT";
 type Coordinate = [number, number, number];
 type Rotation = [number, number, number];
@@ -95,7 +97,7 @@ const LEFT_LAYER: Layer = { center: [-1.01, 0, 0], corner: [-1.01, 0.5, 0.5] };
 const FRONT_LAYER: Layer = { center: [0, 0, 1.01], corner: [0.5, 0.5, 1.01] };
 const BACK_LAYER: Layer = { center: [0, 0, -1.01], corner: [-0.5, 0.5, -1.01] };
 
-const CUBE_CONSTANT: CubeConstant = {
+export const CUBE_CONSTANT: CubeConstant = {
   LAYERS: {
     UP_LAYER,
     LEFT_LAYER,
@@ -153,4 +155,5 @@ const CUBE_CONSTANT: CubeConstant = {
   OUTSIDE_DIRECTIONS: { BACK: true, LEFT: true },
 };
 
-export default CUBE_CONSTANT;
+export const CubeGeometry = new THREE.BoxGeometry(2, 2, 2);
+export const CubeLineGeometry = new THREE.CylinderGeometry(0.03, 0.03, 2, 8);

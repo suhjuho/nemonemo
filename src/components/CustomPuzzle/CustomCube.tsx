@@ -18,7 +18,7 @@ import {
 import usePuzzleMakingStore from "../../store/making.tsx";
 import { soundClick } from "../../utils/soundEffect.ts";
 import revertCoordinate from "../../utils/revertCoordinate.ts";
-import CUBE_CONSTANT from "../../constants/cube.ts";
+import { CUBE_CONSTANT } from "../../constants/cube.ts";
 import { Coordinate } from "../../../types/cube.ts";
 
 interface CustomCubeProps {

@@ -1,7 +1,7 @@
 import { Text } from "@react-three/drei";
 
 import { useLayerStore } from "../../store/store.tsx";
-import CUBE_CONSTANT from "../../constants/cube.ts";
+import { CUBE_CONSTANT } from "../../constants/cube.ts";
 import { Coordinate, MarkingNumbers } from "../../../types/cube.ts";
 
 function CubeNumbers({

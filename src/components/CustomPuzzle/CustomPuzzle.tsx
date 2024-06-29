@@ -1,5 +1,5 @@
 import { useEffect, useRef, useState } from "react";
-import * as THREE from "three";
+
 import { OrthographicCamera, OrbitControls } from "@react-three/drei";
 import { OrthographicCamera as OrthographicCameraType } from "three";
 import { OrbitControls as OrbitControlsType } from "three-stdlib";
@@ -28,7 +28,11 @@ import {
 } from "../../store/store.tsx";
 import usePuzzleMakingStore from "../../store/making.tsx";
 import revertCoordinate from "../../utils/revertCoordinate.ts";
-import CUBE_CONSTANT from "../../constants/cube.ts";
+import {
+  CUBE_CONSTANT,
+  CubeGeometry,
+  CubeLineGeometry,
+} from "../../constants/cube.ts";
 import {
   Coordinate,
   DefaultPuzzle,
@@ -41,9 +45,6 @@ const Stage = styled.div`
   position: relative;
   height: 100vh;
 `;
-
-const cubeGeometry = new THREE.BoxGeometry(2, 2, 2);
-const cubeLineGeometry = new THREE.CylinderGeometry(0.03, 0.03, 2, 8);
 
 function CustomPuzzle() {
   const { isOrbitEnable } = useOrbitControlStore();
@@ -221,8 +222,8 @@ function CustomPuzzle() {
             {defaultPuzzle.map((position) => (
               <CustomCube
                 key={position.join("")}
-                cubeGeometry={cubeGeometry}
-                cubeLineGeometry={cubeLineGeometry}
+                cubeGeometry={CubeGeometry}
+                cubeLineGeometry={CubeLineGeometry}
                 position={position}
                 customCubesState={customCubesState}
                 changeCustomCubesState={setCustomCubesState}
