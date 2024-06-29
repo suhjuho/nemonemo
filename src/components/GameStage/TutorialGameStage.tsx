@@ -30,7 +30,11 @@ import useSetEventClickMode from "../../utils/useSetEventClickMode.tsx";
 import usePuzzleEnding from "../../utils/usePuzzleEnding.tsx";
 import breakpoints from "../../styles/media.tsx";
 import { Puzzle as PuzzleType } from "../../../types/puzzle.ts";
-import { DefaultPuzzle, MarkingNumbers } from "../../../types/cube.ts";
+import {
+  Coordinate,
+  DefaultPuzzle,
+  MarkingNumbers,
+} from "../../../types/cube.ts";
 
 const Stage = styled.div`
   position: relative;
@@ -69,15 +73,17 @@ function TutorialGameStage() {
   useSetEventKeySound();
   usePuzzleEnding(camera);
 
-  const [pixelPointerPosition, setPixelPointerPosition] = useState([
+  const [pixelPointerPosition, setPixelPointerPosition] = useState<Coordinate>([
     -100, 0, 0,
   ]);
-  const [pixelPointerRotation, setPixelPointerRotation] = useState([
+  const [pixelPointerRotation, setPixelPointerRotation] = useState<Coordinate>([
     0,
     Math.PI / 4,
     Math.PI,
   ]);
-  const [cubePointerPosition, setCubePointerPosition] = useState([-100, 0, 0]);
+  const [cubePointerPosition, setCubePointerPosition] = useState<Coordinate>([
+    -100, 0, 0,
+  ]);
   const [tutorialNumber, setTutorialNumber] = useState(0);
   const [moveDirection, setMoveDirection] = useState("y");
 
