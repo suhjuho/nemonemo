@@ -270,8 +270,8 @@ return (
     {defaultPuzzle.map((position) => (
       <Cube
         key={position}
-        cubeGeometry={cubeGeometry}
-        cubeLineGeometry={cubeLineGeometry}
+        cubeGeometry={CubeGeometry}
+        cubeLineGeometry={CubeLineGeometry}
         position={position}
         markingNumbers={markingNumbers}
         positivePosition={revertCoordinate(position, size)}
