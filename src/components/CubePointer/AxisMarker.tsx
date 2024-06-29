@@ -1,4 +1,4 @@
-import React, { useEffect, useRef } from "react";
+import { useEffect, useRef } from "react";
 import { useGLTF } from "@react-three/drei";
 import { Mesh, MeshStandardMaterial } from "three";
 import { Coordinate } from "../../../types/cube.ts";
@@ -34,7 +34,7 @@ function AxisX({ position, rotation }: AxisProps) {
   );
 }
 
-function AxisY({ position, rotation }) {
+function AxisY({ position, rotation }: AxisProps) {
   const pointerRef = useRef<Mesh>(null!);
   const { nodes } = useGLTF("/assets/alphabet_asset.glb");
 
@@ -59,7 +59,7 @@ function AxisY({ position, rotation }) {
   );
 }
 
-function AxisZ({ position, rotation }) {
+function AxisZ({ position, rotation }: AxisProps) {
   const pointerRef = useRef<Mesh>(null!);
   const { nodes } = useGLTF("/assets/alphabet_asset.glb");
 
