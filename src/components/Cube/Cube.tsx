@@ -28,6 +28,16 @@ import saveRank from "../../utils/saveRank.ts";
 import { Coordinate, MarkingNumbers } from "../../../types/cube.ts";
 import { DifficultyLevel } from "../../../types/puzzle.ts";
 
+interface CubeProps {
+  position: Coordinate;
+  cubeGeometry: BoxGeometry;
+  cubeLineGeometry: CylinderGeometry;
+  markingNumbers: MarkingNumbers;
+  positivePosition: Coordinate;
+  colors: Record<string, string>;
+  size: [number, number, number];
+}
+
 function Cube({
   position,
   cubeGeometry,
@@ -36,15 +46,7 @@ function Cube({
   positivePosition,
   colors,
   size,
-}: {
-  position: Coordinate;
-  cubeGeometry: BoxGeometry;
-  cubeLineGeometry: CylinderGeometry;
-  markingNumbers: MarkingNumbers;
-  positivePosition: Coordinate;
-  colors: Record<string, string>;
-  size: [number, number, number];
-}) {
+}: CubeProps) {
   const cube = useRef<Mesh>(null!);
   const [isClicked, setIsClicked] = useState(false);
   const [isRemoved, setIsRemoved] = useState(false);
@@ -94,28 +96,30 @@ function Cube({
     setCubeStates(cubeStates);
   }
 
-  function checkCubeState(): keyof typeof CUBE_CONSTANT.MATERIAL_ARGS {
+  function checkCubeState() {
+    let result: keyof typeof CUBE_CONSTANT.MATERIAL_ARGS = "blank";
+
     if (!isClicked && !isRemoved) {
-      return "blank";
+      result = "blank";
     }
 
     if (isClicked && !isRemoved) {
-      return "marked";
+      result = "marked";
     }
 
     if (!isClicked && isRemoved && clickMode === "color") {
-      return "invisible";
+      result = "invisible";
     }
 
     if (!isClicked && isRemoved && clickMode === "cube") {
-      return "haze";
+      result = "haze";
     }
 
     if (isHidden) {
-      return "invisible";
+      result = "invisible";
     }
 
-    return "blank";
+    return result;
   }
 
   const cubeState = useMemo(
