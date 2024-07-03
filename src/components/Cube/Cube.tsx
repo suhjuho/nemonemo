@@ -17,16 +17,17 @@ import {
   useDragPositionStore,
   useLayerStore,
   useSoundStore,
-  useGameTimeStore,
 } from "../../store/store.tsx";
 import useSolvedPuzzlesStore from "../../store/solvedPuzzles.tsx";
 import checkAnswer from "../../utils/checkAnswer.ts";
 import { soundClick } from "../../utils/soundEffect.ts";
 import revertCoordinate from "../../utils/revertCoordinate.ts";
 import { CUBE_CONSTANT } from "../../constants/cube.ts";
-import saveRank from "../../utils/saveRank.ts";
 import { Coordinate, MarkingNumbers } from "../../../types/cube.ts";
 import { DifficultyLevel } from "../../../types/puzzle.ts";
+import checkCubeState from "../../utils/checkCubeState.ts";
+import useCheckCurrentLayer from "../../utils/useCheckCurrentLayer.ts";
+import useCheckCubeHistory from "../../utils/useCheckCubeHistory.ts";
 
 interface CubeProps {
   position: Coordinate;
@@ -54,11 +55,10 @@ function Cube({
   const [isHover, setIsHover] = useState(false);
   const [isVisible, setIsVisible] = useState(true);
 
-  const { difficulty = "tutorial", stageNumber } = useParams<{
+  const { difficulty = "easy", stageNumber = "1" } = useParams<{
     difficulty: DifficultyLevel;
     stageNumber: string;
   }>();
-  const { gameTime } = useGameTimeStore();
   const { solvedPuzzles, setSolvedPuzzles } = useSolvedPuzzlesStore();
   const { puzzles, setPuzzles } = usePuzzlesStore();
   const { answer, isComplete, setIsComplete } = useAnswerStore();
@@ -75,7 +75,7 @@ function Cube({
     setCubeStatesHistory,
     setHistoryIndex,
   } = useCubeStatesStore();
-  const { layerDirection, layers, currentLayer } = useLayerStore();
+  const { layerDirection } = useLayerStore();
 
   useEffect(() => {
     setIsClicked(false);
@@ -86,44 +86,17 @@ function Cube({
   }, [stageNumber]);
 
   useEffect(() => {
+    setIsHidden(false);
+  }, [layerDirection]);
+
+  useEffect(() => {
     if (isComplete) {
       setIsHidden(false);
     }
   }, [isComplete]);
 
-  function saveCubeStates() {
-    cubeStates[position.join("")] = { isClicked, isRemoved, isHidden };
-    setCubeStates(cubeStates);
-  }
-
-  function checkCubeState() {
-    let result: keyof typeof CUBE_CONSTANT.MATERIAL_ARGS = "blank";
-
-    if (!isClicked && !isRemoved) {
-      result = "blank";
-    }
-
-    if (isClicked && !isRemoved) {
-      result = "marked";
-    }
-
-    if (!isClicked && isRemoved && clickMode === "color") {
-      result = "invisible";
-    }
-
-    if (!isClicked && isRemoved && clickMode === "cube") {
-      result = "haze";
-    }
-
-    if (isHidden) {
-      result = "invisible";
-    }
-
-    return result;
-  }
-
   const cubeState = useMemo(
-    () => checkCubeState(),
+    () => checkCubeState(isClicked, isRemoved, clickMode, isHidden),
     [isClicked, isRemoved, clickMode, isHidden, stageNumber],
   );
 
@@ -148,49 +121,13 @@ function Cube({
   });
 
   useEffect(() => {
-    setIsHidden(false);
-  }, [layerDirection]);
+    cubeStates[position.join("")] = { isClicked, isRemoved, isHidden };
 
-  useEffect(() => {
-    saveCubeStates();
+    setCubeStates(cubeStates);
   }, [isClicked, isRemoved, clickMode]);
 
-  useEffect(() => {
-    const [targetPosition, layer] =
-      layerDirection === "FRONT" || layerDirection === "BACK"
-        ? [position[2], layers.z]
-        : [position[0], layers.x];
-
-    if (layerDirection === "FRONT" || layerDirection === "RIGHT") {
-      if (targetPosition <= layer[currentLayer - 1]) {
-        setIsHidden(false);
-      }
-
-      if (targetPosition > layer[currentLayer - 1]) {
-        setIsHidden(true);
-      }
-    }
-
-    if (layerDirection === "BACK" || layerDirection === "LEFT") {
-      if (targetPosition < layer[currentLayer - 1]) {
-        setIsHidden(true);
-      }
-
-      if (targetPosition >= layer[currentLayer - 1]) {
-        setIsHidden(false);
-      }
-    }
-  }, [currentLayer]);
-
-  useEffect(() => {
-    const newCubeStates = cubeStatesHistory[historyIndex];
-
-    if (newCubeStates && newCubeStates[position.join("")]) {
-      setIsClicked(newCubeStates[position.join("")].isClicked);
-      setIsRemoved(newCubeStates[position.join("")].isRemoved);
-      setIsHover(false);
-    }
-  }, [historyIndex]);
+  useCheckCurrentLayer(position, setIsHidden);
+  useCheckCubeHistory(position, setIsClicked, setIsRemoved, setIsHover);
 
   const handleRightClick = useCallback(
     (event: ThreeEvent<MouseEvent>) => {
@@ -290,8 +227,6 @@ function Cube({
     setHistoryIndex(cubeStatesHistory.length - 1);
 
     if (checkAnswer(answer, cubeStates) && stageNumber) {
-      saveRank(difficulty, stageNumber, gameTime);
-
       solvedPuzzles[difficulty][stageNumber] = true;
       setSolvedPuzzles(solvedPuzzles);
 

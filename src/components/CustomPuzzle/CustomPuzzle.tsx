@@ -27,7 +27,6 @@ import {
   useOrbitControlStore,
 } from "../../store/store.tsx";
 import usePuzzleMakingStore from "../../store/making.tsx";
-import revertCoordinate from "../../utils/revertCoordinate.ts";
 import {
   CUBE_CONSTANT,
   CubeGeometry,
@@ -38,8 +37,10 @@ import {
   DefaultPuzzle,
   ShowingNumbers,
 } from "../../../types/cube.ts";
+import revertCoordinate from "../../utils/revertCoordinate.ts";
 import useSetEventKeySound from "../../utils/useSetEventKeySound.tsx";
 import useSetEventClickMode from "../../utils/useSetEventClickMode.tsx";
+import useLayerChange from "../../utils/useLayerChange.tsx";
 
 const Stage = styled.div`
   position: relative;
@@ -122,6 +123,7 @@ function CustomPuzzle() {
 
   useSetEventClickMode();
   useSetEventKeySound();
+  useLayerChange();
 
   return (
     <Stage>

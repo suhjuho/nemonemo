@@ -20,6 +20,8 @@ import { soundClick } from "../../utils/soundEffect.ts";
 import revertCoordinate from "../../utils/revertCoordinate.ts";
 import { CUBE_CONSTANT } from "../../constants/cube.ts";
 import { Coordinate } from "../../../types/cube.ts";
+import useCheckCurrentLayer from "../../utils/useCheckCurrentLayer.ts";
+import checkCubeState from "../../utils/checkCubeState.ts";
 
 interface CustomCubeProps {
   position: Coordinate;
@@ -59,34 +61,7 @@ function CustomCube({
   const { sound } = useSoundStore();
   const [answerColor, setAnswerColor] = useState("#ffffff");
 
-  const { layerDirection, layers, currentLayer, setCurrentLayer } =
-    useLayerStore();
-
-  function checkCubeState() {
-    let result: keyof typeof CUBE_CONSTANT.MATERIAL_ARGS = "blank";
-
-    if (!isClicked && !isRemoved) {
-      result = "blank";
-    }
-
-    if (isClicked && !isRemoved) {
-      result = "marked";
-    }
-
-    if (!isClicked && isRemoved && clickMode === "color") {
-      result = "invisible";
-    }
-
-    if (!isClicked && isRemoved && clickMode === "cube") {
-      result = "haze";
-    }
-
-    if (isHidden) {
-      result = "invisible";
-    }
-
-    return result;
-  }
+  const { layerDirection } = useLayerStore();
 
   useEffect(() => {
     if (hasAnswers && hasColors) {
@@ -96,6 +71,10 @@ function CustomCube({
   }, [hasColors]);
 
   useEffect(() => {
+    setIsHidden(false);
+  }, [layerDirection]);
+
+  useEffect(() => {
     customCubesState[
       revertCoordinate(position, size.map(Number) as Coordinate).join("")
     ] = isRemoved;
@@ -103,7 +82,7 @@ function CustomCube({
   }, [isRemoved]);
 
   const cubeState = useMemo(
-    () => checkCubeState(),
+    () => checkCubeState(isClicked, isRemoved, clickMode, isHidden),
     [isClicked, isRemoved, clickMode, isHidden],
   );
 
@@ -127,55 +106,7 @@ function CustomCube({
     },
   });
 
-  useEffect(() => {
-    setIsHidden(false);
-  }, [layerDirection]);
-
-  useEffect(() => {
-    function handleLayerChange(event: KeyboardEvent) {
-      const isInside = CUBE_CONSTANT.INSIDE_CUBE_KEYS[event.key];
-      const isOutside = CUBE_CONSTANT.OUTSIDE_CUBE_KEYS[event.key];
-
-      const [targetPosition, layer] =
-        layerDirection === "FRONT" || layerDirection === "BACK"
-          ? [position[2], layers.z]
-          : [position[0], layers.x];
-
-      if (isInside) {
-        if (CUBE_CONSTANT.INSIDE_DIRECTIONS[layerDirection]) {
-          if (currentLayer > 1 && targetPosition === layer[currentLayer - 1]) {
-            setIsHidden(true);
-            setCurrentLayer(currentLayer - 1);
-          }
-        } else if (CUBE_CONSTANT.OUTSIDE_DIRECTIONS[layerDirection]) {
-          if (
-            currentLayer < layer.length &&
-            targetPosition === layer[currentLayer - 1]
-          ) {
-            setIsHidden(true);
-            setCurrentLayer(currentLayer + 1);
-          }
-        }
-      }
-
-      if (isOutside) {
-        if (CUBE_CONSTANT.INSIDE_DIRECTIONS[layerDirection]) {
-          if (targetPosition === layer[currentLayer]) {
-            setIsHidden(false);
-            setCurrentLayer(currentLayer + 1);
-          }
-        } else if (CUBE_CONSTANT.OUTSIDE_DIRECTIONS[layerDirection]) {
-          if (targetPosition === layer[currentLayer - 2]) {
-            setIsHidden(false);
-            setCurrentLayer(currentLayer - 1);
-          }
-        }
-      }
-    }
-
-    window.addEventListener("keydown", handleLayerChange);
-    return () => window.removeEventListener("keydown", handleLayerChange);
-  }, [currentLayer, layerDirection, layers, position]);
+  useCheckCurrentLayer(position, setIsHidden);
 
   const handleRightClick = useCallback(
     (event: ThreeEvent<MouseEvent>) => {
