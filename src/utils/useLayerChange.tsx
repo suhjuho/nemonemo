@@ -1,13 +1,18 @@
 import { useEffect } from "react";
 import { CUBE_CONSTANT } from "../constants/cube.ts";
-import { useLayerStore } from "../store/store.tsx";
+import { useLayerStore, useUserNameStore } from "../store/store.tsx";
 
 const useLayerChange = () => {
   const { layerDirection, layers, currentLayer, setCurrentLayer } =
     useLayerStore();
+  const { userName } = useUserNameStore();
 
   useEffect(() => {
     function handleLayerChange(event: KeyboardEvent): void {
+      if (userName !== "default name") {
+        return;
+      }
+
       const isInside = CUBE_CONSTANT.INSIDE_CUBE_KEYS[event.key];
       const isOutside = CUBE_CONSTANT.OUTSIDE_CUBE_KEYS[event.key];
 

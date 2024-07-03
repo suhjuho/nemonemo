@@ -12,7 +12,15 @@ import {
   TutorialStepState,
   LanguageState,
   DeviceState,
+  UserNameState,
 } from "../../types/setting.ts";
+
+const useUserNameStore = create<UserNameState>()((set) => ({
+  userName: "default name",
+  setUserName: (userName) => {
+    set({ userName });
+  },
+}));
 
 const useMarkingNumbersStore = create<MarkingNumbersState>()((set) => ({
   markingNumbers: {
@@ -40,7 +48,7 @@ const useCubeStatesStore = create<CubeStatesState>()((set) => ({
 }));
 
 const useClickModeStore = create<ClickModeState>()((set) => ({
-  clickMode: "color", // color, cube
+  clickMode: "color",
   setClickMode: (clickMode) => set({ clickMode }),
 }));
 
@@ -103,6 +111,7 @@ const useDeviceStore = create<DeviceState>()((set) => ({
 }));
 
 export {
+  useUserNameStore,
   useMarkingNumbersStore,
   useAnswerStore,
   useCubeStatesStore,

@@ -4,7 +4,6 @@ import { useParams } from "react-router-dom";
 import { ThreeEvent } from "@react-three/fiber";
 import checkAnswer from "../../utils/checkAnswer.ts";
 import { soundClick } from "../../utils/soundEffect.ts";
-import saveRank from "../../utils/saveRank.ts";
 import usePuzzlesStore from "../../store/puzzle.tsx";
 import useSolvedPuzzlesStore from "../../store/solvedPuzzles.tsx";
 import {
@@ -14,7 +13,6 @@ import {
   useRightClickStore,
   useAnswerStore,
   useSoundStore,
-  useGameTimeStore,
 } from "../../store/store.tsx";
 import BACKGROUND_CONSTANT from "../../constants/background.ts";
 
@@ -40,7 +38,6 @@ function TutorialBackGround({ color }: { color: string }) {
   const { puzzles, setPuzzles } = usePuzzlesStore();
   const { solvedPuzzles, setSolvedPuzzles } = useSolvedPuzzlesStore();
   const { stageNumber } = useParams<{ stageNumber: string }>();
-  const { gameTime } = useGameTimeStore();
   const difficulty = "tutorial";
 
   function handleContextMenu(event: ThreeEvent<MouseEvent>): void {
@@ -76,8 +73,6 @@ function TutorialBackGround({ color }: { color: string }) {
     }
 
     if (checkAnswer(answer, cubeStates) && difficulty && stageNumber) {
-      saveRank(difficulty, stageNumber, gameTime);
-
       solvedPuzzles[difficulty][stageNumber] = true;
       setSolvedPuzzles(solvedPuzzles);
 

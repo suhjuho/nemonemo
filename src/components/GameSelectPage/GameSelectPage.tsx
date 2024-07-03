@@ -200,6 +200,11 @@ const PlayTime = styled.div<{ idx: number }>`
   `}
 `;
 
+interface Ranking {
+  time: number;
+  userName: string;
+}
+
 interface PuzzleData {
   title: string;
   size: [number, number, number];
@@ -212,7 +217,7 @@ interface PuzzleData {
   };
   mainColor: string;
   subColor: string;
-  ranking: number[];
+  ranking: Ranking[];
 }
 
 function GameSelectPage() {
@@ -228,7 +233,7 @@ function GameSelectPage() {
   const [allPuzzles, setAllPuzzles] = useState<[string, PuzzleData][]>([]);
   const [currentIndex, setCurrentIndex] = useState(1);
   const [isRankShown, setIsRankShown] = useState(false);
-  const [ranking, setRanking] = useState<number[]>([]);
+  const [ranking, setRanking] = useState<Ranking[]>([]);
   const [rankIndex, setRankIndex] = useState(-1);
   const [displayList, setDisplayList] = useState<number[]>([-2, -1, 0, 1, 2]);
 
@@ -311,12 +316,14 @@ function GameSelectPage() {
                     isRankShown &&
                     rankIndex === currentIndex + idx && (
                       <RankingModal idx={idx}>
-                        <span>풀이 시간</span>
-                        {ranking.map((time, i) => (
+                        <span>
+                          {language === "English" ? "Time Score" : "풀이 시간"}
+                        </span>
+                        {ranking.map((rank) => (
                           <PlayTime
-                            key={time + i}
+                            key={rank.userName + rank.time}
                             idx={idx}
-                          >{`${i + 1}등 ${formatTime(ranking[i]).slice(3)}초`}</PlayTime>
+                          >{`${rank.userName}님 ${formatTime(rank.time).slice(3)}초`}</PlayTime>
                         ))}
                       </RankingModal>
                     )}

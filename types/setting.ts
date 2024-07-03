@@ -1,8 +1,13 @@
 export type HeaderType = "main" | "game" | "setting" | "select";
 
+export type UserNameState = {
+  userName: string;
+  setUserName: (userName: string) => void;
+};
+
 export type ClickModeState = {
-  clickMode: string;
-  setClickMode: (clickMode: string) => void;
+  clickMode: "color" | "cube";
+  setClickMode: (clickMode: "color" | "cube") => void;
 };
 
 export type OrbitControlState = {

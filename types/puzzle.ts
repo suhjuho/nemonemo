@@ -1,5 +1,10 @@
 import { Coordinate } from "./cube.ts";
 
+interface Ranking {
+  time: number;
+  userName: string;
+}
+
 export type Puzzle = {
   title: string;
   size: Coordinate;
@@ -12,7 +17,7 @@ export type Puzzle = {
   };
   mainColor: string;
   subColor: string;
-  ranking: number[];
+  ranking: Ranking[];
 };
 
 export interface CustomPuzzleState {

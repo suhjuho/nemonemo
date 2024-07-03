@@ -11,12 +11,10 @@ import {
   useRightClickStore,
   useAnswerStore,
   useSoundStore,
-  useGameTimeStore,
 } from "../../store/store.tsx";
 
 import checkAnswer from "../../utils/checkAnswer.ts";
 import { soundClick } from "../../utils/soundEffect.ts";
-import saveRank from "../../utils/saveRank.ts";
 import BACKGROUND_CONSTANT from "../../constants/background.ts";
 import { DifficultyLevel } from "../../../types/puzzle.ts";
 
@@ -45,7 +43,6 @@ function BackGround({ color }: { color: string }) {
     difficulty: DifficultyLevel;
     stageNumber: string;
   }>();
-  const { gameTime } = useGameTimeStore();
 
   function handleContextMenu(event: ThreeEvent<MouseEvent>): void {
     event.stopPropagation();
@@ -80,8 +77,6 @@ function BackGround({ color }: { color: string }) {
     }
 
     if (checkAnswer(answer, cubeStates) && difficulty && stageNumber) {
-      saveRank(difficulty, stageNumber, gameTime);
-
       solvedPuzzles[difficulty][stageNumber] = true;
       setSolvedPuzzles(solvedPuzzles);
 
