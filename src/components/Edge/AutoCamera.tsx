@@ -3,8 +3,15 @@ import { useState } from "react";
 
 import { useCameraPositionStore, useLayerStore } from "../../store/store.tsx";
 import { Puzzle } from "../../../types/puzzle.ts";
+import { Coordinate } from "../../../types/cube.ts";
 
-function AutoCamera({ puzzle }: { puzzle: Puzzle }) {
+function AutoCamera({
+  puzzle,
+  handleCubeCameraPosition,
+}: {
+  puzzle: Puzzle;
+  handleCubeCameraPosition?: (state: Coordinate) => void;
+}) {
   const { camera } = useThree();
   const { setCameraPosition } = useCameraPositionStore();
   const { layerDirection, setLayerDirection, setCurrentLayer } =
@@ -22,6 +29,9 @@ function AutoCamera({ puzzle }: { puzzle: Puzzle }) {
     const posZ = cameraZ >= 0 ? 1 : 0;
 
     setCameraPosition([posX, posY, posZ]);
+    if (handleCubeCameraPosition) {
+      handleCubeCameraPosition([cameraX, cameraY, cameraZ]);
+    }
   }
 
   function checkLayerDirection(cameraX: number, cameraZ: number) {

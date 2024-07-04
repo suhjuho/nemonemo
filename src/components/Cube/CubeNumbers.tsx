@@ -7,9 +7,11 @@ import { Coordinate, MarkingNumbers } from "../../../types/cube.ts";
 function CubeNumbers({
   markingNumbers,
   positivePosition,
+  color = "#000000",
 }: {
   markingNumbers: MarkingNumbers;
   positivePosition: Coordinate;
+  color?: string;
 }) {
   const { layerDirection } = useLayerStore();
   const yzPosition = `${positivePosition[1]}${positivePosition[2]}`;
@@ -23,7 +25,7 @@ function CubeNumbers({
           <Text
             position={CUBE_CONSTANT.LAYERS.LEFT_LAYER.center}
             fontSize={1.2}
-            color="#000000"
+            color={color}
             anchorX="center"
             anchorY="middle"
             rotation={CUBE_CONSTANT.ROTATIONS.LEFT_LAYER}
@@ -34,7 +36,7 @@ function CubeNumbers({
           <Text
             position={CUBE_CONSTANT.LAYERS.LEFT_LAYER.corner}
             fontSize={0.8}
-            color="#000000"
+            color={color}
             anchorX="center"
             anchorY="middle"
             rotation={CUBE_CONSTANT.ROTATIONS.LEFT_LAYER}
@@ -48,7 +50,7 @@ function CubeNumbers({
             <Text
               position={CUBE_CONSTANT.LAYERS.LEFT_LAYER.center}
               fontSize={1}
-              color="#000000"
+              color={color}
               anchorX="center"
               anchorY="top"
               rotation={CUBE_CONSTANT.ROTATIONS.LEFT_LAYER}
@@ -61,7 +63,7 @@ function CubeNumbers({
           <Text
             position={CUBE_CONSTANT.LAYERS.RIGHT_LAYER.center}
             fontSize={1.2}
-            color="#000000"
+            color={color}
             anchorX="center"
             anchorY="middle"
             rotation={CUBE_CONSTANT.ROTATIONS.RIGHT_LAYER}
@@ -72,7 +74,7 @@ function CubeNumbers({
           <Text
             position={CUBE_CONSTANT.LAYERS.RIGHT_LAYER.corner}
             fontSize={0.8}
-            color="#000000"
+            color={color}
             anchorX="center"
             anchorY="middle"
             rotation={CUBE_CONSTANT.ROTATIONS.RIGHT_LAYER}
@@ -86,7 +88,7 @@ function CubeNumbers({
             <Text
               position={CUBE_CONSTANT.LAYERS.RIGHT_LAYER.center}
               fontSize={1}
-              color="#000000"
+              color={color}
               anchorX="center"
               anchorY="top"
               rotation={CUBE_CONSTANT.ROTATIONS.RIGHT_LAYER}
@@ -103,7 +105,7 @@ function CubeNumbers({
           <Text
             position={CUBE_CONSTANT.LAYERS.UP_LAYER.center}
             fontSize={1.2}
-            color="#000000"
+            color={color}
             anchorX="center"
             anchorY="middle"
             rotation={CUBE_CONSTANT.ROTATIONS.UP_LAYER[layerDirection]}
@@ -114,7 +116,7 @@ function CubeNumbers({
           <Text
             position={CUBE_CONSTANT.LAYERS.UP_LAYER.corner[layerDirection]}
             fontSize={0.8}
-            color="#000000"
+            color={color}
             anchorX="center"
             anchorY="middle"
             rotation={CUBE_CONSTANT.ROTATIONS.UP_LAYER[layerDirection]}
@@ -128,7 +130,7 @@ function CubeNumbers({
             <Text
               position={CUBE_CONSTANT.LAYERS.UP_LAYER.center}
               fontSize={1}
-              color="#000000"
+              color={color}
               anchorX="center"
               anchorY="top"
               rotation={CUBE_CONSTANT.ROTATIONS.UP_LAYER[layerDirection]}
@@ -141,7 +143,7 @@ function CubeNumbers({
           <Text
             position={CUBE_CONSTANT.LAYERS.DOWN_LAYER.center}
             fontSize={1.2}
-            color="#000000"
+            color={color}
             anchorX="center"
             anchorY="middle"
             rotation={CUBE_CONSTANT.ROTATIONS.DOWN_LAYER[layerDirection]}
@@ -152,7 +154,7 @@ function CubeNumbers({
           <Text
             position={CUBE_CONSTANT.LAYERS.DOWN_LAYER.corner[layerDirection]}
             fontSize={0.8}
-            color="#000000"
+            color={color}
             anchorX="center"
             anchorY="middle"
             rotation={CUBE_CONSTANT.ROTATIONS.DOWN_LAYER[layerDirection]}
@@ -166,7 +168,7 @@ function CubeNumbers({
             <Text
               position={CUBE_CONSTANT.LAYERS.DOWN_LAYER.center}
               fontSize={1}
-              color="#000000"
+              color={color}
               anchorX="center"
               anchorY="top"
               rotation={CUBE_CONSTANT.ROTATIONS.DOWN_LAYER[layerDirection]}
@@ -183,7 +185,7 @@ function CubeNumbers({
           <Text
             position={CUBE_CONSTANT.LAYERS.FRONT_LAYER.center}
             fontSize={1.2}
-            color="#000000"
+            color={color}
             anchorX="center"
             anchorY="middle"
             rotation={CUBE_CONSTANT.ROTATIONS.FRONT_LAYER}
@@ -194,7 +196,7 @@ function CubeNumbers({
           <Text
             position={CUBE_CONSTANT.LAYERS.FRONT_LAYER.corner}
             fontSize={0.8}
-            color="#000000"
+            color={color}
             anchorX="center"
             anchorY="middle"
             rotation={CUBE_CONSTANT.ROTATIONS.FRONT_LAYER}
@@ -208,7 +210,7 @@ function CubeNumbers({
             <Text
               position={CUBE_CONSTANT.LAYERS.FRONT_LAYER.center}
               fontSize={1}
-              color="#000000"
+              color={color}
               anchorX="center"
               anchorY="top"
               rotation={CUBE_CONSTANT.ROTATIONS.FRONT_LAYER}
@@ -221,7 +223,7 @@ function CubeNumbers({
           <Text
             position={CUBE_CONSTANT.LAYERS.BACK_LAYER.center}
             fontSize={1.2}
-            color="#000000"
+            color={color}
             anchorX="center"
             anchorY="middle"
             rotation={CUBE_CONSTANT.ROTATIONS.BACK_LAYER}
@@ -232,7 +234,7 @@ function CubeNumbers({
           <Text
             position={CUBE_CONSTANT.LAYERS.BACK_LAYER.corner}
             fontSize={0.8}
-            color="#000000"
+            color={color}
             anchorX="center"
             anchorY="middle"
             rotation={CUBE_CONSTANT.ROTATIONS.BACK_LAYER}
@@ -246,7 +248,7 @@ function CubeNumbers({
             <Text
               position={CUBE_CONSTANT.LAYERS.BACK_LAYER.center}
               fontSize={1}
-              color="#000000"
+              color={color}
               anchorX="center"
               anchorY="top"
               rotation={CUBE_CONSTANT.ROTATIONS.BACK_LAYER}

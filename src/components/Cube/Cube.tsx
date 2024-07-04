@@ -267,6 +267,7 @@ function Cube({
                 <CubeNumbers
                   markingNumbers={markingNumbers}
                   positivePosition={positivePosition}
+                  color="#000000"
                 />
               )}
               <CubeEdge cubeLineGeometry={cubeLineGeometry} />

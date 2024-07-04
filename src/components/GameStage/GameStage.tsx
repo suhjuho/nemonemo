@@ -13,6 +13,7 @@ import AutoCamera from "../Edge/AutoCamera.tsx";
 import GameStageHeader from "../shared/Header/GameStageHeader.tsx";
 import GameStageSideBar from "../shared/SideBar/GameStageSideBar.tsx";
 import GameStageFooter from "../Footer/GameStageFooter.tsx";
+import CubeSize from "../CubeSize/CubeSize.tsx";
 
 import getMarkingNumbers from "../../utils/getMarkingNumbers.ts";
 import getDefaultPuzzle from "../../utils/getDefaultPuzzle.ts";
@@ -27,7 +28,11 @@ import {
   DifficultyLevel,
   Puzzle as PuzzleType,
 } from "../../../types/puzzle.ts";
-import { DefaultPuzzle, MarkingNumbers } from "../../../types/cube.ts";
+import {
+  Coordinate,
+  DefaultPuzzle,
+  MarkingNumbers,
+} from "../../../types/cube.ts";
 
 const Stage = styled.div`
   position: relative;
@@ -41,6 +46,9 @@ function GameStage() {
   }>();
   const [defaultPuzzle, setDefaultPuzzle] = useState<DefaultPuzzle>(null!);
   const [markingNumbers, setMarkingNumbers] = useState<MarkingNumbers>(null!);
+  const [cubeCameraPosition, setCubeCameraPosition] = useState<Coordinate>(
+    null!,
+  );
   const { puzzles } = usePuzzlesStore();
   const { isOrbitEnable } = useOrbitControlStore();
   const { isComplete, setIsComplete } = useAnswerStore();
@@ -69,6 +77,11 @@ function GameStage() {
 
   return (
     <Stage>
+      <CubeSize
+        cubeCameraPosition={cubeCameraPosition}
+        size={size}
+        textColor={puzzle.subColor}
+      />
       <GameStageHeader
         difficulty={difficulty || "custom"}
         type="game"
@@ -90,7 +103,10 @@ function GameStage() {
         <directionalLight intensity={3} position={[-10, -8, -6]} />
         <directionalLight intensity={5} position={[10, 8, 6]} />
 
-        <AutoCamera puzzle={puzzle} />
+        <AutoCamera
+          puzzle={puzzle}
+          handleCubeCameraPosition={setCubeCameraPosition}
+        />
 
         <OrthographicCamera
           ref={camera}
