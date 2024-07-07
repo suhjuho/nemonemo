@@ -55,7 +55,7 @@ function Cube({
   const [isHover, setIsHover] = useState(false);
   const [isVisible, setIsVisible] = useState(true);
 
-  const { difficulty = "easy", stageNumber = "1" } = useParams<{
+  const { difficulty, stageNumber } = useParams<{
     difficulty: DifficultyLevel;
     stageNumber: string;
   }>();
@@ -226,7 +226,7 @@ function Cube({
     setCubeStatesHistory(cubeStatesHistory);
     setHistoryIndex(cubeStatesHistory.length - 1);
 
-    if (checkAnswer(answer, cubeStates) && stageNumber) {
+    if (checkAnswer(answer, cubeStates) && difficulty && stageNumber) {
       solvedPuzzles[difficulty][stageNumber] = true;
       setSolvedPuzzles(solvedPuzzles);
 
