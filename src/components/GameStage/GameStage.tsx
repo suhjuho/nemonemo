@@ -77,11 +77,13 @@ function GameStage() {
 
   return (
     <Stage>
-      <CubeSize
-        cubeCameraPosition={cubeCameraPosition}
-        size={size}
-        textColor={puzzle.subColor}
-      />
+      {!isComplete && (
+        <CubeSize
+          cubeCameraPosition={cubeCameraPosition}
+          size={size}
+          textColor={puzzle.subColor}
+        />
+      )}
       <GameStageHeader
         difficulty={difficulty || "custom"}
         type="game"

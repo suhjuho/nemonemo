@@ -10,6 +10,7 @@ import {
 } from "../../store/store.tsx";
 import { DifficultyLevel } from "../../../types/puzzle.ts";
 import saveRank from "../../utils/saveRank.ts";
+import breakpoints from "../../styles/media.tsx";
 
 const Footer = styled.footer`
   position: fixed;
@@ -25,29 +26,48 @@ const Footer = styled.footer`
     width: 80px;
     border-radius: 20px;
     box-shadow: 2px 4px 8px;
+
+    @media screen and (max-width: ${breakpoints.md}) {
+      width: 40px;
+      border-radius: 10px;
+      box-shadow: 2px 4px 8px;
+    }
   }
 
   .user-name {
-    font-size: 60px;
+    font-size: 50px;
     font-weight: 900;
-    padding: 0px 10px;
+    padding: 2px 0px;
     text-align: center;
     width: fit-content;
     background-color: rgba(255, 255, 255, 0.1);
     border: 3px solid white;
     border-radius: 20px;
     box-shadow: 2px 4px 8px;
+    margin-right: 2px;
+
+    @media screen and (max-width: ${breakpoints.md}) {
+      font-size: 20px;
+      font-weight: 700;
+      border-radius: 10px;
+    }
   }
 
   .next {
     font-size: 60px;
     font-weight: 900;
-    padding: 0px 10px;
+    padding: 2px 2px;
     text-align: center;
     background-color: rgba(255, 255, 255, 0.1);
     border: 3px solid white;
     border-radius: 20px;
     box-shadow: 2px 4px 8px;
+
+    @media screen and (max-width: ${breakpoints.md}) {
+      font-size: 20px;
+      font-weight: 700;
+      border-radius: 10px;
+    }
   }
 `;
 
@@ -80,11 +100,9 @@ function GameStageFooter({
       />
       <form>
         <input
-          className="next"
+          className="user-name"
           placeholder={
-            language === "English"
-              ? "Enter User Name"
-              : "기록할 이름을 입력하세요"
+            language === "English" ? "Enter User" : "이름을 입력하세요"
           }
           onChange={(event) => {
             setUserName(event.target.value);
